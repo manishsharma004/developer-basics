@@ -1,5 +1,5 @@
 import { NavLink, Route, Routes } from 'react-router-dom'
-import { demos } from './demos/index.ts'
+import { lessons } from './lessons/index.tsx'
 import Home from './pages/Home.tsx'
 
 function App() {
@@ -10,29 +10,25 @@ function App() {
           <span className="brand-mark">{'</>'}</span>
           <div>
             <div className="brand-title">Developer Basics</div>
-            <div className="brand-sub">interactive fundamentals</div>
+            <div className="brand-sub">learn the systems you use</div>
           </div>
         </div>
 
         <nav className="nav">
           <NavLink to="/" end className="nav-link">
             <span className="nav-icon">🏠</span>
-            <span>Home</span>
+            <span>All lessons</span>
           </NavLink>
-          {demos.map((demo) => (
-            <NavLink key={demo.id} to={demo.path} className="nav-link">
-              <span className="nav-icon">{demo.icon}</span>
-              <span>{demo.title}</span>
+          {lessons.map((lesson) => (
+            <NavLink key={lesson.id} to={lesson.path} className="nav-link">
+              <span className="nav-icon">{lesson.icon}</span>
+              <span>{lesson.title}</span>
             </NavLink>
           ))}
         </nav>
 
         <div className="sidebar-footer">
-          <a
-            href="https://github.com/manishsharma004/developer-basics"
-            target="_blank"
-            rel="noreferrer"
-          >
+          <a href="https://github.com/manishsharma004/developer-basics" target="_blank" rel="noreferrer">
             View source
           </a>
         </div>
@@ -41,7 +37,7 @@ function App() {
       <main className="content">
         <Routes>
           <Route path="/" element={<Home />} />
-          {demos.map(({ id, path, Component }) => (
+          {lessons.map(({ id, path, Component }) => (
             <Route key={id} path={path} element={<Component />} />
           ))}
           <Route path="*" element={<Home />} />

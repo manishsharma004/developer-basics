@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { demos } from '../demos/index.ts'
+import { lessons } from '../lessons/index.tsx'
 
 function Home() {
   return (
@@ -7,31 +7,39 @@ function Home() {
       <header className="page-header">
         <h1>Developer Basics</h1>
         <p className="lead">
-          Hands-on, interactive explainers for the core concepts every developer
-          should understand. These aren't slideshows — each demo runs a real
-          simulation in your browser (Python via WebAssembly), so you can poke at
-          it and watch the model respond.
+          A hands-on course in the systems every developer relies on — the
+          filesystem, processes, memory, and the network. Each lesson explains the
+          idea in plain language, then lets you experiment with a real, live
+          simulation running in your browser. The goal: understand what's actually
+          happening underneath, so you can reason about it with confidence.
         </p>
       </header>
 
-      <section className="card-grid">
-        {demos.map((demo) => (
-          <Link key={demo.id} to={demo.path} className="topic-card">
-            <span className="topic-icon">{demo.icon}</span>
-            <h2>{demo.title}</h2>
-            <p>{demo.tagline}</p>
-            <span className="topic-cta">Explore →</span>
+      <section className="lesson-grid">
+        {lessons.map((lesson, i) => (
+          <Link key={lesson.id} to={lesson.path} className="lesson-card">
+            <div className="lesson-card-top">
+              <span className="lesson-card-num">{String(i + 1).padStart(2, '0')}</span>
+              <span className="lesson-card-icon">{lesson.icon}</span>
+            </div>
+            <h2>{lesson.title}</h2>
+            <p className="lesson-card-summary">{lesson.summary}</p>
+            <div className="lesson-card-meta">
+              <span className={`badge badge--${lesson.level.toLowerCase()}`}>{lesson.level}</span>
+              <span className="badge badge--muted">{lesson.minutes} min</span>
+            </div>
           </Link>
         ))}
       </section>
 
       <section className="home-note">
-        <h3>Powered by real code</h3>
+        <h3>How these lessons work</h3>
         <p>
-          The filesystem demo is a genuine Unix-like shell over a live in-browser
-          filesystem, and the process demo runs an actual CPU-scheduling
-          simulation. Both execute Python through <code>Pyodide</code>, compiled
-          to WebAssembly — no server required, even on GitHub Pages.
+          Read the short explanation, then use the interactive panel to try it
+          yourself — a real filesystem, a live CPU scheduler, a stack/heap
+          visualizer, and a network request tracer. The "Under the hood" panels go
+          a level deeper when you're ready. Everything runs client-side (Python
+          via WebAssembly), so nothing is faked and nothing needs a server.
         </p>
       </section>
     </div>
