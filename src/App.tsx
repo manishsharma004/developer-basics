@@ -1,6 +1,6 @@
 import { NavLink, Route, Routes } from 'react-router-dom'
-import { demos } from './demos/index.js'
-import Home from './pages/Home.jsx'
+import { demos } from './demos/index.ts'
+import Home from './pages/Home.tsx'
 
 function App() {
   return (
