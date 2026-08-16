@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { demos } from '../demos/index.js'
+import { demos } from '../demos/index.ts'
 
 function Home() {
   return (
@@ -8,8 +8,9 @@ function Home() {
         <h1>Developer Basics</h1>
         <p className="lead">
           Hands-on, interactive explainers for the core concepts every developer
-          should understand. Pick a topic to explore — start with the filesystem,
-          then dive into how processes work.
+          should understand. These aren't slideshows — each demo runs a real
+          simulation in your browser (Python via WebAssembly), so you can poke at
+          it and watch the model respond.
         </p>
       </header>
 
@@ -25,11 +26,12 @@ function Home() {
       </section>
 
       <section className="home-note">
-        <h3>How to use this</h3>
+        <h3>Powered by real code</h3>
         <p>
-          Each demo pairs a short explanation with something you can click. The
-          goal is intuition, not exhaustive detail: poke at the interactive parts
-          and watch how the model responds.
+          The filesystem demo is a genuine Unix-like shell over a live in-browser
+          filesystem, and the process demo runs an actual CPU-scheduling
+          simulation. Both execute Python through <code>Pyodide</code>, compiled
+          to WebAssembly — no server required, even on GitHub Pages.
         </p>
       </section>
     </div>

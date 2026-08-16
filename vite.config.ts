@@ -10,4 +10,11 @@ const base = process.env.BASE_PATH ?? '/'
 export default defineConfig({
   base,
   plugins: [react()],
+  // Pyodide ships large wasm/asm files and its own loader shim; excluding it
+  // from dependency pre-bundling avoids esbuild choking on those assets. The
+  // runtime itself is fetched from the jsDelivr CDN at load time (see
+  // src/lib/pyodide.ts), so nothing extra needs to be bundled.
+  optimizeDeps: {
+    exclude: ['pyodide'],
+  },
 })
