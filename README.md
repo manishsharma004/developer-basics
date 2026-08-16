@@ -1,32 +1,38 @@
 # developer-basics
 
 An interactive React playground for learning **developer basics**. Each topic
-pairs a short explanation with something you can click.
+runs a real simulation in your browser (Python via WebAssembly), so you can
+experiment and watch the model respond — no server required.
 
 Current demos:
 
-- **🗂️ Filesystem** — explore a Unix-like directory tree and inspect the
-  metadata (paths, permissions, owner, size, inode) the OS stores per entry.
-- **⚙️ Process Architecture** — walk a process tree, see a virtual memory
-  layout, and step a process through its lifecycle state machine.
+- **🗂️ Filesystem** — a genuine Unix-like shell (`ls`, `cd`, `cat`, `mkdir`,
+  `tree`, `stat`, redirection…) and a Python REPL, both operating on a real
+  in-browser filesystem, with a live-updating directory tree.
+- **⚙️ Process Architecture** — an editable process table feeding a real CPU
+  scheduling simulation (FCFS, SJF, Round Robin) with an animated Gantt chart
+  and waiting/turnaround metrics.
 
 ## Tech stack
 
-- [React 19](https://react.dev/) + [React Router](https://reactrouter.com/)
+- [React 19](https://react.dev/) + [React Router](https://reactrouter.com/) in **TypeScript**
 - [Vite](https://vite.dev/) for dev server and builds
+- [Pyodide](https://pyodide.org/) (CPython on WebAssembly) powering the interactive simulations
 - [oxlint](https://oxc.rs/docs/guide/usage/linter) for linting
+- [Bun](https://bun.sh/) as the package manager and script runner
 - Deployed to **GitHub Pages** via GitHub Actions
 
 ## Getting started
 
-Requires Node.js 20+.
+Requires [Bun](https://bun.sh/) (`curl -fsSL https://bun.sh/install | bash`).
 
 ```bash
-npm install      # install dependencies
-npm run dev      # start the dev server (http://localhost:5173)
-npm run lint     # run the linter
-npm run build    # production build into dist/
-npm run preview  # preview the production build locally
+bun install        # install dependencies
+bun run dev        # start the dev server (http://localhost:5173)
+bun run lint       # run the linter
+bun run typecheck  # type-check with tsc
+bun run build      # production build into dist/
+bun run preview    # preview the production build locally
 ```
 
 ## Deployment
@@ -39,13 +45,19 @@ to GitHub Pages. Enable Pages in the repo settings with **Source: GitHub Actions
 
 ```
 src/
-  App.jsx              # layout + routing
-  main.jsx             # entry point (HashRouter)
-  pages/Home.jsx       # landing page
+  App.tsx                    # layout + routing
+  main.tsx                   # entry point (HashRouter)
+  pages/Home.tsx             # landing page
+  lib/
+    pyodide.ts               # shared, lazily-loaded Pyodide runtime
+    usePyodide.ts            # React hook exposing load state
+  components/RuntimeBanner.tsx
   demos/
-    index.js           # demo registry (nav + routes)
-    FilesystemDemo.jsx
-    ProcessDemo.jsx
+    index.ts                 # demo registry (nav + routes)
+    FilesystemDemo.tsx       # shell + Python REPL + live tree
+    filesystemProgram.ts     # Python shell implementation
+    ProcessDemo.tsx          # scheduling UI + animated Gantt chart
+    processProgram.ts        # Python CPU-scheduling simulation
 ```
 
-Add a new demo by creating a component and registering it in `src/demos/index.js`.
+Add a new demo by creating a component and registering it in `src/demos/index.ts`.
