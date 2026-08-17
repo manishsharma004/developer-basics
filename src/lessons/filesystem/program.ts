@@ -12,15 +12,20 @@ STATE = {'cwd': '/home/dev'}
 
 HELP = """Available commands:
   pwd                 print working directory
-  ls [-l] [path]      list directory contents
+  ls [-l] [path]      list directory contents (-l shows link count)
   cd [path]           change directory
   cat <file>          print file contents
   mkdir [-p] <dir>    create a directory
   touch <file>        create an empty file / update timestamp
   echo <text> [> f]   print text (or write/append to a file with > / >>)
+  cp <src> <dst>      copy a file
+  mv <src> <dst>      move / rename a file
+  ln <tgt> <name>     create a hard link (same inode)
+  ln -s <tgt> <name>  create a symbolic link
+  wc <file>           count lines, words, characters
   rm [-r] <path>      remove a file or directory
   tree [path]         show the directory tree
-  stat <path>         show inode / size / permissions
+  stat <path>         show inode / links / size / permissions
   clear               clear the terminal
   help                show this help
 Tip: switch to the Python tab to drive the same filesystem with real code."""
@@ -37,16 +42,22 @@ def _resolve(path):
 
 
 def _mode_str(path):
-    st = os.stat(path)
+    is_link = os.path.islink(path)
+    st = os.lstat(path) if is_link else os.stat(path)
     mode = st.st_mode
-    is_dir = statmod.S_ISDIR(mode)
+    if is_link:
+        first = 'l'
+    elif statmod.S_ISDIR(mode):
+        first = 'd'
+    else:
+        first = '-'
     bits = [
         (statmod.S_IRUSR, 'r'), (statmod.S_IWUSR, 'w'), (statmod.S_IXUSR, 'x'),
         (statmod.S_IRGRP, 'r'), (statmod.S_IWGRP, 'w'), (statmod.S_IXGRP, 'x'),
         (statmod.S_IROTH, 'r'), (statmod.S_IWOTH, 'w'), (statmod.S_IXOTH, 'x'),
     ]
     s = ''.join(ch if mode & flag else '-' for flag, ch in bits)
-    return ('d' if is_dir else '-') + s
+    return first + s
 
 
 def _ls(args):
@@ -73,7 +84,8 @@ def _ls(args):
         for e in entries:
             full = os.path.join(base, e)
             suffix = '/' if os.path.isdir(full) else ''
-            lines.append('%s %6d  %s%s' % (_mode_str(full), os.path.getsize(full), e, suffix))
+            nlink = os.lstat(full).st_nlink
+            lines.append('%s %2d %6d  %s%s' % (_mode_str(full), nlink, os.path.getsize(full), e, suffix))
         return '\n'.join(lines)
     return '  '.join(e + ('/' if os.path.isdir(os.path.join(base, e)) else '') for e in entries)
 
@@ -187,12 +199,90 @@ def _stat(args):
     if not os.path.exists(p):
         return 'stat: ' + args[0] + ': No such file or directory'
     st = os.stat(p)
-    kind = 'directory' if os.path.isdir(p) else 'regular file'
+    if os.path.islink(p):
+        kind = 'symbolic link'
+    elif os.path.isdir(p):
+        kind = 'directory'
+    else:
+        kind = 'regular file'
     return ('  File: ' + p + '\n'
             '  Type: ' + kind + '\n'
             '  Size: ' + str(st.st_size) + ' bytes\n'
+            ' Links: ' + str(st.st_nlink) + '\n'
             '  Mode: ' + _mode_str(p) + '\n'
             ' Inode: ' + str(st.st_ino))
+
+
+def _cp(args):
+    files = [a for a in args if not a.startswith('-')]
+    if len(files) < 2:
+        return 'cp: need a source and a destination'
+    dest = files[-1]
+    srcs = files[:-1]
+    dest_path = _resolve(dest)
+    dest_is_dir = os.path.isdir(dest_path)
+    for s in srcs:
+        sp = _resolve(s)
+        if not os.path.exists(sp):
+            return 'cp: ' + s + ': No such file or directory'
+        if os.path.isdir(sp):
+            return 'cp: ' + s + ': is a directory'
+        target = os.path.join(dest_path, os.path.basename(sp)) if dest_is_dir else dest_path
+        shutil.copyfile(sp, target)
+    return ''
+
+
+def _mv(args):
+    files = [a for a in args if not a.startswith('-')]
+    if len(files) < 2:
+        return 'mv: need a source and a destination'
+    dest = files[-1]
+    srcs = files[:-1]
+    dest_path = _resolve(dest)
+    dest_is_dir = os.path.isdir(dest_path)
+    for s in srcs:
+        sp = _resolve(s)
+        if not os.path.exists(sp):
+            return 'mv: ' + s + ': No such file or directory'
+        target = os.path.join(dest_path, os.path.basename(sp)) if dest_is_dir else dest_path
+        shutil.move(sp, target)
+    return ''
+
+
+def _wc(args):
+    files = [a for a in args if not a.startswith('-')]
+    if not files:
+        return 'wc: missing file operand'
+    out = []
+    for f_ in files:
+        p = _resolve(f_)
+        if not os.path.exists(p):
+            out.append('wc: ' + f_ + ': No such file or directory')
+            continue
+        with open(p) as fh:
+            data = fh.read()
+        out.append('%4d %4d %4d %s' % (data.count('\n'), len(data.split()), len(data), f_))
+    return '\n'.join(out)
+
+
+def _ln(args):
+    symbolic = any(a == '-s' for a in args)
+    files = [a for a in args if not a.startswith('-')]
+    if len(files) < 2:
+        return 'ln: need a target and a link name'
+    target, link = files[0], files[1]
+    tp = _resolve(target)
+    lp = _resolve(link)
+    try:
+        if symbolic:
+            os.symlink(tp, lp)
+        else:
+            os.link(tp, lp)
+    except FileExistsError:
+        return 'ln: ' + link + ': File exists'
+    except OSError as e:
+        return 'ln: ' + str(e)
+    return ''
 
 
 def _run(cmd, args):
@@ -214,6 +304,14 @@ def _run(cmd, args):
         return _mkdir(args)
     if cmd == 'touch':
         return _touch(args)
+    if cmd == 'cp':
+        return _cp(args)
+    if cmd == 'mv':
+        return _mv(args)
+    if cmd == 'wc':
+        return _wc(args)
+    if cmd == 'ln':
+        return _ln(args)
     if cmd == 'rm':
         return _rm(args)
     if cmd == 'tree':

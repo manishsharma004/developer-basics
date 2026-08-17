@@ -1,6 +1,21 @@
 import { Lesson } from '../components/Lesson.tsx'
-import { Section, Callout, UnderTheHood, TryThis, Recap } from '../components/blocks.tsx'
+import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { RequestTracer, UrlAnatomy } from './RequestTracer.tsx'
+
+const METHODS = [
+  { m: 'GET', d: 'read a resource (no side effects)' },
+  { m: 'POST', d: 'create something / submit data' },
+  { m: 'PUT', d: 'replace a resource' },
+  { m: 'PATCH', d: 'partially update a resource' },
+  { m: 'DELETE', d: 'remove a resource' },
+]
+
+const STATUS = [
+  { c: '2xx', d: 'success', ex: '200 OK, 201 Created' },
+  { c: '3xx', d: 'redirect', ex: '301 Moved, 304 Not Modified' },
+  { c: '4xx', d: 'your request was wrong', ex: '400 Bad Request, 404 Not Found' },
+  { c: '5xx', d: 'the server failed', ex: '500 Internal Error, 503 Unavailable' },
+]
 
 export default function NetworkLesson() {
   return (
@@ -49,6 +64,48 @@ export default function NetworkLesson() {
         </TryThis>
       </Section>
 
+      <Section id="http" title="Methods & status codes">
+        <p className="prose">
+          Once connected, the client sends an HTTP <strong>method</strong> naming
+          the intent, and the server replies with a <strong>status code</strong>{' '}
+          summarizing the outcome. Learning these two vocabularies makes API work
+          and log-reading far easier.
+        </p>
+        <div className="demo-split">
+          <div className="panel">
+            <div className="panel-title">Common methods</div>
+            <table className="metrics-table">
+              <tbody>
+                {METHODS.map((x) => (
+                  <tr key={x.m}>
+                    <td><code>{x.m}</code></td>
+                    <td>{x.d}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="panel">
+            <div className="panel-title">Status code families</div>
+            <table className="metrics-table">
+              <tbody>
+                {STATUS.map((x) => (
+                  <tr key={x.c}>
+                    <td><code>{x.c}</code></td>
+                    <td>{x.d}<br /><span className="panel-hint">{x.ex}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <Callout kind="tip">
+          A quick triage rule: <code>4xx</code> means "fix your request",{' '}
+          <code>5xx</code> means "the server broke". Only <code>5xx</code> (and
+          timeouts) are truly the server's problem.
+        </Callout>
+      </Section>
+
       <Section id="hood" title="Under the hood">
         <UnderTheHood title="Why each hop is a 'round trip'">
           <p className="prose">
@@ -68,11 +125,49 @@ export default function NetworkLesson() {
             not speeding them up.
           </p>
         </UnderTheHood>
-        <Callout kind="note">
-          The HTTP status code summarizes the outcome: <code>2xx</code> success,{' '}
-          <code>3xx</code> redirect, <code>4xx</code> you sent something wrong,{' '}
-          <code>5xx</code> the server failed.
-        </Callout>
+      </Section>
+
+      <Section id="terms" title="Key terms">
+        <KeyTerms
+          terms={[
+            { term: 'DNS', def: 'The system that resolves a hostname to an IP address.' },
+            { term: 'TCP handshake', def: 'The SYN/SYN-ACK/ACK exchange that establishes a connection.' },
+            { term: 'TLS', def: 'The negotiation that encrypts an HTTPS connection.' },
+            { term: 'round trip (RTT)', def: 'The time for a message to reach the server and come back.' },
+            { term: 'HTTP method', def: 'The verb (GET, POST, …) stating the intent of a request.' },
+            { term: 'status code', def: 'The 3-digit result (2xx/3xx/4xx/5xx) the server returns.' },
+          ]}
+        />
+      </Section>
+
+      <Section id="check" title="Check yourself">
+        <Quiz
+          questions={[
+            {
+              q: 'A page loads slowly on the first visit but is fast afterward. The most likely reason is:',
+              options: [
+                'The server got faster',
+                'DNS, TCP, and TLS setup was paid once, then reused/cached',
+                'The CPU warmed up',
+                'HTTP switched to GET',
+              ],
+              answer: 1,
+              explain: 'Connection setup and caching costs are paid up front; subsequent requests skip them.',
+            },
+            {
+              q: <>You get a <code>404</code>. Whose problem is it, usually?</>,
+              options: ['The server crashed', 'The request asked for something that isn\'t there', 'DNS failed', 'TLS expired'],
+              answer: 1,
+              explain: '4xx codes indicate a problem with the request — here, the resource was not found.',
+            },
+            {
+              q: 'Which action is safe to retry because it should have no side effects?',
+              options: ['POST', 'DELETE', 'GET', 'PATCH'],
+              answer: 2,
+              explain: 'GET is meant to read without side effects, so it is safe to repeat.',
+            },
+          ]}
+        />
       </Section>
 
       <Section id="recap" title="Recap">
@@ -80,7 +175,7 @@ export default function NetworkLesson() {
           items={[
             <>A URL encodes the scheme, host, port, path, and query.</>,
             <>A request flows through <strong>DNS → TCP → TLS → HTTP</strong>, each costing a round trip.</>,
-            <>Latency is dominated by round trips, which physical distance sets.</>,
+            <>Methods state intent (GET/POST/…); status codes state the result (2xx–5xx).</>,
             <>Keep-alive and caching win by <strong>avoiding</strong> hops, not speeding them up.</>,
           ]}
         />

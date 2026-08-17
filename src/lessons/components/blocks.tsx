@@ -76,3 +76,75 @@ export function Recap({ items }: { items: ReactNode[] }) {
     </ul>
   )
 }
+
+export interface QuizQuestion {
+  q: ReactNode
+  options: string[]
+  answer: number
+  explain?: ReactNode
+}
+
+// A lightweight multiple-choice knowledge check. Each question reveals whether
+// the choice was right (with an explanation) as soon as it's picked.
+export function Quiz({ questions }: { questions: QuizQuestion[] }) {
+  const [picked, setPicked] = useState<Record<number, number>>({})
+
+  return (
+    <div className="quiz">
+      {questions.map((question, qi) => {
+        const chosen = picked[qi]
+        const answered = chosen !== undefined
+        return (
+          <div key={qi} className="quiz-q">
+            <div className="quiz-prompt">
+              <span className="quiz-num">Q{qi + 1}</span>
+              <span>{question.q}</span>
+            </div>
+            <div className="quiz-options">
+              {question.options.map((opt, oi) => {
+                const isChosen = chosen === oi
+                const isCorrect = oi === question.answer
+                let cls = 'quiz-option'
+                if (answered && isCorrect) cls += ' quiz-option--correct'
+                else if (answered && isChosen && !isCorrect) cls += ' quiz-option--wrong'
+                return (
+                  <button
+                    key={oi}
+                    className={cls}
+                    disabled={answered}
+                    onClick={() => setPicked((p) => ({ ...p, [qi]: oi }))}
+                  >
+                    <span className="quiz-marker">
+                      {answered && isCorrect ? '✓' : answered && isChosen ? '✗' : String.fromCharCode(65 + oi)}
+                    </span>
+                    {opt}
+                  </button>
+                )
+              })}
+            </div>
+            {answered && (
+              <div className={`quiz-feedback${chosen === question.answer ? ' quiz-feedback--ok' : ' quiz-feedback--no'}`}>
+                {chosen === question.answer ? 'Correct. ' : 'Not quite. '}
+                {question.explain}
+              </div>
+            )}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+// A compact glossary of the key terms introduced in a lesson.
+export function KeyTerms({ terms }: { terms: { term: string; def: ReactNode }[] }) {
+  return (
+    <dl className="key-terms">
+      {terms.map((t) => (
+        <div key={t.term} className="key-term">
+          <dt>{t.term}</dt>
+          <dd>{t.def}</dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
