@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { usePyodide } from '../lib/usePyodide.ts'
-import { RuntimeBanner } from '../components/RuntimeBanner.tsx'
-import { PROCESS_PROGRAM } from './processProgram.ts'
+import { usePyodide } from '../../lib/usePyodide.ts'
+import { RuntimeBanner } from '../../components/RuntimeBanner.tsx'
+import { PROCESS_PROGRAM } from './program.ts'
 
 interface Proc {
   pid: string
@@ -52,7 +52,7 @@ const DEFAULT_PROCS: Proc[] = [
   { pid: 'P4', arrival: 4, burst: 2 },
 ]
 
-export default function ProcessDemo() {
+export function SchedulerPlayground() {
   const { pyodide, phase, message, error } = usePyodide()
   const [ready, setReady] = useState(false)
   const [procs, setProcs] = useState<Proc[]>(DEFAULT_PROCS)
@@ -78,7 +78,6 @@ export default function ProcessDemo() {
     }
   }, [pyodide])
 
-  // Re-run the simulation whenever the inputs change.
   useEffect(() => {
     if (!ready || !simRef.current) return
     const json = simRef.current(JSON.stringify(procs), algo, quantum) as string
@@ -88,7 +87,6 @@ export default function ProcessDemo() {
     setPlaying(false)
   }, [ready, procs, algo, quantum])
 
-  // Discrete time-step animation of the Gantt chart.
   useEffect(() => {
     if (!playing || !result) return
     if (cursor >= result.makespan) {
@@ -130,16 +128,7 @@ export default function ProcessDemo() {
   const tickStep = makespan > 24 ? Math.ceil(makespan / 24) : 1
 
   return (
-    <div className="page">
-      <header className="page-header">
-        <h1>⚙️ Process Architecture</h1>
-        <p className="lead">
-          The OS scheduler decides which ready process runs next on the CPU.
-          Edit the processes, pick an algorithm, and watch a real simulation
-          (computed in Python) lay out the timeline and compute the metrics.
-        </p>
-      </header>
-
+    <>
       <RuntimeBanner phase={phase} message={message} error={error} />
 
       <div className="demo-split demo-split--wide">
@@ -157,24 +146,12 @@ export default function ProcessDemo() {
             <tbody>
               {procs.map((p, i) => (
                 <tr key={p.pid}>
+                  <td><span className="proc-chip" style={{ background: colorFor(p.pid) }}>{p.pid}</span></td>
                   <td>
-                    <span className="proc-chip" style={{ background: colorFor(p.pid) }}>{p.pid}</span>
+                    <input type="number" min={0} value={p.arrival} onChange={(e) => updateProc(i, 'arrival', Number(e.target.value))} />
                   </td>
                   <td>
-                    <input
-                      type="number"
-                      min={0}
-                      value={p.arrival}
-                      onChange={(e) => updateProc(i, 'arrival', Number(e.target.value))}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      min={1}
-                      value={p.burst}
-                      onChange={(e) => updateProc(i, 'burst', Number(e.target.value))}
-                    />
+                    <input type="number" min={1} value={p.burst} onChange={(e) => updateProc(i, 'burst', Number(e.target.value))} />
                   </td>
                   <td>
                     <button className="icon-btn" onClick={() => removeProc(i)} aria-label={`remove ${p.pid}`}>×</button>
@@ -193,11 +170,7 @@ export default function ProcessDemo() {
           <div className="panel-title">Scheduling algorithm</div>
           <div className="algo-picker">
             {ALGOS.map((a) => (
-              <button
-                key={a.id}
-                className={`algo-btn${algo === a.id ? ' algo-btn--active' : ''}`}
-                onClick={() => setAlgo(a.id)}
-              >
+              <button key={a.id} className={`algo-btn${algo === a.id ? ' algo-btn--active' : ''}`} onClick={() => setAlgo(a.id)}>
                 {a.label}
               </button>
             ))}
@@ -207,12 +180,7 @@ export default function ProcessDemo() {
           {algo === 'rr' && (
             <label className="quantum">
               Time quantum
-              <input
-                type="number"
-                min={1}
-                value={quantum}
-                onChange={(e) => setQuantum(Math.max(1, Number(e.target.value)))}
-              />
+              <input type="number" min={1} value={quantum} onChange={(e) => setQuantum(Math.max(1, Number(e.target.value)))} />
             </label>
           )}
 
@@ -246,9 +214,8 @@ export default function ProcessDemo() {
               className="btn"
               disabled={!result || makespan === 0}
               onClick={() => {
-                if (playing) {
-                  setPlaying(false)
-                } else {
+                if (playing) setPlaying(false)
+                else {
                   setCursor(0)
                   setPlaying(true)
                 }
@@ -287,9 +254,7 @@ export default function ProcessDemo() {
             <div className="gantt-axis">
               {ticks.map((t) =>
                 t % tickStep === 0 ? (
-                  <span key={t} className="gantt-tick" style={{ left: `${(t / makespan) * 100}%` }}>
-                    {t}
-                  </span>
+                  <span key={t} className="gantt-tick" style={{ left: `${(t / makespan) * 100}%` }}>{t}</span>
                 ) : null,
               )}
             </div>
@@ -335,28 +300,6 @@ export default function ProcessDemo() {
           </table>
         </div>
       )}
-
-      <section className="concepts">
-        <h3>Key concepts</h3>
-        <div className="concept-grid">
-          <div className="concept">
-            <h4>Arrival &amp; burst</h4>
-            <p>Arrival is when a process becomes ready; burst is how much CPU time it needs.</p>
-          </div>
-          <div className="concept">
-            <h4>Turnaround &amp; waiting</h4>
-            <p>Turnaround = completion − arrival. Waiting = turnaround − burst (time spent ready but not running).</p>
-          </div>
-          <div className="concept">
-            <h4>Preemption</h4>
-            <p>Round Robin preempts after each quantum, so long jobs are sliced — compare its waiting time to FCFS.</p>
-          </div>
-          <div className="concept">
-            <h4>Starvation</h4>
-            <p>SJF minimizes average waiting but can starve long jobs if short ones keep arriving. Try it!</p>
-          </div>
-        </div>
-      </section>
-    </div>
+    </>
   )
 }
