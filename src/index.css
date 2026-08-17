@@ -1951,3 +1951,366 @@ a {
   font-family: ui-monospace, monospace;
   margin-top: 2px;
 }
+
+/* =========================================================================
+   10 more lessons: cli, data structures, algorithms, recursion, sql,
+   regex, errors, caching, crypto, time
+   ========================================================================= */
+
+/* CLI --------------------------------------------------------------------- */
+.cli-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #060b16;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.cli-input {
+  font-family: ui-monospace, monospace;
+}
+
+/* Data structures / hash map ---------------------------------------------- */
+.ds-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.ds-note {
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  font-size: 0.88rem;
+  font-family: ui-monospace, monospace;
+}
+.buckets {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.bucket {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #060b16;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.bucket--hot {
+  border-color: var(--accent);
+  background: rgba(56, 189, 248, 0.08);
+}
+.bucket-idx {
+  font-family: ui-monospace, monospace;
+  color: var(--muted);
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.bucket-entries {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.bucket-empty {
+  color: #334155;
+}
+.bucket-entry {
+  font-family: ui-monospace, monospace;
+  font-size: 0.82rem;
+  background: rgba(52, 211, 153, 0.14);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+.bucket-entry--collision {
+  background: rgba(251, 191, 36, 0.16);
+  border-color: rgba(251, 191, 36, 0.5);
+}
+
+/* Sorting ----------------------------------------------------------------- */
+.algo-big {
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+  opacity: 0.7;
+  margin-left: 4px;
+}
+.sort-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 220px;
+  margin: 16px 0;
+  padding: 8px;
+  background: #060b16;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.bar {
+  flex: 1;
+  background: var(--accent);
+  border-radius: 3px 3px 0 0;
+  min-width: 3px;
+  transition: height 0.08s linear;
+}
+.bar--compare {
+  background: #fbbf24;
+}
+.bar--swap {
+  background: #f472b6;
+}
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.sort-stat {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-family: ui-monospace, monospace;
+}
+
+/* Recursion --------------------------------------------------------------- */
+.rec-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: flex-end;
+  margin-bottom: 12px;
+}
+.rec-stat {
+  color: #cdd7ea;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+}
+.rec-tree {
+  overflow-x: auto;
+  padding: 8px;
+  background: #060b16;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rec-node-wrap {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 6px;
+}
+.rec-node {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: 7px;
+  padding: 4px 9px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  margin-bottom: 4px;
+}
+.rec-node--base {
+  background: rgba(52, 211, 153, 0.12);
+  border-color: rgba(52, 211, 153, 0.4);
+}
+.rec-node--cached {
+  background: rgba(148, 164, 195, 0.1);
+  border-color: var(--border);
+  opacity: 0.75;
+}
+.rec-call {
+  font-weight: 700;
+}
+.rec-res {
+  color: var(--muted);
+}
+.rec-tag {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: rgba(52, 211, 153, 0.2);
+  color: #6ee7b7;
+  padding: 1px 5px;
+  border-radius: 999px;
+}
+.rec-tag--cache {
+  background: rgba(148, 164, 195, 0.2);
+  color: var(--muted);
+}
+.rec-children {
+  display: flex;
+  gap: 6px;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+/* SQL --------------------------------------------------------------------- */
+.sql-result {
+  margin-top: 14px;
+  overflow-x: auto;
+}
+
+/* Regex ------------------------------------------------------------------- */
+.rx-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #060b16;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+}
+.rx-slash {
+  color: var(--accent);
+  font-family: ui-monospace, monospace;
+  font-size: 1.1rem;
+}
+.rx-pattern {
+  font-family: ui-monospace, monospace;
+}
+.rx-flags {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+  color: #cdd7ea;
+}
+.rx-flags label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+.rx-flag-desc {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+.rx-count {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+.rx-text {
+  background: #060b16;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+.rx-match {
+  background: rgba(56, 189, 248, 0.3);
+  color: #e6edf7;
+  border-radius: 3px;
+  padding: 1px 2px;
+}
+
+/* Errors ------------------------------------------------------------------ */
+.error-trace {
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+/* Caching / LRU ----------------------------------------------------------- */
+.lru-keys {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.lru-cache {
+  margin: 14px 0;
+}
+.lru-slots {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.lru-slot {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  font-family: ui-monospace, monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #334155;
+}
+.lru-slot--full {
+  border-style: solid;
+  color: var(--text);
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+.lru-slot--mru {
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+}
+
+/* Crypto ------------------------------------------------------------------ */
+.hash-block {
+  margin: 12px 0;
+}
+.hash-label {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+.hash-hex {
+  display: block;
+  word-break: break-all;
+  background: #060b16;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+.hash-diff {
+  color: #f472b6;
+  font-weight: 700;
+}
+
+/* Time -------------------------------------------------------------------- */
+.time-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.time-buttons {
+  display: flex;
+  gap: 8px;
+}
+.time-iso {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+.time-iso code {
+  font-size: 1rem;
+}
+.time-table td {
+  vertical-align: top;
+}
