@@ -7,58 +7,80 @@ interface Commit {
   branch: string
 }
 
+interface GraphState {
+  commits: Commit[]
+  branches: Record<string, string>
+  head: string
+  nextId: number
+}
+
 const PALETTE = ['#38bdf8', '#a78bfa', '#f472b6', '#34d399', '#fbbf24', '#fb7185']
 
-const INITIAL_COMMITS: Commit[] = [{ id: 'c1', message: 'initial commit', parents: [], branch: 'main' }]
+const INITIAL: GraphState = {
+  commits: [{ id: 'c1', message: 'initial commit', parents: [], branch: 'main' }],
+  branches: { main: 'c1' },
+  head: 'main',
+  nextId: 2,
+}
 
 export function CommitGraph() {
-  const [commits, setCommits] = useState<Commit[]>(INITIAL_COMMITS)
-  const [branches, setBranches] = useState<Record<string, string>>({ main: 'c1' })
-  const [head, setHead] = useState('main')
-  const [nextId, setNextId] = useState(2)
+  // A single state object keeps commits/branches/head/nextId consistent under
+  // React's batching, so rapid clicks can't produce duplicate or lost commits.
+  const [state, setState] = useState<GraphState>(INITIAL)
   const [newBranch, setNewBranch] = useState('feature')
   const [mergeFrom, setMergeFrom] = useState('')
 
+  const { commits, branches, head } = state
+  const branchNames = Object.keys(branches)
+
   const branchColor = useMemo(() => {
-    const names = Object.keys(branches)
-    return (b: string) => PALETTE[Math.max(0, names.indexOf(b)) % PALETTE.length]
-  }, [branches])
+    return (b: string) => PALETTE[Math.max(0, branchNames.indexOf(b)) % PALETTE.length]
+  }, [branchNames])
 
   const commit = () => {
-    const id = `c${nextId}`
-    setCommits((cs) => [...cs, { id, message: `work on ${head}`, parents: [branches[head]], branch: head }])
-    setBranches((b) => ({ ...b, [head]: id }))
-    setNextId((n) => n + 1)
+    setState((s) => {
+      const id = `c${s.nextId}`
+      return {
+        ...s,
+        commits: [...s.commits, { id, message: `work on ${s.head}`, parents: [s.branches[s.head]], branch: s.head }],
+        branches: { ...s.branches, [s.head]: id },
+        nextId: s.nextId + 1,
+      }
+    })
   }
 
   const createBranch = () => {
     const name = newBranch.trim()
-    if (!name || branches[name]) return
-    setBranches((b) => ({ ...b, [name]: branches[head] }))
-    setHead(name)
+    setState((s) => {
+      if (!name || s.branches[name]) return s
+      return { ...s, branches: { ...s.branches, [name]: s.branches[s.head] }, head: name }
+    })
   }
 
+  const checkout = (name: string) => setState((s) => ({ ...s, head: name }))
+
   const merge = () => {
-    if (!mergeFrom || mergeFrom === head) return
-    if (branches[mergeFrom] === branches[head]) return
-    const id = `c${nextId}`
-    setCommits((cs) => [
-      ...cs,
-      { id, message: `merge ${mergeFrom} into ${head}`, parents: [branches[head], branches[mergeFrom]], branch: head },
-    ])
-    setBranches((b) => ({ ...b, [head]: id }))
-    setNextId((n) => n + 1)
+    setState((s) => {
+      if (!mergeFrom || mergeFrom === s.head) return s
+      if (s.branches[mergeFrom] === s.branches[s.head]) return s
+      const id = `c${s.nextId}`
+      return {
+        ...s,
+        commits: [
+          ...s.commits,
+          { id, message: `merge ${mergeFrom} into ${s.head}`, parents: [s.branches[s.head], s.branches[mergeFrom]], branch: s.head },
+        ],
+        branches: { ...s.branches, [s.head]: id },
+        nextId: s.nextId + 1,
+      }
+    })
   }
 
   const reset = () => {
-    setCommits(INITIAL_COMMITS)
-    setBranches({ main: 'c1' })
-    setHead('main')
-    setNextId(2)
+    setState(INITIAL)
     setMergeFrom('')
   }
 
-  const branchNames = Object.keys(branches)
   const labelsFor = (id: string) => branchNames.filter((b) => branches[b] === id)
 
   return (
@@ -77,7 +99,7 @@ export function CommitGraph() {
 
           <div className="git-row">
             <span className="git-label">Checkout</span>
-            <select value={head} onChange={(e) => setHead(e.target.value)}>
+            <select value={head} onChange={(e) => checkout(e.target.value)}>
               {branchNames.map((b) => (
                 <option key={b} value={b}>{b}</option>
               ))}
