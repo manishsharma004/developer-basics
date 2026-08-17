@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
-import { usePyodide } from '../lib/usePyodide.ts'
-import { RuntimeBanner } from '../components/RuntimeBanner.tsx'
-import { FILESYSTEM_PROGRAM } from './filesystemProgram.ts'
+import { usePyodide } from '../../lib/usePyodide.ts'
+import { RuntimeBanner } from '../../components/RuntimeBanner.tsx'
+import { FILESYSTEM_PROGRAM } from './program.ts'
 
 interface FsNode {
   name: string
@@ -27,7 +27,7 @@ interface Line {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PyCallable = (...args: any[]) => any
 
-const QUICK_COMMANDS = ['ls -l', 'tree', 'cd projects', 'cat README.md', 'stat notes']
+const QUICK_COMMANDS = ['ls -l', 'tree', 'cd projects', 'cat README.md', 'stat README.md']
 
 function TreeView({ node, cwd, onOpen, depth = 0 }: {
   node: FsNode
@@ -59,7 +59,11 @@ function TreeView({ node, cwd, onOpen, depth = 0 }: {
   )
 }
 
-export default function FilesystemDemo() {
+function shorten(path: string): string {
+  return path.replace(/^\/home\/dev/, '~')
+}
+
+export function FilesystemPlayground() {
   const { pyodide, phase, message, error } = usePyodide()
   const [ready, setReady] = useState(false)
   const [mode, setMode] = useState<'shell' | 'python'>('shell')
@@ -91,7 +95,7 @@ export default function FilesystemDemo() {
         {
           kind: 'system',
           text:
-            "This shell runs on a REAL filesystem, powered by Python running in your browser.\n" +
+            "This shell runs on a REAL filesystem, powered by Python in your browser.\n" +
             "Type 'help' for commands, click entries in the tree, or switch to the Python tab.",
         },
       ])
@@ -128,10 +132,8 @@ export default function FilesystemDemo() {
     setInput('')
     if (!cmd) return
 
-    if (cmd) {
-      cmdHistory.current.push(cmd)
-      histIdx.current = cmdHistory.current.length
-    }
+    cmdHistory.current.push(cmd)
+    histIdx.current = cmdHistory.current.length
 
     setBusy(true)
     try {
@@ -171,32 +173,16 @@ export default function FilesystemDemo() {
     line.mode === 'python' ? '>>>' : `dev:${shorten(line.cwd ?? '/home/dev')}$`
 
   return (
-    <div className="page">
-      <header className="page-header">
-        <h1>🗂️ Filesystem</h1>
-        <p className="lead">
-          A filesystem is a tree of directories and files. Below is a genuine
-          one running inside your browser via Python (Pyodide) — every command
-          you type really creates, reads, and deletes files, and the tree on the
-          right updates live.
-        </p>
-      </header>
-
+    <>
       <RuntimeBanner phase={phase} message={message} error={error} />
 
       <div className="demo-split demo-split--wide">
         <div className="panel panel--terminal">
           <div className="terminal-tabs">
-            <button
-              className={`tab${mode === 'shell' ? ' tab--active' : ''}`}
-              onClick={() => setMode('shell')}
-            >
+            <button className={`tab${mode === 'shell' ? ' tab--active' : ''}`} onClick={() => setMode('shell')}>
               Shell
             </button>
-            <button
-              className={`tab${mode === 'python' ? ' tab--active' : ''}`}
-              onClick={() => setMode('python')}
-            >
+            <button className={`tab${mode === 'python' ? ' tab--active' : ''}`} onClick={() => setMode('python')}>
               Python
             </button>
             <span className="terminal-hint">
@@ -275,35 +261,6 @@ export default function FilesystemDemo() {
           </ul>
         </div>
       </div>
-
-      <section className="concepts">
-        <h3>Key concepts</h3>
-        <div className="concept-grid">
-          <div className="concept">
-            <h4>Hierarchy &amp; the root</h4>
-            <p>Everything descends from a single root, <code>/</code>. Directories nest to form a tree.</p>
-          </div>
-          <div className="concept">
-            <h4>Absolute vs. relative paths</h4>
-            <p>
-              <code>cd /home/dev</code> is absolute; <code>cd projects</code> is
-              relative to the current directory. Try both.
-            </p>
-          </div>
-          <div className="concept">
-            <h4>Inodes</h4>
-            <p>Run <code>stat README.md</code> — the inode number is the file's real identity; the name is just a directory entry.</p>
-          </div>
-          <div className="concept">
-            <h4>Permissions</h4>
-            <p>The <code>rwx</code> triples in <code>ls -l</code> control read/write/execute for owner, group, and others.</p>
-          </div>
-        </div>
-      </section>
-    </div>
+    </>
   )
-}
-
-function shorten(path: string): string {
-  return path.replace(/^\/home\/dev/, '~')
 }
