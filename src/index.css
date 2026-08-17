@@ -1595,3 +1595,359 @@ a {
     grid-template-columns: 110px 1fr;
   }
 }
+
+/* =========================================================================
+   Expanded knowledge: quiz, glossary, data, concurrency, git
+   ========================================================================= */
+
+/* Quiz -------------------------------------------------------------------- */
+.quiz {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.quiz-q {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  background: var(--panel);
+}
+.quiz-prompt {
+  display: flex;
+  gap: 10px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+.quiz-num {
+  color: var(--accent);
+  font-family: ui-monospace, monospace;
+  flex-shrink: 0;
+}
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  background: #060b16;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 9px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 0.92rem;
+  transition: border-color 0.12s, background 0.12s;
+}
+.quiz-option:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+.quiz-option:disabled {
+  cursor: default;
+}
+.quiz-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.quiz-option--correct {
+  border-color: rgba(52, 211, 153, 0.6);
+  background: rgba(52, 211, 153, 0.12);
+}
+.quiz-option--correct .quiz-marker {
+  border-color: #6ee7b7;
+  color: #6ee7b7;
+}
+.quiz-option--wrong {
+  border-color: rgba(248, 113, 113, 0.6);
+  background: rgba(248, 113, 113, 0.12);
+}
+.quiz-option--wrong .quiz-marker {
+  border-color: #fca5a5;
+  color: #fca5a5;
+}
+.quiz-feedback {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  padding: 10px 12px;
+  border-radius: 9px;
+}
+.quiz-feedback--ok {
+  background: rgba(52, 211, 153, 0.1);
+  color: #a7f3d0;
+}
+.quiz-feedback--no {
+  background: rgba(251, 191, 36, 0.1);
+  color: #fde68a;
+}
+
+/* Key terms --------------------------------------------------------------- */
+.key-terms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+.key-term {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.key-term dt {
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.key-term dd {
+  margin: 0;
+  color: #cdd7ea;
+  line-height: 1.5;
+  font-size: 0.92rem;
+}
+
+/* Data & encoding --------------------------------------------------------- */
+.conv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+.conv-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.conv-field input {
+  background: #060b16;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 9px 11px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.95rem;
+}
+.conv-text {
+  width: 100%;
+  background: #060b16;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 1.05rem;
+  margin-bottom: 12px;
+}
+.byte-view {
+  margin-top: 14px;
+}
+.byte-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.byte-chip {
+  font-family: ui-monospace, monospace;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: 6px;
+  padding: 6px 8px;
+  letter-spacing: 2px;
+}
+.text-stats {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.cp-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cp-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: #060b16;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  min-width: 64px;
+}
+.cp-char {
+  font-size: 1.3rem;
+}
+.cp-code {
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+  color: var(--accent);
+}
+.cp-bytes {
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+/* Concurrency race -------------------------------------------------------- */
+.race-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: flex-end;
+  margin-bottom: 18px;
+}
+.lock-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #cdd7ea;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.race-nums {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.race-stat {
+  background: #060b16;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.race-ok {
+  color: #6ee7b7;
+}
+.race-bad {
+  color: #fca5a5;
+}
+.race-verdict {
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.race-verdict--ok {
+  background: rgba(52, 211, 153, 0.1);
+  color: #a7f3d0;
+  border: 1px solid rgba(52, 211, 153, 0.4);
+}
+.race-verdict--bad {
+  background: rgba(248, 113, 113, 0.1);
+  color: #fca5a5;
+  border: 1px solid rgba(248, 113, 113, 0.4);
+}
+
+/* Git commit graph -------------------------------------------------------- */
+.git-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+.git-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.git-row input,
+.git-row select {
+  background: #060b16;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+}
+.git-label {
+  color: var(--muted);
+  font-size: 0.85rem;
+  min-width: 64px;
+}
+.commit-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+.commit-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.commit-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.04);
+}
+.commit-info {
+  flex: 1;
+  min-width: 0;
+  background: #060b16;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.commit-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.commit-id {
+  font-weight: 700;
+}
+.commit-merge {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(167, 139, 250, 0.2);
+  color: #c4b5fd;
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+.branch-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  border: 1px solid;
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+.commit-msg {
+  color: #cdd7ea;
+  margin-top: 2px;
+}
+.commit-parents {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-family: ui-monospace, monospace;
+  margin-top: 2px;
+}

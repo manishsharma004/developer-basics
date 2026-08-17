@@ -1,5 +1,5 @@
 import { Lesson } from '../components/Lesson.tsx'
-import { Section, Callout, UnderTheHood, TryThis, Recap } from '../components/blocks.tsx'
+import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { SchedulerPlayground } from './SchedulerPlayground.tsx'
 
 const STATES = [
@@ -68,6 +68,33 @@ export default function ProcessLesson() {
         </TryThis>
       </Section>
 
+      <Section id="lifecycle" title="How processes start">
+        <p className="prose">
+          On Unix, new processes are born in a distinctive two-step dance that's
+          worth knowing because it explains parent/child relationships, shells, and
+          background jobs.
+        </p>
+        <ul className="prose-list">
+          <li>
+            <strong>fork()</strong> — a process clones itself, producing a nearly
+            identical child. Both continue from the same point; only the return
+            value differs, so each knows whether it's the parent or child.
+          </li>
+          <li>
+            <strong>exec()</strong> — the child replaces its own program image with
+            a new one (e.g. your shell forks, then the child execs <code>ls</code>).
+          </li>
+          <li>
+            <strong>wait()</strong> — the parent waits for the child to finish and
+            collects its exit code.
+          </li>
+        </ul>
+        <Callout kind="tip">
+          Running a command with <code>&amp;</code> in a shell tells it{' '}
+          <em>not</em> to <code>wait()</code> — that's a background job.
+        </Callout>
+      </Section>
+
       <Section id="hood" title="Under the hood">
         <UnderTheHood title="What a context switch actually costs">
           <p className="prose">
@@ -78,16 +105,78 @@ export default function ProcessLesson() {
             up. That trade-off is exactly why quantum size matters.
           </p>
         </UnderTheHood>
+        <UnderTheHood title="Processes vs. threads">
+          <p className="prose">
+            A process has its own private memory. A <strong>thread</strong> is a
+            lighter unit of execution that lives <em>inside</em> a process and
+            shares its memory with sibling threads. Threads are cheaper to create
+            and communicate, but sharing memory is exactly what makes them prone to
+            race conditions (the next lesson).
+          </p>
+        </UnderTheHood>
         <UnderTheHood title="Preemption, fairness, and starvation">
           <p className="prose">
             <strong>FCFS</strong> never interrupts a running job, so one long job
             can make everyone wait (the "convoy effect"). <strong>SJF</strong>{' '}
-            gives the best average waiting time but can <em>starve</em> long jobs
-            if short ones keep arriving. <strong>Round Robin</strong> preempts
-            after a fixed quantum, trading a little throughput for fairness and
-            responsiveness — which is why interactive systems favor it.
+            gives the best average waiting time but can <em>starve</em> long jobs.{' '}
+            <strong>Round Robin</strong> preempts after a fixed quantum, trading a
+            little throughput for fairness and responsiveness — which is why
+            interactive systems favor it.
           </p>
         </UnderTheHood>
+      </Section>
+
+      <Section id="terms" title="Key terms">
+        <KeyTerms
+          terms={[
+            { term: 'process', def: 'A running program with its own memory and OS-tracked state.' },
+            { term: 'thread', def: 'A unit of execution inside a process that shares the process memory.' },
+            { term: 'scheduler', def: 'The OS component that decides which ready process runs next.' },
+            { term: 'context switch', def: "Saving one process's CPU state and loading another's." },
+            { term: 'burst', def: 'The amount of CPU time a process needs before it blocks or finishes.' },
+            { term: 'preemption', def: 'Interrupting a running process so another can run.' },
+          ]}
+        />
+      </Section>
+
+      <Section id="check" title="Check yourself">
+        <Quiz
+          questions={[
+            {
+              q: 'Why does Round Robin use context switches more than FCFS?',
+              options: [
+                'It runs processes in parallel',
+                'It preempts each process after a fixed quantum',
+                'It never lets a process finish',
+                'It uses more memory',
+              ],
+              answer: 1,
+              explain: 'Round Robin slices time into quanta and switches at each one, so more switches occur.',
+            },
+            {
+              q: 'What is the main difference between a thread and a process?',
+              options: [
+                'Threads are always faster',
+                'Threads share memory within a process; processes have separate memory',
+                'Processes cannot do I/O',
+                'There is no difference',
+              ],
+              answer: 1,
+              explain: 'Threads live inside a process and share its address space; processes are isolated.',
+            },
+            {
+              q: <>After <code>fork()</code>, how does the child know it is the child?</>,
+              options: [
+                'It has a different program',
+                'fork() returns 0 in the child and the child PID in the parent',
+                'It starts from main() again',
+                'It cannot know',
+              ],
+              answer: 1,
+              explain: 'fork() returns 0 to the child and the new PID to the parent, so each can branch.',
+            },
+          ]}
+        />
       </Section>
 
       <Section id="recap" title="Recap">
@@ -95,8 +184,8 @@ export default function ProcessLesson() {
           items={[
             <>A process is a running program plus its OS-tracked state.</>,
             <>Processes cycle through <strong>ready → running → waiting</strong> as they share the CPU.</>,
-            <>The scheduler picks who runs next; the strategy changes fairness and average wait.</>,
-            <>Switching between processes costs a little (a <strong>context switch</strong>), so quantum size is a trade-off.</>,
+            <>New processes are made with <strong>fork()</strong> then <strong>exec()</strong>.</>,
+            <>The scheduler picks who runs next; switching costs a <strong>context switch</strong>, so quantum size is a trade-off.</>,
           ]}
         />
       </Section>

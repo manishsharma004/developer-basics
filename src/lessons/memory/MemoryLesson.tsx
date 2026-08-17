@@ -1,5 +1,5 @@
 import { Lesson } from '../components/Lesson.tsx'
-import { Section, Callout, UnderTheHood, TryThis, Recap } from '../components/blocks.tsx'
+import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { ReferencePlayground, StackHeapVisualizer } from './MemoryPlayground.tsx'
 
 export default function MemoryLesson() {
@@ -47,9 +47,33 @@ export default function MemoryLesson() {
           Press <strong>Call function</strong> until you hit the limit — that's a{' '}
           <em>stack overflow</em> (what runaway recursion causes). Then allocate a
           couple of heap objects and use <strong>Point top frame → newest</strong>;
-          notice objects nothing points to are labeled "garbage" — exactly what a
-          garbage collector reclaims.
+          notice objects nothing points to are labeled "garbage".
         </TryThis>
+      </Section>
+
+      <Section id="gc" title="Garbage & leaks">
+        <p className="prose">
+          Once nothing references a heap object, it can never be used again — it's{' '}
+          <strong>garbage</strong>. Managed languages (Python, JavaScript, Go, Java)
+          run a <strong>garbage collector</strong> that reclaims such objects
+          automatically. But "automatic" doesn't mean "leak-proof".
+        </p>
+        <ul className="prose-list">
+          <li>
+            A <strong>memory leak</strong> in a GC language happens when you keep
+            references you no longer need — e.g. appending to a global list forever,
+            or a cache that never evicts. The GC can't free what's still reachable.
+          </li>
+          <li>
+            In manual-memory languages (C/C++), a leak is forgetting to{' '}
+            <code>free()</code>; a <em>use-after-free</em> is freeing too early.
+          </li>
+        </ul>
+        <Callout kind="warning" title="Watch for">
+          Growing memory over time (rising RSS) usually means references are piling
+          up somewhere. Look for unbounded collections, caches, or event listeners
+          that are never removed.
+        </Callout>
       </Section>
 
       <Section id="hood" title="Under the hood">
@@ -70,11 +94,54 @@ export default function MemoryLesson() {
             your process's mappings, not just installed RAM.
           </p>
         </UnderTheHood>
-        <Callout kind="note">
-          Languages with a garbage collector (Python, JS, Go) free heap objects for
-          you once nothing references them. In C/C++/Rust you manage or track that
-          lifetime yourself.
-        </Callout>
+      </Section>
+
+      <Section id="terms" title="Key terms">
+        <KeyTerms
+          terms={[
+            { term: 'reference', def: 'A pointer from a variable to an object; assignment usually copies the reference.' },
+            { term: 'stack', def: 'Fast, last-in-first-out memory holding call frames and locals.' },
+            { term: 'heap', def: 'Flexible memory for objects that outlive a single call.' },
+            { term: 'garbage collection', def: 'Automatic reclamation of objects nothing references anymore.' },
+            { term: 'memory leak', def: 'Holding references you no longer need, so memory grows unbounded.' },
+            { term: 'virtual memory', def: "Each process's private address space, mapped to physical RAM in pages." },
+          ]}
+        />
+      </Section>
+
+      <Section id="check" title="Check yourself">
+        <Quiz
+          questions={[
+            {
+              q: <>After <code>b = a</code> where <code>a</code> is a list, you do <code>b.append(9)</code>. What happens to <code>a</code>?</>,
+              options: ['a is unchanged', 'a also gets 9 appended', 'an error occurs', 'a becomes a copy'],
+              answer: 1,
+              explain: 'b and a reference the same list, so mutating through b is visible via a.',
+            },
+            {
+              q: 'What typically causes a stack overflow?',
+              options: [
+                'Allocating too many heap objects',
+                'Unbounded or very deep recursion',
+                'A memory leak',
+                'Using the garbage collector',
+              ],
+              answer: 1,
+              explain: 'Each call adds a frame; too many nested calls exhaust the limited stack.',
+            },
+            {
+              q: 'Can a garbage-collected language still leak memory?',
+              options: [
+                'No, never',
+                'Yes — if you keep references you no longer need',
+                'Only on Windows',
+                'Only in C',
+              ],
+              answer: 1,
+              explain: "The GC only frees unreachable objects; reachable-but-unneeded objects still accumulate.",
+            },
+          ]}
+        />
       </Section>
 
       <Section id="recap" title="Recap">
@@ -82,8 +149,8 @@ export default function MemoryLesson() {
           items={[
             <>Variables hold <strong>references</strong>, so aliases can share one object.</>,
             <><code>is</code> compares identity; <code>==</code> compares value.</>,
-            <>The <strong>stack</strong> holds call frames and locals; the <strong>heap</strong> holds longer-lived objects.</>,
-            <>Unbounded recursion overflows the stack; unreferenced heap objects become garbage.</>,
+            <>The <strong>stack</strong> holds call frames; the <strong>heap</strong> holds longer-lived objects.</>,
+            <>GC frees unreachable objects, but keeping unneeded references still leaks.</>,
           ]}
         />
       </Section>
