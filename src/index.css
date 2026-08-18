@@ -2314,3 +2314,178 @@ a {
 .time-table td {
   vertical-align: top;
 }
+
+/* =========================================================================
+   Experiences: Student / Teacher
+   ========================================================================= */
+
+/* Teacher theme: shift the accent so the whole UI feels different. */
+.app--teacher {
+  --accent: #f59e0b;
+  --accent-2: #34d399;
+}
+
+/* Experience switcher ----------------------------------------------------- */
+.exp-switch {
+  display: flex;
+  gap: 4px;
+  background: #0b1120;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  margin: 0 6px 18px;
+}
+.exp-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  border-radius: 7px;
+  padding: 7px 8px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.exp-btn--active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #06101f;
+}
+
+/* Grouped teacher nav ----------------------------------------------------- */
+.nav-group {
+  margin-top: 10px;
+}
+.nav-group-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  padding: 6px 12px 2px;
+}
+
+/* Teacher-mode ribbon ----------------------------------------------------- */
+.mode-ribbon {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(52, 211, 153, 0.18));
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fcd34d;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 22px;
+}
+
+.badge--teacher-tag {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fcd34d;
+}
+
+/* Teacher home: tips + curriculum table ----------------------------------- */
+.teacher-tips {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.teacher-tip {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  color: #cdd7ea;
+  line-height: 1.5;
+  font-size: 0.92rem;
+}
+.teacher-tip-icon {
+  font-size: 1.3rem;
+}
+
+.curriculum-group {
+  margin-bottom: 28px;
+}
+.curriculum-heading {
+  font-size: 1.2rem;
+  margin: 0 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.curriculum-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.curriculum-table th {
+  text-align: left;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.curriculum-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid rgba(38, 52, 80, 0.5);
+  vertical-align: top;
+}
+.ct-num {
+  font-family: ui-monospace, monospace;
+  color: var(--muted);
+}
+.ct-title {
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+}
+.ct-title:hover {
+  color: var(--accent);
+}
+.ct-tagline {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-top: 2px;
+}
+.ct-lab {
+  color: var(--muted);
+  font-size: 0.85rem;
+  max-width: 260px;
+}
+
+/* Teacher lesson plan ----------------------------------------------------- */
+.plan-list {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+.plan-list li {
+  position: relative;
+  padding: 8px 0 8px 28px;
+  color: #cdd7ea;
+  line-height: 1.6;
+  border-bottom: 1px solid rgba(38, 52, 80, 0.4);
+}
+.plan-list li::before {
+  content: '•';
+  position: absolute;
+  left: 8px;
+  color: var(--accent);
+  font-weight: 700;
+}
+.plan-list--check li::before { content: '✓'; color: #6ee7b7; }
+.plan-list--warn li::before { content: '⚠'; color: #fcd34d; }
+.plan-list--ask li::before { content: '?'; color: #7dd3fc; font-weight: 800; }
+
+.plan-lab {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
