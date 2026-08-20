@@ -10,7 +10,7 @@ import { useTheme } from './theme/ThemeContext.tsx'
 import { THEMES } from './theme/themes.ts'
 import { FeedbackDialog } from './components/FeedbackDialog.tsx'
 
-const LEVELS: Level[] = ['Beginner', 'Intermediate']
+const LEVELS: Level[] = ['Beginner', 'Intermediate', 'Advanced']
 const COLLAPSE_KEY = 'devbasics.sidebarCollapsed'
 
 function App() {

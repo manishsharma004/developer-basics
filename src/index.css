@@ -2976,3 +2976,395 @@ a {
   justify-content: flex-end;
   gap: 10px;
 }
+
+/* =========================================================================
+   Extended theme catalog (popular editor/IDE palettes)
+   Code surfaces stay dark via --code-bg in every theme for legibility.
+   ========================================================================= */
+[data-theme='solarized-dark'] {
+  --bg: #002b36; --bg-elev: #01313d; --panel: #073642; --panel-2: #0a4553;
+  --border: #145d6b; --text: #eee8d5; --muted: #93a1a1; --accent: #268bd2;
+  --accent-2: #2aa198; --code-bg: #00212b; --rail-bg: #01313d; --bg-glow: #073642;
+  --prose: #cfe3df; color-scheme: dark;
+}
+[data-theme='solarized-light'] {
+  --bg: #fdf6e3; --bg-elev: #fbf1d3; --panel: #fbf1d3; --panel-2: #eee8d5;
+  --border: #ddd6c1; --text: #073642; --muted: #657b83; --accent: #268bd2;
+  --accent-2: #b58900; --code-bg: #002b36; --rail-bg: #eee8d5; --bg-glow: #eee8d5;
+  --prose: #3b4b52; color-scheme: light;
+}
+[data-theme='monokai'] {
+  --bg: #232420; --bg-elev: #1f201c; --panel: #2d2e28; --panel-2: #35362f;
+  --border: #46473f; --text: #f8f8f2; --muted: #a6a692; --accent: #a6e22e;
+  --accent-2: #fd971f; --code-bg: #1b1c18; --rail-bg: #1f201c; --bg-glow: #35362f;
+  --prose: #e6e6dc; color-scheme: dark;
+}
+[data-theme='one-dark'] {
+  --bg: #282c34; --bg-elev: #23272e; --panel: #2f343d; --panel-2: #363c46;
+  --border: #3e4451; --text: #dcdfe4; --muted: #9098a6; --accent: #61afef;
+  --accent-2: #c678dd; --code-bg: #21252b; --rail-bg: #23272e; --bg-glow: #3e4451;
+  --prose: #cdd3de; color-scheme: dark;
+}
+[data-theme='one-light'] {
+  --bg: #fafafa; --bg-elev: #ffffff; --panel: #ffffff; --panel-2: #eef0f2;
+  --border: #dcdfe4; --text: #2a2f38; --muted: #6b7280; --accent: #4078f2;
+  --accent-2: #a626a4; --code-bg: #21252b; --rail-bg: #eef0f2; --bg-glow: #eaecef;
+  --prose: #3a4048; color-scheme: light;
+}
+[data-theme='gruvbox-dark'] {
+  --bg: #282828; --bg-elev: #232323; --panel: #32302f; --panel-2: #3c3836;
+  --border: #504945; --text: #ebdbb2; --muted: #a89984; --accent: #fabd2f;
+  --accent-2: #fe8019; --code-bg: #1d2021; --rail-bg: #232323; --bg-glow: #3c3836;
+  --prose: #e2d3ad; color-scheme: dark;
+}
+[data-theme='gruvbox-light'] {
+  --bg: #fbf1c7; --bg-elev: #f7edc0; --panel: #f9f5d7; --panel-2: #ebdbb2;
+  --border: #d5c4a1; --text: #3c3836; --muted: #7c6f64; --accent: #b57614;
+  --accent-2: #af3a03; --code-bg: #1d2021; --rail-bg: #ebdbb2; --bg-glow: #ebdbb2;
+  --prose: #504945; color-scheme: light;
+}
+[data-theme='tokyo-night'] {
+  --bg: #1a1b26; --bg-elev: #16161e; --panel: #1f2335; --panel-2: #24283b;
+  --border: #2f334d; --text: #c0caf5; --muted: #7f88b3; --accent: #7aa2f7;
+  --accent-2: #bb9af7; --code-bg: #16161e; --rail-bg: #16161e; --bg-glow: #24283b;
+  --prose: #b4bdea; color-scheme: dark;
+}
+[data-theme='catppuccin-mocha'] {
+  --bg: #1e1e2e; --bg-elev: #181825; --panel: #26263a; --panel-2: #302f44;
+  --border: #3d3c54; --text: #cdd6f4; --muted: #9399b2; --accent: #cba6f7;
+  --accent-2: #89b4fa; --code-bg: #181825; --rail-bg: #181825; --bg-glow: #302f44;
+  --prose: #c2cbef; color-scheme: dark;
+}
+[data-theme='catppuccin-latte'] {
+  --bg: #eff1f5; --bg-elev: #ffffff; --panel: #ffffff; --panel-2: #e6e9ef;
+  --border: #ccd0da; --text: #4c4f69; --muted: #6c6f85; --accent: #8839ef;
+  --accent-2: #1e66f5; --code-bg: #1e1e2e; --rail-bg: #e6e9ef; --bg-glow: #dce0e8;
+  --prose: #4c4f69; color-scheme: light;
+}
+[data-theme='github-dark'] {
+  --bg: #0d1117; --bg-elev: #010409; --panel: #161b22; --panel-2: #1c2129;
+  --border: #30363d; --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff;
+  --accent-2: #d2a8ff; --code-bg: #010409; --rail-bg: #010409; --bg-glow: #161b22;
+  --prose: #d5dde6; color-scheme: dark;
+}
+[data-theme='github-light'] {
+  --bg: #ffffff; --bg-elev: #ffffff; --panel: #f6f8fa; --panel-2: #eef1f4;
+  --border: #d0d7de; --text: #1f2328; --muted: #636c76; --accent: #0969da;
+  --accent-2: #8250df; --code-bg: #0d1117; --rail-bg: #f6f8fa; --bg-glow: #eef1f4;
+  --prose: #30363d; color-scheme: light;
+}
+[data-theme='ayu-dark'] {
+  --bg: #0b0e14; --bg-elev: #090c12; --panel: #131721; --panel-2: #1b202b;
+  --border: #2a3140; --text: #bfbdb6; --muted: #8a8f99; --accent: #ffb454;
+  --accent-2: #59c2ff; --code-bg: #090c12; --rail-bg: #090c12; --bg-glow: #1b202b;
+  --prose: #c6c4bc; color-scheme: dark;
+}
+[data-theme='ayu-light'] {
+  --bg: #fcfcfc; --bg-elev: #ffffff; --panel: #ffffff; --panel-2: #f0f0f0;
+  --border: #e0e0e0; --text: #5c6166; --muted: #8a9199; --accent: #ff9940;
+  --accent-2: #55b4d4; --code-bg: #0b0e14; --rail-bg: #f0f0f0; --bg-glow: #f0f0f0;
+  --prose: #4c5257; color-scheme: light;
+}
+[data-theme='rose-pine'] {
+  --bg: #191724; --bg-elev: #16141f; --panel: #1f1d2e; --panel-2: #26233a;
+  --border: #333150; --text: #e0def4; --muted: #908caa; --accent: #c4a7e7;
+  --accent-2: #ebbcba; --code-bg: #16141f; --rail-bg: #16141f; --bg-glow: #26233a;
+  --prose: #d5d3ee; color-scheme: dark;
+}
+[data-theme='night-owl'] {
+  --bg: #011627; --bg-elev: #010f1c; --panel: #0b2942; --panel-2: #0e3350;
+  --border: #1d3b53; --text: #d6deeb; --muted: #7e8aa0; --accent: #82aaff;
+  --accent-2: #c792ea; --code-bg: #010f1c; --rail-bg: #010f1c; --bg-glow: #0e3350;
+  --prose: #cbd5ea; color-scheme: dark;
+}
+[data-theme='synthwave'] {
+  --bg: #241b2f; --bg-elev: #1e1729; --panel: #2c2340; --panel-2: #34294a;
+  --border: #45375f; --text: #f7f2ff; --muted: #b39ddb; --accent: #ff7edb;
+  --accent-2: #36f9f6; --code-bg: #1a1426; --rail-bg: #1e1729; --bg-glow: #34294a;
+  --prose: #e9defc; color-scheme: dark;
+}
+[data-theme='cobalt'] {
+  --bg: #193549; --bg-elev: #15304a; --panel: #1c405e; --panel-2: #234c6d;
+  --border: #2f5f85; --text: #e6f0ff; --muted: #94b8d6; --accent: #ffc600;
+  --accent-2: #ff9d00; --code-bg: #12283a; --rail-bg: #15304a; --bg-glow: #234c6d;
+  --prose: #d6e6f7; color-scheme: dark;
+}
+[data-theme='palenight'] {
+  --bg: #292d3e; --bg-elev: #242737; --panel: #323750; --panel-2: #3a3f5c;
+  --border: #444a6b; --text: #d0d3e0; --muted: #9aa0bd; --accent: #c792ea;
+  --accent-2: #82aaff; --code-bg: #222533; --rail-bg: #242737; --bg-glow: #3a3f5c;
+  --prose: #c6c9da; color-scheme: dark;
+}
+
+/* Scrollable theme picker for the large catalog. */
+.theme-swatches {
+  max-height: 92px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+/* =========================================================================
+   Low-level design lessons: compute, queues, classes, oop, patterns
+   ========================================================================= */
+.badge--advanced {
+  background: rgba(248, 113, 113, 0.2);
+  color: #fca5a5;
+}
+
+/* Compute / scaling ------------------------------------------------------- */
+.instance-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 14px 0;
+}
+.instance {
+  width: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.instance-top {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.instance-bar {
+  width: 34px;
+  height: 80px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: var(--code-bg);
+}
+.instance-fill {
+  width: 100%;
+  background: var(--accent);
+  transition: height 0.2s ease;
+}
+.instance-fill--hot {
+  background: #fb7185;
+}
+.instance-pct {
+  font-size: 0.72rem;
+  font-family: ui-monospace, monospace;
+  color: var(--muted);
+}
+
+/* Queues ------------------------------------------------------------------ */
+.queue-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.queue-status {
+  font-size: 0.82rem;
+  font-family: ui-monospace, monospace;
+}
+.queue-status--growing { color: #fca5a5; }
+.queue-status--draining { color: #6ee7b7; }
+.queue-status--balanced { color: var(--muted); }
+.queue-flow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+.queue-end {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  flex-direction: column;
+  font-size: 1.2rem;
+}
+.queue-end-label {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.queue-pipe {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-wrap: wrap;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px;
+  min-height: 44px;
+}
+.queue-msg {
+  width: 10px;
+  height: 16px;
+  border-radius: 2px;
+  background: transparent;
+  border: 1px solid var(--border);
+}
+.queue-msg--on {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.queue-overflow {
+  color: #fca5a5;
+  font-family: ui-monospace, monospace;
+  font-size: 0.8rem;
+  margin-left: 4px;
+}
+
+/* Classes / objects ------------------------------------------------------- */
+.class-src {
+  font-size: 0.8rem;
+}
+.class-create {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  margin: 12px 0;
+}
+.obj-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.obj-card {
+  border: 1px solid var(--border);
+  border-left-width: 4px;
+  border-radius: 10px;
+  padding: 10px 12px;
+  min-width: 160px;
+  background: var(--code-bg);
+}
+.obj-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.obj-badge {
+  color: #06101f;
+  font-weight: 800;
+  border-radius: 6px;
+  padding: 1px 7px;
+  font-size: 0.75rem;
+}
+.obj-make {
+  font-weight: 700;
+}
+.obj-head .icon-btn {
+  margin-left: auto;
+}
+.obj-fields {
+  font-family: ui-monospace, monospace;
+  font-size: 0.82rem;
+  color: var(--prose);
+  margin-bottom: 8px;
+}
+.obj-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* OOP / SOLID ------------------------------------------------------------- */
+.solid-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.solid-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.solid-letter {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #06101f;
+}
+.solid-name {
+  font-weight: 700;
+}
+.solid-desc {
+  color: var(--prose);
+  font-size: 0.92rem;
+}
+
+/* Design patterns catalog ------------------------------------------------- */
+.patterns-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.patterns-search {
+  max-width: 240px;
+  margin: 0;
+}
+.pattern-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pattern-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--panel);
+}
+.pattern-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--text);
+  padding: 11px 14px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+.pattern-caret {
+  color: var(--muted);
+}
+.pattern-name {
+  font-weight: 700;
+}
+.pattern-cat {
+  margin-left: auto;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(148, 164, 195, 0.15);
+  color: var(--muted);
+}
+.pattern-cat--creational { background: rgba(56, 189, 248, 0.18); color: #7dd3fc; }
+.pattern-cat--structural { background: rgba(52, 211, 153, 0.18); color: #6ee7b7; }
+.pattern-cat--behavioral { background: rgba(167, 139, 250, 0.18); color: #c4b5fd; }
+.pattern-cat--industry { background: rgba(251, 191, 36, 0.18); color: #fcd34d; }
+.pattern-body {
+  padding: 4px 14px 14px;
+  border-top: 1px solid var(--border);
+}
+.pattern-code {
+  font-size: 0.8rem;
+}

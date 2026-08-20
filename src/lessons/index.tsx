@@ -17,6 +17,11 @@ import ErrorsLesson from './errors/ErrorsLesson.tsx'
 import CachingLesson from './caching/CachingLesson.tsx'
 import CryptoLesson from './crypto/CryptoLesson.tsx'
 import TimeLesson from './time/TimeLesson.tsx'
+import ComputeLesson from './compute/ComputeLesson.tsx'
+import QueueLesson from './queues/QueueLesson.tsx'
+import ClassesLesson from './classes/ClassesLesson.tsx'
+import OopLesson from './oop/OopLesson.tsx'
+import PatternsLesson from './patterns/PatternsLesson.tsx'
 
 // Wire each metadata entry to its component. Adding a lesson = add a metadata
 // entry in meta.ts and a component here; nav, routes, and the home page update
@@ -39,6 +44,11 @@ const COMPONENTS: Record<string, ComponentType> = {
   caching: CachingLesson,
   crypto: CryptoLesson,
   time: TimeLesson,
+  compute: ComputeLesson,
+  queues: QueueLesson,
+  classes: ClassesLesson,
+  oop: OopLesson,
+  patterns: PatternsLesson,
 }
 
 export interface RegisteredLesson extends LessonMeta {

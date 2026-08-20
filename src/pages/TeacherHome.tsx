@@ -3,7 +3,7 @@ import { lessons } from '../lessons/index.tsx'
 import { teacherGuides } from '../experience/teacherGuides.ts'
 import type { Level } from '../lessons/meta.ts'
 
-const LEVELS: Level[] = ['Beginner', 'Intermediate']
+const LEVELS: Level[] = ['Beginner', 'Intermediate', 'Advanced']
 
 function Home() {
   const totalMinutes = lessons.reduce((s, l) => s + l.minutes, 0)

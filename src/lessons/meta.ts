@@ -2,7 +2,7 @@
 // components so lesson components can read it without creating import cycles.
 // Adding a lesson = add an entry here + a component wired up in `index.tsx`.
 
-export type Level = 'Beginner' | 'Intermediate'
+export type Level = 'Beginner' | 'Intermediate' | 'Advanced'
 
 export interface SectionMeta {
   id: string
@@ -336,6 +336,97 @@ export const lessonsMeta: LessonMeta[] = [
       { id: 'model', title: 'Epoch, UTC & offsets' },
       { id: 'playground', title: 'Convert time' },
       { id: 'hood', title: 'Under the hood' },
+      ...CLOSING,
+    ],
+  },
+  {
+    id: 'compute',
+    path: '/lessons/compute',
+    title: 'Compute Instances',
+    tagline: 'VMs, containers, and serverless — where your code actually runs, and how it scales.',
+    icon: '🖥️',
+    level: 'Intermediate',
+    minutes: 15,
+    summary:
+      'Compare VMs, containers, and serverless, then drive an autoscaling simulator to see how instances, load, capacity, and cost interact.',
+    sections: [
+      { id: 'intro', title: 'Why it matters' },
+      { id: 'model', title: 'VMs, containers, serverless' },
+      { id: 'playground', title: 'Scale it live' },
+      { id: 'hood', title: 'Under the hood' },
+      ...CLOSING,
+    ],
+  },
+  {
+    id: 'queues',
+    path: '/lessons/queues',
+    title: 'Queue Architecture',
+    tagline: 'Decoupling producers from consumers with message queues and backpressure.',
+    icon: '📨',
+    level: 'Intermediate',
+    minutes: 15,
+    summary:
+      'Learn producers, consumers, brokers, and backpressure, then run a live queue where you can outrun the consumers and watch the backlog build.',
+    sections: [
+      { id: 'intro', title: 'Why it matters' },
+      { id: 'model', title: 'Producers, consumers, brokers' },
+      { id: 'playground', title: 'Run a live queue' },
+      { id: 'hood', title: 'Under the hood' },
+      ...CLOSING,
+    ],
+  },
+  {
+    id: 'classes',
+    path: '/lessons/classes',
+    title: 'Classes & Objects',
+    tagline: 'Blueprints and instances: the atom of object-oriented design.',
+    icon: '🧩',
+    level: 'Beginner',
+    minutes: 13,
+    summary:
+      'Understand how a class is a blueprint and objects are instances with their own state but shared behavior — by building objects interactively.',
+    sections: [
+      { id: 'intro', title: 'Why it matters' },
+      { id: 'model', title: 'Blueprints & instances' },
+      { id: 'playground', title: 'Make some objects' },
+      { id: 'hood', title: 'Under the hood' },
+      ...CLOSING,
+    ],
+  },
+  {
+    id: 'oop',
+    path: '/lessons/oop',
+    title: 'Object-Oriented Programming',
+    tagline: 'Encapsulation, inheritance, polymorphism, abstraction — and SOLID.',
+    icon: '🧬',
+    level: 'Intermediate',
+    minutes: 18,
+    summary:
+      'Master the four pillars of OOP with runnable Python examples, then learn the five SOLID principles that keep object-oriented code maintainable.',
+    sections: [
+      { id: 'intro', title: 'Why it matters' },
+      { id: 'model', title: 'The four pillars' },
+      { id: 'playground', title: 'OOP in real code' },
+      { id: 'solid', title: 'The SOLID principles' },
+      { id: 'hood', title: 'Under the hood' },
+      ...CLOSING,
+    ],
+  },
+  {
+    id: 'patterns',
+    path: '/lessons/patterns',
+    title: 'Design Patterns',
+    tagline: 'The catalog of reusable solutions every engineer should recognize.',
+    icon: '🏛️',
+    level: 'Advanced',
+    minutes: 24,
+    summary:
+      'Browse the full catalog of Gang-of-Four patterns plus common industry ones — grouped, searchable, each with intent, a runnable example, and real-world uses.',
+    sections: [
+      { id: 'intro', title: 'Why it matters' },
+      { id: 'model', title: 'Three categories' },
+      { id: 'playground', title: 'The pattern catalog' },
+      { id: 'hood', title: 'Using patterns well' },
       ...CLOSING,
     ],
   },
