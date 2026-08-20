@@ -8,6 +8,7 @@ import { useExperience } from './experience/ExperienceContext.tsx'
 import { LessonPlan } from './experience/LessonPlan.tsx'
 import { useTheme } from './theme/ThemeContext.tsx'
 import { THEMES } from './theme/themes.ts'
+import { FeedbackDialog } from './components/FeedbackDialog.tsx'
 
 const LEVELS: Level[] = ['Beginner', 'Intermediate']
 const COLLAPSE_KEY = 'devbasics.sidebarCollapsed'
@@ -26,6 +27,7 @@ function App() {
     }
   })
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [feedbackOpen, setFeedbackOpen] = useState(false)
 
   const toggleCollapsed = () => {
     setCollapsed((c) => {
@@ -69,6 +71,9 @@ function App() {
           <span className="hamburger" aria-hidden />
         </button>
         <span className="topbar-title">Developer Basics</span>
+        <button className="topbar-feedback" onClick={() => setFeedbackOpen(true)} aria-label="Request or report an issue" title="Request / report">
+          💬
+        </button>
         <span className={`topbar-mode${teacher ? ' topbar-mode--teacher' : ''}`}>
           {teacher ? '🧑‍🏫 Teacher' : '🎓 Student'}
         </span>
@@ -177,6 +182,10 @@ function App() {
         </div>
 
         <div className="sidebar-footer">
+          <button className="feedback-btn" onClick={() => setFeedbackOpen(true)}>
+            <span className="nav-icon">💬</span>
+            <span className="nav-label">Request / feedback</span>
+          </button>
           <a href="https://github.com/manishsharma004/developer-basics" target="_blank" rel="noreferrer">
             <span className="nav-icon">↗</span>
             <span className="nav-label">View source</span>
@@ -194,6 +203,8 @@ function App() {
           <Route path="*" element={teacher ? <TeacherHome /> : <Home />} />
         </Routes>
       </main>
+
+      {feedbackOpen && <FeedbackDialog onClose={() => setFeedbackOpen(false)} />}
     </div>
   )
 }
