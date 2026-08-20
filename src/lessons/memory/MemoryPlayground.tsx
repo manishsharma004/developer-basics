@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { usePyodide } from '../../lib/usePyodide.ts'
 import { RuntimeBanner } from '../../components/RuntimeBanner.tsx'
+import { handleEditorTab } from '../../lib/editorKeys.ts'
 import { MEMORY_PROGRAM } from './program.ts'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -90,6 +91,7 @@ export function ReferencePlayground() {
           value={code}
           spellCheck={false}
           onChange={(e) => setCode(e.target.value)}
+          onKeyDown={(e) => handleEditorTab(e, code, setCode)}
           rows={code.split('\n').length + 1}
           aria-label="Python code"
         />

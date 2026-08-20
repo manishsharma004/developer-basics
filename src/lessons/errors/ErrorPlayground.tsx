@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { usePyodide } from '../../lib/usePyodide.ts'
 import { RuntimeBanner } from '../../components/RuntimeBanner.tsx'
+import { handleEditorTab } from '../../lib/editorKeys.ts'
 import { ERRORS_PROGRAM } from './program.ts'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -83,7 +84,7 @@ export function ErrorPlayground() {
             <button key={s.label} className="chip" onClick={() => { setCode(s.code); setOutput('') }}>{s.label}</button>
           ))}
         </div>
-        <textarea className="code-editor" rows={Math.max(4, code.split('\n').length + 1)} value={code} spellCheck={false} onChange={(e) => setCode(e.target.value)} aria-label="Python code" />
+        <textarea className="code-editor" rows={Math.max(4, code.split('\n').length + 1)} value={code} spellCheck={false} onChange={(e) => setCode(e.target.value)} onKeyDown={(e) => handleEditorTab(e, code, setCode)} aria-label="Python code" />
         <div className="ref-run-row">
           <button className="btn" disabled={!ready} onClick={run}>{ready ? '▶ Run' : 'starting Python…'}</button>
         </div>

@@ -8,9 +8,87 @@
   --muted: #93a4c3;
   --accent: #38bdf8;
   --accent-2: #a78bfa;
+  --code-bg: #060b16;
+  --rail-bg: #0b1120;
+  --bg-glow: #182544;
+  --prose: #cdd7ea;
   --radius: 14px;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
     sans-serif;
+  color-scheme: dark;
+}
+
+/* -------------------------------------------------------------------------
+   Themes — each overrides the palette variables. `midnight` is the :root
+   default above; the others are applied via <html data-theme="...">.
+   Code surfaces (terminals, editors) stay dark in every theme via --code-bg
+   so code stays crisp and readable, including in the light theme.
+   ------------------------------------------------------------------------- */
+[data-theme='light'] {
+  --bg: #f4f7fb;
+  --bg-elev: #ffffff;
+  --panel: #ffffff;
+  --panel-2: #eef2f9;
+  --border: #d6deea;
+  --text: #10203a;
+  --muted: #5a6b86;
+  --accent: #0284c7;
+  --accent-2: #7c3aed;
+  --code-bg: #0b1324;
+  --rail-bg: #e9eef7;
+  --bg-glow: #dfe8f6;
+  --prose: #26364f;
+  color-scheme: light;
+}
+
+[data-theme='nord'] {
+  --bg: #2e3440;
+  --bg-elev: #2b303b;
+  --panel: #3b4252;
+  --panel-2: #434c5e;
+  --border: #4c566a;
+  --text: #eceff4;
+  --muted: #a9b3c6;
+  --accent: #88c0d0;
+  --accent-2: #b48ead;
+  --code-bg: #242933;
+  --rail-bg: #272c37;
+  --bg-glow: #3b4252;
+  --prose: #d8dee9;
+  color-scheme: dark;
+}
+
+[data-theme='dracula'] {
+  --bg: #282a36;
+  --bg-elev: #21222c;
+  --panel: #343746;
+  --panel-2: #3c3f52;
+  --border: #4a4d63;
+  --text: #f8f8f2;
+  --muted: #a9adc4;
+  --accent: #bd93f9;
+  --accent-2: #ff79c6;
+  --code-bg: #1e1f29;
+  --rail-bg: #21222c;
+  --bg-glow: #44475a;
+  --prose: #e6e6ef;
+  color-scheme: dark;
+}
+
+[data-theme='terminal'] {
+  --bg: #05100a;
+  --bg-elev: #06140d;
+  --panel: #0a1f14;
+  --panel-2: #0e2a1b;
+  --border: #14432b;
+  --text: #c6f7d8;
+  --muted: #5faf7f;
+  --accent: #22c55e;
+  --accent-2: #a3e635;
+  --code-bg: #030b07;
+  --rail-bg: #06140d;
+  --bg-glow: #0e2a1b;
+  --prose: #a7e3bf;
   color-scheme: dark;
 }
 
@@ -26,7 +104,7 @@ body,
 }
 
 body {
-  background: radial-gradient(1200px 600px at 20% -10%, #182544, var(--bg));
+  background: radial-gradient(1200px 600px at 20% -10%, var(--bg-glow), var(--bg));
   color: var(--text);
 }
 
@@ -55,7 +133,7 @@ a {
 }
 
 .sidebar {
-  background: linear-gradient(180deg, var(--bg-elev), #0d1526);
+  background: linear-gradient(180deg, var(--bg-elev), var(--rail-bg));
   border-right: 1px solid var(--border);
   padding: 22px 16px;
   display: flex;
@@ -608,7 +686,7 @@ a {
 }
 
 .terminal {
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 12px 14px;
@@ -734,7 +812,7 @@ a {
 
 .proc-table input {
   width: 72px;
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   color: var(--text);
   border-radius: 7px;
@@ -808,7 +886,7 @@ a {
 }
 .quantum input {
   width: 70px;
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   color: var(--text);
   border-radius: 7px;
@@ -823,7 +901,7 @@ a {
   margin-top: 6px;
 }
 .sim-averages > div {
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 10px 12px;
@@ -876,7 +954,7 @@ a {
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid var(--border);
-  background: #060b16;
+  background: var(--code-bg);
 }
 
 .gantt-slice {
@@ -1111,13 +1189,13 @@ a {
 }
 
 .prose {
-  color: #cdd7ea;
+  color: var(--prose);
   line-height: 1.7;
   font-size: 1rem;
   max-width: 72ch;
 }
 .prose-list {
-  color: #cdd7ea;
+  color: var(--prose);
   line-height: 1.7;
   max-width: 72ch;
   padding-left: 20px;
@@ -1146,7 +1224,7 @@ a {
 }
 .callout-body {
   line-height: 1.6;
-  color: #cdd7ea;
+  color: var(--prose);
 }
 .callout--why {
   border-color: rgba(56, 189, 248, 0.45);
@@ -1215,7 +1293,7 @@ a {
 }
 .try-this-body {
   line-height: 1.6;
-  color: #cdd7ea;
+  color: var(--prose);
 }
 
 .recap {
@@ -1229,7 +1307,7 @@ a {
   align-items: flex-start;
   padding: 8px 0;
   line-height: 1.6;
-  color: #cdd7ea;
+  color: var(--prose);
 }
 .recap-check {
   color: #6ee7b7;
@@ -1322,7 +1400,7 @@ a {
 }
 .code-editor {
   width: 100%;
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   color: #e6edf7;
@@ -1447,7 +1525,7 @@ a {
   flex-direction: column;
   gap: 4px;
   font-size: 0.85rem;
-  color: #cdd7ea;
+  color: var(--prose);
 }
 .net-toggles label {
   display: flex;
@@ -1477,7 +1555,7 @@ a {
   font-weight: 700;
 }
 .waterfall-track {
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 6px;
   height: 26px;
@@ -1543,7 +1621,7 @@ a {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #cdd7ea;
+  color: var(--prose);
   font-size: 0.9rem;
 }
 .url-swatch {
@@ -1617,7 +1695,7 @@ a {
   align-items: center;
   gap: 10px;
   text-align: left;
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   color: var(--text);
   border-radius: 9px;
@@ -1696,7 +1774,7 @@ a {
 }
 .key-term dd {
   margin: 0;
-  color: #cdd7ea;
+  color: var(--prose);
   line-height: 1.5;
   font-size: 0.92rem;
 }
@@ -1715,7 +1793,7 @@ a {
   color: var(--muted);
 }
 .conv-field input {
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   color: var(--text);
   border-radius: 8px;
@@ -1725,7 +1803,7 @@ a {
 }
 .conv-text {
   width: 100%;
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   color: var(--text);
   border-radius: 8px;
@@ -1767,7 +1845,7 @@ a {
   flex-direction: column;
   align-items: center;
   gap: 3px;
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 10px;
@@ -1799,7 +1877,7 @@ a {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #cdd7ea;
+  color: var(--prose);
   font-size: 0.9rem;
   cursor: pointer;
 }
@@ -1810,7 +1888,7 @@ a {
   margin-bottom: 14px;
 }
 .race-stat {
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 10px 12px;
@@ -1856,7 +1934,7 @@ a {
 }
 .git-row input,
 .git-row select {
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   color: var(--text);
   border-radius: 8px;
@@ -1894,7 +1972,7 @@ a {
 .commit-info {
   flex: 1;
   min-width: 0;
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 12px;
@@ -1925,7 +2003,7 @@ a {
   padding: 2px 8px;
 }
 .commit-msg {
-  color: #cdd7ea;
+  color: var(--prose);
   margin-top: 2px;
 }
 .commit-parents {
@@ -1945,7 +2023,7 @@ a {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 12px;
@@ -1980,7 +2058,7 @@ a {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 6px 10px;
@@ -2032,7 +2110,7 @@ a {
   height: 220px;
   margin: 16px 0;
   padding: 8px;
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
 }
@@ -2070,14 +2148,14 @@ a {
   margin-bottom: 12px;
 }
 .rec-stat {
-  color: #cdd7ea;
+  color: var(--prose);
   margin-bottom: 12px;
   font-size: 0.95rem;
 }
 .rec-tree {
   overflow-x: auto;
   padding: 8px;
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
 }
@@ -2146,7 +2224,7 @@ a {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 12px;
@@ -2165,7 +2243,7 @@ a {
   gap: 16px;
   margin-bottom: 10px;
   font-size: 0.85rem;
-  color: #cdd7ea;
+  color: var(--prose);
 }
 .rx-flags label {
   display: flex;
@@ -2183,7 +2261,7 @@ a {
   margin-bottom: 8px;
 }
 .rx-text {
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 12px;
@@ -2260,7 +2338,7 @@ a {
 .hash-hex {
   display: block;
   word-break: break-all;
-  background: #060b16;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px 12px;
@@ -2312,7 +2390,7 @@ a {
 .exp-switch {
   display: flex;
   gap: 4px;
-  background: #0b1120;
+  background: var(--rail-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 4px;
@@ -2379,7 +2457,7 @@ a {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 14px;
-  color: #cdd7ea;
+  color: var(--prose);
   line-height: 1.5;
   font-size: 0.92rem;
 }
@@ -2447,7 +2525,7 @@ a {
 .plan-list li {
   position: relative;
   padding: 8px 0 8px 28px;
-  color: #cdd7ea;
+  color: var(--prose);
   line-height: 1.6;
   border-bottom: 1px solid rgba(38, 52, 80, 0.4);
 }
@@ -2497,7 +2575,7 @@ a {
   height: 28px;
   border-radius: 8px;
   border: 1px solid var(--border);
-  background: #0b1120;
+  background: var(--rail-bg);
   color: var(--muted);
   cursor: pointer;
   font-size: 0.95rem;
@@ -2726,4 +2804,49 @@ a {
   .demo-split--wide {
     grid-template-columns: 1fr;
   }
+}
+
+/* Theme picker ------------------------------------------------------------ */
+.theme-picker {
+  margin-top: auto;
+  padding: 12px 8px 6px;
+}
+.theme-picker-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.theme-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.theme-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--border);
+  transition: transform 0.12s ease;
+}
+.theme-swatch:hover {
+  transform: scale(1.12);
+}
+.theme-swatch--active {
+  border-color: var(--bg);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.sidebar-footer {
+  margin-top: 8px;
+}
+.app--collapsed .theme-picker {
+  padding: 12px 4px 6px;
+}
+.app--collapsed .theme-swatches {
+  justify-content: center;
 }

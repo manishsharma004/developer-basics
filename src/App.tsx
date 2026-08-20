@@ -6,12 +6,15 @@ import Home from './pages/Home.tsx'
 import TeacherHome from './pages/TeacherHome.tsx'
 import { useExperience } from './experience/ExperienceContext.tsx'
 import { LessonPlan } from './experience/LessonPlan.tsx'
+import { useTheme } from './theme/ThemeContext.tsx'
+import { THEMES } from './theme/themes.ts'
 
 const LEVELS: Level[] = ['Beginner', 'Intermediate']
 const COLLAPSE_KEY = 'devbasics.sidebarCollapsed'
 
 function App() {
   const { experience, setExperience } = useExperience()
+  const { theme, setTheme } = useTheme()
   const teacher = experience === 'teacher'
   const location = useLocation()
 
@@ -155,6 +158,23 @@ function App() {
             ))
           )}
         </nav>
+
+        <div className="theme-picker">
+          <span className="theme-picker-label nav-label">Theme</span>
+          <div className="theme-swatches">
+            {THEMES.map((t) => (
+              <button
+                key={t.id}
+                className={`theme-swatch${theme === t.id ? ' theme-swatch--active' : ''}`}
+                style={{ background: t.swatch }}
+                onClick={() => setTheme(t.id)}
+                aria-label={`${t.label} theme`}
+                aria-pressed={theme === t.id}
+                title={t.label}
+              />
+            ))}
+          </div>
+        </div>
 
         <div className="sidebar-footer">
           <a href="https://github.com/manishsharma004/developer-basics" target="_blank" rel="noreferrer">

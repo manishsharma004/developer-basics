@@ -1,4 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react'
+import { handleEditorTab } from '../../lib/editorKeys.ts'
 
 const SAMPLE = `Contact: ada@math.org, grace@navy.mil
 Call 555-0142 or 555-9930
@@ -77,7 +78,7 @@ export function RegexTester() {
       )}
 
       <div className="rx-text">{highlighted}</div>
-      <textarea className="code-editor" rows={4} value={text} spellCheck={false} onChange={(e) => setText(e.target.value)} aria-label="test text" />
+      <textarea className="code-editor" rows={4} value={text} spellCheck={false} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => handleEditorTab(e, text, setText)} aria-label="test text" />
     </div>
   )
 }
