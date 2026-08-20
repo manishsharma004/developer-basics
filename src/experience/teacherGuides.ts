@@ -455,4 +455,134 @@ export const teacherGuides: Record<string, TeacherGuide> = {
       'Define the Unix epoch.',
     ],
   },
+  compute: {
+    objectives: [
+      'Compare VMs, containers, and serverless.',
+      'Explain horizontal vs. vertical scaling.',
+      'Reason about capacity, utilization, and cost.',
+    ],
+    keyConcepts: [
+      'An instance is one running copy; scale horizontally behind a load balancer.',
+      'Stateless services scale freely; state goes in a shared store.',
+      'Autoscaling reacts to load but lags; cold starts add latency.',
+      'More capacity costs more — right-size for utilization.',
+    ],
+    misconceptions: [
+      '"Just buy a bigger machine" (vertical scaling has a hard ceiling).',
+      '"Autoscaling is instant" (it lags; spikes can still drop requests).',
+    ],
+    discussion: [
+      'When would you choose serverless over containers?',
+      'Why must services be stateless to scale out?',
+    ],
+    lab: 'Use the scaling simulator: overload it to drop requests, add instances, then enable autoscaling and vary the load.',
+    assess: [
+      'Given a load and per-instance capacity, compute instances needed.',
+      'Explain why stateless design enables horizontal scaling.',
+    ],
+  },
+  queues: {
+    objectives: [
+      'Explain how a queue decouples producers and consumers.',
+      'Describe backpressure and how to relieve it.',
+      'Know delivery guarantees and idempotency.',
+    ],
+    keyConcepts: [
+      'Producers append; consumers pull independently.',
+      'Add consumers to increase throughput.',
+      'At-least-once delivery → make consumers idempotent.',
+      'Queues absorb spikes and downstream outages.',
+    ],
+    misconceptions: [
+      '"A queue makes things faster" (it decouples and buffers, not speeds up work).',
+      '"Messages are delivered exactly once" (usually at-least-once).',
+    ],
+    discussion: [
+      'Work queue vs. pub/sub — when each?',
+      'What happens if consumers never catch up?',
+    ],
+    lab: 'Run the queue simulator: make producers outrun consumers to build a backlog, then add consumers to drain it.',
+    assess: [
+      'Explain what a growing queue depth indicates.',
+      'Why should consumers be idempotent?',
+    ],
+  },
+  classes: {
+    objectives: [
+      'Distinguish a class from an object.',
+      'Explain fields (per-object state) vs. methods (shared behavior).',
+      'Describe the role of the constructor.',
+    ],
+    keyConcepts: [
+      'A class is a blueprint; an object is an instance.',
+      'Each object owns its fields; methods live on the class.',
+      'The constructor initializes new objects.',
+      'Beware shared mutable class-level state.',
+    ],
+    misconceptions: [
+      '"Changing one object changes all of them."',
+      '"Every object stores its own copy of the methods."',
+    ],
+    discussion: [
+      'When is a class better than a plain dict/record?',
+      'What is the difference between class and instance variables?',
+    ],
+    lab: 'Use the class builder: create several objects and mutate one to show independent state with shared behavior.',
+    assess: [
+      'Predict the effect of calling a method on one object.',
+      'Explain where methods live vs. fields.',
+    ],
+  },
+  oop: {
+    objectives: [
+      'Explain the four pillars of OOP.',
+      'Recognize polymorphism replacing type-branching.',
+      'Summarize the SOLID principles.',
+    ],
+    keyConcepts: [
+      'Encapsulation, inheritance, polymorphism, abstraction.',
+      'Program to interfaces; depend on abstractions (DIP).',
+      'Prefer composition over deep inheritance.',
+      'SOLID keeps OO code flexible and testable.',
+    ],
+    misconceptions: [
+      '"Inheritance is always the right reuse tool."',
+      '"OOP means lots of getters/setters."',
+    ],
+    discussion: [
+      'Composition vs. inheritance — how to choose?',
+      'Which SOLID principle most improves testability?',
+    ],
+    lab: 'Run each pillar snippet; extend Inheritance and Polymorphism with a new subclass/shape.',
+    assess: [
+      'Identify which pillar a code sample demonstrates.',
+      'State the Dependency Inversion principle.',
+    ],
+  },
+  patterns: {
+    objectives: [
+      'Categorize patterns as creational, structural, or behavioral.',
+      'Recognize when a specific pattern applies.',
+      'Avoid over-applying patterns.',
+    ],
+    keyConcepts: [
+      'A pattern is a reusable design shape, not copy-paste code.',
+      'Many patterns share "program to an interface".',
+      'The GoF 23 plus industry patterns (DI, Repository, MVC).',
+      'Apply patterns to a felt problem, not preemptively.',
+    ],
+    misconceptions: [
+      '"More patterns = better design" (pattern soup).',
+      '"Patterns are language features" (they are design shapes).',
+    ],
+    discussion: [
+      'Which patterns are really the same idea in disguise?',
+      'When does a plain function beat a pattern?',
+    ],
+    lab: 'Browse the catalog; run Strategy, Observer, and Dependency Injection; discuss where each appears in your stack.',
+    assess: [
+      'Match a scenario to the right pattern.',
+      'Name the three GoF categories with an example each.',
+    ],
+  },
 }

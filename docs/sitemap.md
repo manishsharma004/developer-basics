@@ -13,6 +13,18 @@ layout, navigation, and content.
 The active experience is chosen from the sidebar switcher and persisted in
 `localStorage` (`devbasics.experience`).
 
+## Themes
+
+A catalog of ~24 editor/IDE color themes (Midnight, Light, Nord, Dracula,
+Terminal, Solarized Dark/Light, Monokai, One Dark/Light, Gruvbox Dark/Light,
+Tokyo Night, Catppuccin Mocha/Latte, GitHub Dark/Light, Ayu Dark/Light, Rosé
+Pine, Night Owl, Synthwave '84, Cobalt2, Palenight). Chosen from the sidebar
+theme swatches and persisted in `localStorage` (`devbasics.theme`); applied via
+`<html data-theme>`. Defined in `src/theme/themes.ts` + palette blocks in
+`src/index.css`. Code surfaces stay dark in every theme for legibility. The
+desktop sidebar is collapsible and mobile uses a top-bar drawer; code editors
+capture Tab for indentation.
+
 ## Routes
 
 | Route | Student view | Teacher view |
@@ -24,7 +36,7 @@ Routing uses `HashRouter` (GitHub Pages friendly). Adding a lesson = one entry i
 `src/lessons/meta.ts` + a component wired in `src/lessons/index.tsx`; the teacher
 guide lives in `src/experience/teacherGuides.ts`.
 
-## Lessons (17)
+## Lessons (22)
 
 Legend for lab tech: **Py** = Python via Pyodide (WebAssembly), **React** = pure
 client-side React, **WebCrypto** = SubtleCrypto, **Intl** = Intl/Date.
@@ -48,6 +60,11 @@ client-side React, **WebCrypto** = SubtleCrypto, **Intl** = Intl/Date.
 | 15 | Caching & LRU | `/lessons/caching` | Intermediate | 14 | LRU cache simulator | React |
 | 16 | Hashing & Cryptography | `/lessons/crypto` | Intermediate | 14 | SHA-256 hasher (avalanche) | WebCrypto |
 | 17 | Time, Dates & Timezones | `/lessons/time` | Beginner | 13 | Epoch / timezone converter | Intl |
+| 18 | Compute Instances | `/lessons/compute` | Intermediate | 15 | Autoscaling simulator | React |
+| 19 | Queue Architecture | `/lessons/queues` | Intermediate | 15 | Producer/consumer queue sim | React |
+| 20 | Classes & Objects | `/lessons/classes` | Beginner | 13 | Class → instances visualizer | React |
+| 21 | Object-Oriented Programming | `/lessons/oop` | Intermediate | 18 | Four-pillars Python playground | Py |
+| 22 | Design Patterns | `/lessons/patterns` | Advanced | 24 | Pattern catalog (28 patterns, runnable) | Py |
 
 ## Per-lesson detail
 
@@ -125,6 +142,26 @@ Assessment.
 - Student: Why it matters → Epoch, UTC & offsets → Convert time → Under the hood → Key terms → Check yourself → Recap
 - Lab: Epoch ↔ human-date converter shown across multiple timezones.
 
+### 18 · Compute Instances (`compute`)
+- Student: Why it matters → VMs, containers, serverless → Scale it live → Under the hood → Key terms → Check yourself → Recap
+- Lab: Autoscaling simulator — load vs. instances, per-instance utilization, dropped requests, and cost.
+
+### 19 · Queue Architecture (`queues`)
+- Student: Why it matters → Producers, consumers, brokers → Run a live queue → Under the hood → Key terms → Check yourself → Recap
+- Lab: Animated producer/consumer queue; create backpressure and drain it by adding consumers.
+
+### 20 · Classes & Objects (`classes`)
+- Student: Why it matters → Blueprints & instances → Make some objects → Under the hood → Key terms → Check yourself → Recap
+- Lab: A class blueprint plus live instances with independent state and shared methods.
+
+### 21 · Object-Oriented Programming (`oop`)
+- Student: Why it matters → The four pillars → OOP in real code → The SOLID principles → Under the hood → Key terms → Check yourself → Recap
+- Lab: Runnable Python snippets for encapsulation, inheritance, polymorphism, and abstraction.
+
+### 22 · Design Patterns (`patterns`)
+- Student: Why it matters → Three categories → The pattern catalog → Using patterns well → Key terms → Check yourself → Recap
+- Lab: Searchable/filterable catalog of 28 patterns (all 23 GoF + industry), each with intent, when-to-use, real-world usage, and a runnable Python example.
+
 ## Source map
 
 ```
@@ -137,7 +174,10 @@ src/
     TeacherHome.tsx           # teacher home (curriculum overview)
   experience/
     ExperienceContext.tsx     # student/teacher context, persisted
-    teacherGuides.ts          # teaching content for all 17 lessons
+    teacherGuides.ts          # teaching content for all lessons
+  theme/
+    themes.ts                 # theme catalog (id, label, swatch, mode)
+    ThemeContext.tsx          # theme provider + hook, persisted
     LessonPlan.tsx            # teacher lesson-plan view
   lessons/
     meta.ts                   # lesson metadata + sections (registry data)
@@ -153,8 +193,8 @@ src/
 
 ## Interactive labs by technology
 
-- **Python / Pyodide:** Filesystem, Processes, Memory (references), Concurrency, Command Line, SQL (sqlite3), Errors.
-- **Pure React:** Data & Encoding, Network, Git, Data Structures, Algorithms, Recursion, Regex, Caching, Time.
+- **Python / Pyodide:** Filesystem, Processes, Memory (references), Concurrency, Command Line, SQL (sqlite3), Errors, OOP, Design Patterns.
+- **Pure React:** Data & Encoding, Network, Git, Data Structures, Algorithms, Recursion, Regex, Caching, Time, Compute Instances, Queue Architecture, Classes & Objects.
 - **Web Crypto:** Hashing & Cryptography.
 
 ## Deployment
