@@ -33,38 +33,64 @@ capture Tab for indentation.
 | `/lessons/:topic` | Interactive lesson | Lesson plan |
 
 Routing uses `HashRouter` (GitHub Pages friendly). Adding a lesson = one entry in
-`src/lessons/meta.ts` + a component wired in `src/lessons/index.tsx`; the teacher
-guide lives in `src/experience/teacherGuides.ts`.
+`src/lessons/meta.ts` (including its `group`) + a component wired in
+`src/lessons/index.tsx`; the teacher guide lives in
+`src/experience/teacherGuides.ts`.
 
-## Lessons (22)
+## Modules
+
+Chapters are organized into **8 thematic modules** (`groups` in
+`src/lessons/meta.ts`). The student sidebar shows them as **collapsible groups**
+and the student home page renders one section per module; teacher mode still
+groups by level. Module order defines chapter order (and "next chapter" flow).
+
+1. **🧱 Foundations** — data, memory, time, errors
+2. **🖥️ Systems & the OS** — filesystem, process, concurrency, compute
+3. **🧮 Data Structures & Algorithms** — datastructures, algorithms, recursion, trees
+4. **🗄️ Data & Persistence** — sql, caching, queues
+5. **🌐 Networking & the Web** — network, apis, auth
+6. **🔐 Security & Cryptography** — crypto, security
+7. **🛠️ Tooling & Workflow** — cli, git, regex, testing
+8. **🎨 Programming & Design** — classes, oop, patterns, functional
+
+## Chapters (28)
 
 Legend for lab tech: **Py** = Python via Pyodide (WebAssembly), **React** = pure
-client-side React, **WebCrypto** = SubtleCrypto, **Intl** = Intl/Date.
+client-side React, **WebCrypto** = SubtleCrypto, **Intl** = Intl/Date. The six
+newest chapters (trees, apis, auth, security, testing, functional) share a
+reusable `SnippetRunner` (`src/lessons/components/SnippetRunner.tsx`) that runs
+editable Python snippets.
 
-| # | Topic | Path | Level | Min | Interactive lab | Tech |
+| Module | Topic | Path | Level | Min | Interactive lab | Tech |
 | --- | --- | --- | --- | --- | --- | --- |
-| 01 | The Filesystem | `/lessons/filesystem` | Beginner | 14 | Live shell + filesystem tree | Py |
-| 02 | Processes & the CPU | `/lessons/process` | Beginner | 16 | CPU scheduler + animated Gantt | Py |
-| 03 | Memory: Stack & Heap | `/lessons/memory` | Intermediate | 16 | References REPL + stack/heap visualizer | Py + React |
-| 04 | Concurrency & Races | `/lessons/concurrency` | Intermediate | 15 | Thread race-condition simulation | Py |
-| 05 | Data & Encoding | `/lessons/data` | Beginner | 13 | Number-base + UTF-8 converter | React |
-| 06 | How the Web Talks | `/lessons/network` | Intermediate | 15 | Request lifecycle tracer + URL anatomy | React |
-| 07 | Version Control with Git | `/lessons/git` | Beginner | 14 | Commit-graph builder | React |
-| 08 | The Command Line & Pipes | `/lessons/cli` | Beginner | 13 | Pipeline composer | Py |
-| 09 | Data Structures | `/lessons/datastructures` | Intermediate | 16 | Hash-map visualizer | React |
-| 10 | Algorithms & Big-O | `/lessons/algorithms` | Intermediate | 15 | Sorting visualizer | React |
-| 11 | Recursion | `/lessons/recursion` | Beginner | 13 | Recursion call-tree (+ memoization) | React |
-| 12 | Databases & SQL | `/lessons/sql` | Beginner | 16 | Real SQLite playground | Py (sqlite3) |
-| 13 | Regular Expressions | `/lessons/regex` | Beginner | 14 | Live regex tester | React |
-| 14 | Errors & Exceptions | `/lessons/errors` | Beginner | 13 | try/except/finally playground | Py |
-| 15 | Caching & LRU | `/lessons/caching` | Intermediate | 14 | LRU cache simulator | React |
-| 16 | Hashing & Cryptography | `/lessons/crypto` | Intermediate | 14 | SHA-256 hasher (avalanche) | WebCrypto |
-| 17 | Time, Dates & Timezones | `/lessons/time` | Beginner | 13 | Epoch / timezone converter | Intl |
-| 18 | Compute Instances | `/lessons/compute` | Intermediate | 15 | Autoscaling simulator | React |
-| 19 | Queue Architecture | `/lessons/queues` | Intermediate | 15 | Producer/consumer queue sim | React |
-| 20 | Classes & Objects | `/lessons/classes` | Beginner | 13 | Class → instances visualizer | React |
-| 21 | Object-Oriented Programming | `/lessons/oop` | Intermediate | 18 | Four-pillars Python playground | Py |
-| 22 | Design Patterns | `/lessons/patterns` | Advanced | 24 | Pattern catalog (28 patterns, runnable) | Py |
+| Foundations | Data & Encoding | `/lessons/data` | Beginner | 13 | Number-base + UTF-8 converter | React |
+| Foundations | Memory: Stack & Heap | `/lessons/memory` | Intermediate | 16 | References REPL + stack/heap visualizer | Py + React |
+| Foundations | Time, Dates & Timezones | `/lessons/time` | Beginner | 13 | Epoch / timezone converter | Intl |
+| Foundations | Errors & Exceptions | `/lessons/errors` | Beginner | 13 | try/except/finally playground | Py |
+| Systems | The Filesystem | `/lessons/filesystem` | Beginner | 14 | Live shell + filesystem tree | Py |
+| Systems | Processes & the CPU | `/lessons/process` | Beginner | 16 | CPU scheduler + animated Gantt | Py |
+| Systems | Concurrency & Races | `/lessons/concurrency` | Intermediate | 15 | Thread race-condition simulation | Py |
+| Systems | Compute Instances | `/lessons/compute` | Intermediate | 15 | Autoscaling simulator | React |
+| DS & Algorithms | Data Structures | `/lessons/datastructures` | Intermediate | 16 | Hash-map visualizer | React |
+| DS & Algorithms | Algorithms & Big-O | `/lessons/algorithms` | Intermediate | 15 | Sorting visualizer | React |
+| DS & Algorithms | Recursion | `/lessons/recursion` | Beginner | 13 | Recursion call-tree (+ memoization) | React |
+| DS & Algorithms | Trees & Graphs | `/lessons/trees` | Intermediate | 16 | DFS/BFS + shortest-path traversals | Py |
+| Persistence | Databases & SQL | `/lessons/sql` | Beginner | 16 | Real SQLite playground | Py (sqlite3) |
+| Persistence | Caching & LRU | `/lessons/caching` | Intermediate | 14 | LRU cache simulator | React |
+| Persistence | Queue Architecture | `/lessons/queues` | Intermediate | 15 | Producer/consumer queue sim | React |
+| Web | How the Web Talks | `/lessons/network` | Intermediate | 15 | Request lifecycle tracer + URL anatomy | React |
+| Web | APIs & REST | `/lessons/apis` | Beginner | 14 | JSON + REST router + status codes | Py |
+| Web | Auth, Sessions & Tokens | `/lessons/auth` | Intermediate | 15 | Salted hash + JWT decoder | Py |
+| Security | Hashing & Cryptography | `/lessons/crypto` | Intermediate | 14 | SHA-256 hasher (avalanche) | WebCrypto |
+| Security | Security Basics | `/lessons/security` | Intermediate | 15 | Injection & XSS: break-then-fix | Py |
+| Tooling | The Command Line & Pipes | `/lessons/cli` | Beginner | 13 | Pipeline composer | Py |
+| Tooling | Version Control with Git | `/lessons/git` | Beginner | 14 | Commit-graph builder | React |
+| Tooling | Regular Expressions | `/lessons/regex` | Beginner | 14 | Live regex tester | React |
+| Tooling | Testing & TDD | `/lessons/testing` | Beginner | 14 | Red/green asserts + tiny test runner | Py |
+| Design | Classes & Objects | `/lessons/classes` | Beginner | 13 | Class → instances visualizer | React |
+| Design | Object-Oriented Programming | `/lessons/oop` | Intermediate | 18 | Four-pillars Python playground | Py |
+| Design | Design Patterns | `/lessons/patterns` | Advanced | 24 | Pattern catalog (28 patterns, runnable) | Py |
+| Design | Functional Programming | `/lessons/functional` | Intermediate | 15 | Pure fns + map/filter/reduce | Py |
 
 ## Per-lesson detail
 
@@ -162,6 +188,30 @@ Assessment.
 - Student: Why it matters → Three categories → The pattern catalog → Using patterns well → Key terms → Check yourself → Recap
 - Lab: Searchable/filterable catalog of 28 patterns (all 23 GoF + industry), each with intent, when-to-use, real-world usage, and a runnable Python example.
 
+### 23 · Trees & Graphs (`trees`)
+- Student: Why it matters → Trees, graphs & traversal → Traverse it live → Under the hood → Key terms → Check yourself → Recap
+- Lab: Runnable Python DFS (recursive) and BFS (queue) over a binary tree, plus BFS shortest-path over an adjacency-list graph.
+
+### 24 · APIs & REST (`apis`)
+- Student: Why it matters → Resources, verbs & JSON → Build a JSON API → Under the hood → Key terms → Check yourself → Recap
+- Lab: Runnable Python JSON serialize/parse, a tiny (method, path) → status REST router, and status-code families.
+
+### 25 · Auth, Sessions & Tokens (`auth`)
+- Student: Why it matters → AuthN vs. AuthZ → Decode a token → Under the hood → Key terms → Check yourself → Recap
+- Lab: Runnable Python salted password hashing/verification and a JWT payload decoder showing tokens are signed, not secret.
+
+### 26 · Security Basics (`security`)
+- Student: Why it matters → Think like an attacker → Break it, then fix it → Under the hood → Key terms → Check yourself → Recap
+- Lab: Runnable Python SQL-injection demo vs. a parameterized fix, plus `html.escape` defusing an XSS payload.
+
+### 27 · Testing & TDD (`testing`)
+- Student: Why it matters → The testing pyramid → Red, green, refactor → Under the hood → Key terms → Check yourself → Recap
+- Lab: Runnable Python red (failing) → green (passing) asserts and a tiny pass/fail test runner.
+
+### 28 · Functional Programming (`functional`)
+- Student: Why it matters → Pure functions & higher-order → map / filter / reduce → Under the hood → Key terms → Check yourself → Recap
+- Lab: Runnable Python pure-vs-impure, map/filter/reduce, and function composition over immutable data.
+
 ## Source map
 
 ```
@@ -193,7 +243,7 @@ src/
 
 ## Interactive labs by technology
 
-- **Python / Pyodide:** Filesystem, Processes, Memory (references), Concurrency, Command Line, SQL (sqlite3), Errors, OOP, Design Patterns.
+- **Python / Pyodide:** Filesystem, Processes, Memory (references), Concurrency, Command Line, SQL (sqlite3), Errors, OOP, Design Patterns, Trees & Graphs, APIs & REST, Auth, Security Basics, Testing & TDD, Functional Programming.
 - **Pure React:** Data & Encoding, Network, Git, Data Structures, Algorithms, Recursion, Regex, Caching, Time, Compute Instances, Queue Architecture, Classes & Objects.
 - **Web Crypto:** Hashing & Cryptography.
 

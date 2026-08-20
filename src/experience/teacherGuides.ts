@@ -585,4 +585,160 @@ export const teacherGuides: Record<string, TeacherGuide> = {
       'Name the three GoF categories with an example each.',
     ],
   },
+  trees: {
+    objectives: [
+      'Distinguish trees from general graphs.',
+      'Traverse structures depth-first and breadth-first.',
+      'Explain why BFS finds shortest unweighted paths.',
+    ],
+    keyConcepts: [
+      'A tree is a cycle-free graph with one root and unique paths.',
+      'DFS uses a stack/recursion; BFS uses a queue.',
+      'BFS expands in rings, so it reaches nodes in fewest edges.',
+      'Graphs need a visited set to avoid looping on cycles.',
+    ],
+    misconceptions: [
+      '"DFS and BFS visit nodes in the same order."',
+      '"You never need to track visited nodes."',
+    ],
+    discussion: [
+      'When is DFS a better fit than BFS?',
+      'What changes when edges have weights?',
+    ],
+    lab: 'Run the DFS and BFS snippets on the same tree and compare order; then use BFS shortest-path and change the goal node.',
+    assess: [
+      'State which traversal finds the shortest unweighted path.',
+      'Explain why a visited set is needed for graphs but not trees.',
+    ],
+  },
+  apis: {
+    objectives: [
+      'Explain REST resources, HTTP verbs, and JSON.',
+      'Map methods to actions and read status-code families.',
+      'Describe why REST is stateless.',
+    ],
+    keyConcepts: [
+      'Resources are nouns (URLs); methods are verbs.',
+      'GET is safe; POST is not idempotent.',
+      'JSON serializes objects to text and back.',
+      'Status codes group into 2xx/3xx/4xx/5xx.',
+    ],
+    misconceptions: [
+      '"GET can safely change server state."',
+      '"JSON and JavaScript objects are the same thing."',
+    ],
+    discussion: [
+      'Why should retries be safe for GET but not POST?',
+      'How does statelessness enable horizontal scaling?',
+    ],
+    lab: 'Run the REST router snippet; add requests and watch status codes change; classify codes by family.',
+    assess: [
+      'Choose the right verb for creating vs. reading a resource.',
+      'Classify a set of status codes by family.',
+    ],
+  },
+  auth: {
+    objectives: [
+      'Separate authentication from authorization.',
+      'Explain salting and slow password hashing.',
+      'Describe why a JWT is signed, not secret.',
+    ],
+    keyConcepts: [
+      'AuthN proves identity; AuthZ grants permission.',
+      'Salts make each password hash unique.',
+      'Sessions store state server-side; tokens carry signed claims.',
+      'A JWT payload is readable — never put secrets in it.',
+    ],
+    misconceptions: [
+      '"A JWT is encrypted, so it is safe to store secrets in it."',
+      '"A fast hash like SHA-256 alone is fine for passwords."',
+    ],
+    discussion: [
+      'When would you choose sessions over tokens?',
+      'Why must password hashing be deliberately slow?',
+    ],
+    lab: 'Run the salt/hash snippet twice to show the salt changes; decode the JWT payload to prove it is readable.',
+    assess: [
+      'Explain the difference between AuthN and AuthZ.',
+      'State why a JWT must not contain secrets.',
+    ],
+  },
+  security: {
+    objectives: [
+      'Recognize injection and XSS.',
+      'Fix them with parameterization and escaping.',
+      'Apply least privilege and defense in depth.',
+    ],
+    keyConcepts: [
+      'Injection = untrusted input treated as code.',
+      'Parameterized queries keep values as data.',
+      'Escape output for its specific context to stop XSS.',
+      'Least privilege limits the blast radius of a breach.',
+    ],
+    misconceptions: [
+      '"Cleaning input once at the door is enough."',
+      '"Only big companies get attacked."',
+    ],
+    discussion: [
+      'Why is output escaping context-specific?',
+      'Where in your stack does least privilege apply?',
+    ],
+    lab: 'Run the unsafe SQL snippet to see the attack, then the parameterized fix; show html.escape defusing an XSS payload.',
+    assess: [
+      'Give the correct fix for SQL injection.',
+      'Explain how escaping stops XSS.',
+    ],
+  },
+  testing: {
+    objectives: [
+      'Explain the value and levels of automated tests.',
+      'Follow the red-green-refactor TDD cycle.',
+      'Describe what makes a good test.',
+    ],
+    keyConcepts: [
+      'Unit < integration < end-to-end (the pyramid).',
+      'A test asserts an expectation and fails loudly.',
+      'TDD: write a failing test, pass it, then refactor.',
+      'Coverage measures execution, not assertion quality.',
+    ],
+    misconceptions: [
+      '"100% coverage means no bugs."',
+      '"Tests slow you down."',
+    ],
+    discussion: [
+      'Why keep end-to-end tests few?',
+      'What makes a test flaky, and how do you fix it?',
+    ],
+    lab: 'Run the failing (red) test, then the passing (green) version; extend the tiny runner with a new case.',
+    assess: [
+      'State the TDD cycle in order.',
+      'Explain why most tests should be unit tests.',
+    ],
+  },
+  functional: {
+    objectives: [
+      'Define pure functions and side effects.',
+      'Use map/filter/reduce to transform data.',
+      'Explain how immutability prevents bugs.',
+    ],
+    keyConcepts: [
+      'Pure = same input, same output, no side effects.',
+      'Higher-order functions take/return functions.',
+      'map transforms, filter selects, reduce folds.',
+      'Immutability avoids shared-state and aliasing bugs.',
+    ],
+    misconceptions: [
+      '"Functional programming needs a special language."',
+      '"reduce is just a fancy loop with no benefit."',
+    ],
+    discussion: [
+      'Why does purity enable parallelism and caching?',
+      'When is a loop clearer than map/reduce?',
+    ],
+    lab: 'Run pure vs. impure; convert a loop into map/filter/reduce; compose two functions over an immutable tuple.',
+    assess: [
+      'Identify whether a function is pure.',
+      'Rewrite a loop using map/filter/reduce.',
+    ],
+  },
 }
