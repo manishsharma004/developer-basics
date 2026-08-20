@@ -2850,3 +2850,9 @@ a {
 .app--collapsed .theme-swatches {
   justify-content: center;
 }
+
+/* Light-theme contrast tweak for the amber teacher ribbon. */
+[data-theme='light'] .mode-ribbon {
+  color: #92400e;
+  border-color: rgba(146, 64, 14, 0.35);
+}
