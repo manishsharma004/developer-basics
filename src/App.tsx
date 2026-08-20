@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Route, Routes, useLocation } from 'react-router-dom'
 import { lessons } from './lessons/index.tsx'
-import type { Level } from './lessons/meta.ts'
+import { groups, type Level } from './lessons/meta.ts'
 import Home from './pages/Home.tsx'
 import TeacherHome from './pages/TeacherHome.tsx'
 import { useExperience } from './experience/ExperienceContext.tsx'
@@ -28,6 +28,10 @@ function App() {
   })
   const [mobileOpen, setMobileOpen] = useState(false)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
+  const [closedGroups, setClosedGroups] = useState<Record<string, boolean>>({})
+
+  const toggleGroup = (id: string) =>
+    setClosedGroups((g) => ({ ...g, [id]: !g[id] }))
 
   const toggleCollapsed = () => {
     setCollapsed((c) => {
@@ -149,18 +153,44 @@ function App() {
               )
             })
           ) : (
-            lessons.map((lesson) => (
-              <NavLink
-                key={lesson.id}
-                to={lesson.path}
-                className="nav-link"
-                title={lesson.title}
-                onClick={closeMobile}
-              >
-                <span className="nav-icon">{lesson.icon}</span>
-                <span className="nav-label">{lesson.title}</span>
-              </NavLink>
-            ))
+            groups.map((group) => {
+              const items = lessons.filter((l) => l.group === group.id)
+              if (items.length === 0) return null
+              // When the rail is collapsed to icons, always show the lessons so
+              // every chapter icon stays reachable.
+              const open = collapsed || !closedGroups[group.id]
+              return (
+                <div
+                  key={group.id}
+                  className={`nav-group nav-group--collapsible${open ? ' nav-group--open' : ''}`}
+                >
+                  <button
+                    type="button"
+                    className="nav-group-toggle"
+                    aria-expanded={open}
+                    onClick={() => toggleGroup(group.id)}
+                    title={group.title}
+                  >
+                    <span className="nav-icon" aria-hidden>{group.icon}</span>
+                    <span className="nav-group-toggle-title nav-label">{group.title}</span>
+                    <span className="nav-group-caret nav-label" aria-hidden>{open ? '▾' : '▸'}</span>
+                  </button>
+                  {open &&
+                    items.map((lesson) => (
+                      <NavLink
+                        key={lesson.id}
+                        to={lesson.path}
+                        className="nav-link nav-link--child"
+                        title={lesson.title}
+                        onClick={closeMobile}
+                      >
+                        <span className="nav-icon">{lesson.icon}</span>
+                        <span className="nav-label">{lesson.title}</span>
+                      </NavLink>
+                    ))}
+                </div>
+              )
+            })
           )}
         </nav>
 

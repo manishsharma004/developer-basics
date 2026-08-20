@@ -1038,6 +1038,55 @@ a {
   margin-bottom: 32px;
 }
 
+/* Home: modules (grouped chapters) --------------------------------------- */
+.home-group {
+  margin-bottom: 34px;
+}
+.home-group-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.home-group-icon {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+.home-group-heading {
+  flex: 1;
+  min-width: 0;
+}
+.home-group-title {
+  margin: 0;
+  font-size: 1.25rem;
+}
+.home-group-blurb {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+.home-group-count {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  background: var(--rail-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+@media (max-width: 560px) {
+  .home-group-count {
+    display: none;
+  }
+}
+
 .lesson-card {
   display: flex;
   flex-direction: column;
@@ -2426,6 +2475,52 @@ a {
   letter-spacing: 0.08em;
   color: var(--muted);
   padding: 6px 12px 2px;
+}
+
+/* Collapsible student nav groups ----------------------------------------- */
+.nav-group--collapsible {
+  margin-top: 6px;
+}
+.nav-group-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--muted);
+  font: inherit;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-group-toggle:hover {
+  background: rgba(148, 164, 195, 0.08);
+  color: var(--text);
+}
+.nav-group-toggle-title {
+  flex: 1;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.nav-group-caret {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+.nav-link--child {
+  padding-left: 22px;
+  font-size: 0.92rem;
+}
+.app--collapsed .nav-group-toggle {
+  justify-content: center;
+  padding: 10px 0;
+}
+.app--collapsed .nav-link--child {
+  padding-left: 0;
 }
 
 /* Teacher-mode ribbon ----------------------------------------------------- */
