@@ -1,6 +1,57 @@
 import { Lesson } from '../components/Lesson.tsx'
 import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
+import { SnippetRunner, type Snippet } from '../components/SnippetRunner.tsx'
 import { HashPlayground } from './HashPlayground.tsx'
+
+const SNIPPETS: Snippet[] = [
+  {
+    label: 'Hash a password with salt',
+    code: `import hashlib, secrets
+
+def hash_password(password):
+    salt = secrets.token_hex(8)
+    digest = hashlib.sha256((salt + password).encode()).hexdigest()
+    return salt, digest
+
+def verify(password, salt, digest):
+    attempt = hashlib.sha256((salt + password).encode()).hexdigest()
+    return attempt == digest
+
+salt, digest = hash_password("hunter2")
+print("stored:", salt, digest[:16] + "...")
+print("correct:", verify("hunter2", salt, digest))
+print("wrong:  ", verify("password", salt, digest))`,
+  },
+  {
+    label: 'Detect tampering',
+    code: `import hashlib
+
+def checksum(data):
+    return hashlib.sha256(data.encode()).hexdigest()
+
+message = "Transfer $100 to Ada"
+stored_hash = checksum(message)
+
+# attacker changes the message
+tampered = "Transfer $10000 to Eve"
+print("original hash:", stored_hash[:16])
+print("tampered hash:", checksum(tampered)[:16])
+print("match?", stored_hash == checksum(tampered))`,
+  },
+  {
+    label: 'Encoding is not encryption',
+    code: `import base64
+
+secret = "not actually secret"
+encoded = base64.b64encode(secret.encode()).decode()
+decoded = base64.b64decode(encoded).decode()
+
+print("original:", secret)
+print("base64:  ", encoded)
+print("decoded: ", decoded)
+print("Anyone can decode base64 — no key needed.")`,
+  },
+]
 
 export default function CryptoLesson() {
   return (
@@ -54,6 +105,20 @@ export default function CryptoLesson() {
         </TryThis>
       </Section>
 
+      <Section id="labs" title="Code lab">
+        <p className="prose">
+          Hash a password with a random salt, verify it on login, and see how a
+          checksum detects tampering. The Base64 snippet shows why encoding alone
+          provides zero security.
+        </p>
+        <SnippetRunner snippets={SNIPPETS} />
+        <TryThis>
+          Run <strong>Detect tampering</strong> and change one character in the
+          message — the hash changes completely. Then run{' '}
+          <strong>Encoding is not encryption</strong> and decode the Base64 yourself.
+        </TryThis>
+      </Section>
+
       <Section id="hood" title="Under the hood">
         <UnderTheHood title="Why you never store plain passwords">
           <p className="prose">
@@ -72,6 +137,15 @@ export default function CryptoLesson() {
             — it isn't secret, it just has to be unique per user.
           </p>
         </UnderTheHood>
+        <UnderTheHood title="Symmetric vs asymmetric encryption">
+          <p className="prose">
+            <strong>Symmetric</strong> encryption (AES) uses one shared key for both
+            directions — fast, but you must exchange the key securely.{' '}
+            <strong>Asymmetric</strong> encryption (RSA, ECC) uses a public/private
+            key pair — HTTPS uses this to agree on a symmetric key, then switches to
+            AES for speed.
+          </p>
+        </UnderTheHood>
       </Section>
 
       <Section id="terms" title="Key terms">
@@ -83,6 +157,7 @@ export default function CryptoLesson() {
             { term: 'salt', def: 'A random per-item value added before hashing.' },
             { term: 'encoding', def: 'A reversible representation (e.g. Base64) — not security.' },
             { term: 'collision resistance', def: 'It is infeasible to find two inputs with the same hash.' },
+            { term: 'HMAC', def: 'A keyed hash for message authentication — proves integrity + origin.' },
           ]}
         />
       </Section>
@@ -113,28 +188,23 @@ export default function CryptoLesson() {
               answer: 2,
               explain: 'Base64 has no secret and is trivially reversible; it provides no confidentiality.',
             },
-
             {
               q: 'Hashing is one-way — you cannot:',
-              options: [
-                'Hash twice',
-              'Recover the original input from the hash',
-              'Use SHA-256',
-              'Compare hashes',
-              ],
+              options: ['Hash twice', 'Recover the original input from the hash', 'Use SHA-256', 'Compare hashes'],
               answer: 1,
               explain: 'Hashes are designed to be irreversible (unlike encryption).',
             },
             {
               q: 'Salting passwords helps against:',
-              options: [
-                'DNS spoofing',
-              'Rainbow table attacks',
-              'HTTP caching',
-              'Git merges',
-              ],
+              options: ['DNS spoofing', 'Rainbow table attacks', 'HTTP caching', 'Git merges'],
               answer: 1,
               explain: 'Unique salts force attackers to crack each password separately.',
+            },
+            {
+              q: 'HTTPS uses asymmetric crypto mainly to:',
+              options: ['Encrypt all traffic slowly', 'Agree on a symmetric session key securely', 'Hash passwords', 'Compress data'],
+              answer: 1,
+              explain: 'Asymmetric crypto bootstraps trust; symmetric AES handles bulk encryption.',
             },
           ]}
         />
@@ -147,6 +217,7 @@ export default function CryptoLesson() {
             <>A tiny input change flips ~half the hash — the <strong>avalanche effect</strong>.</>,
             <>Store passwords as <strong>salted, slow</strong> hashes, never plaintext.</>,
             <>Encoding (Base64) is not security.</>,
+            <>HTTPS combines asymmetric key exchange with fast symmetric encryption.</>,
           ]}
         />
       </Section>
