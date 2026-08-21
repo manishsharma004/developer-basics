@@ -29,6 +29,7 @@ interface ProgressContextValue {
   progressByLesson: ReadonlyMap<string, LessonProgress>
   getProgress: (lessonId: string) => LessonProgress | undefined
   recordOpen: (lessonId: string) => Promise<void>
+  setLessonRead: (lessonId: string, read: boolean) => Promise<void>
   saveQuizAnswer: (lessonId: string, questionIndex: number, optionIndex: number) => Promise<void>
 }
 
@@ -93,13 +94,12 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
           ? {
               ...existing,
               openCount: existing.openCount + 1,
-              read: true,
               lastOpenedAt: now,
             }
           : {
               lessonId,
               openCount: 1,
-              read: true,
+              read: false,
               firstOpenedAt: now,
               lastOpenedAt: now,
               quizAnswers: {},
@@ -112,6 +112,28 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     },
     [],
   )
+
+  const setLessonRead = useCallback(async (lessonId: string, read: boolean) => {
+    const now = Date.now()
+    let nextProgress: LessonProgress | null = null
+    setProgressByLesson((current) => {
+      const existing = current.get(lessonId)
+      nextProgress = existing
+        ? { ...existing, read, lastOpenedAt: now }
+        : {
+            lessonId,
+            openCount: 0,
+            read,
+            firstOpenedAt: now,
+            lastOpenedAt: now,
+            quizAnswers: {},
+          }
+      const next = new Map(current)
+      next.set(lessonId, nextProgress)
+      return next
+    })
+    if (nextProgress) await saveLessonProgress(toRecord(nextProgress))
+  }, [])
 
   const saveQuizAnswer = useCallback(
     async (lessonId: string, questionIndex: number, optionIndex: number) => {
@@ -148,9 +170,10 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       progressByLesson,
       getProgress,
       recordOpen,
+      setLessonRead,
       saveQuizAnswer,
     }),
-    [ready, progressByLesson, getProgress, recordOpen, saveQuizAnswer],
+    [ready, progressByLesson, getProgress, recordOpen, setLessonRead, saveQuizAnswer],
   )
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>

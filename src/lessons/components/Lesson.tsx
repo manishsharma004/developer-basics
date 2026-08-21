@@ -18,9 +18,10 @@ export function Lesson({ id, children }: Props) {
   const location = useLocation()
   const sections: SectionMeta[] = meta?.sections ?? []
   const [active, setActive] = useState(sections[0]?.id ?? '')
-  const { recordOpen } = useProgress()
+  const { recordOpen, setLessonRead } = useProgress()
   const { progress } = useLessonProgress(id)
   const openedRef = useRef<string | null>(null)
+  const isRead = progress?.read ?? false
 
   useEffect(() => {
     const scrollTo = (location.state as { scrollTo?: string } | null)?.scrollTo
@@ -72,6 +73,10 @@ export function Lesson({ id, children }: Props) {
 
   const openCount = progress?.openCount ?? 0
 
+  const toggleRead = () => {
+    void setLessonRead(id, !isRead)
+  }
+
   return (
     <CurrentLessonProvider lessonId={id}>
       <div className="lesson">
@@ -86,12 +91,16 @@ export function Lesson({ id, children }: Props) {
                   Opened {openCount}×
                 </span>
               )}
-              {progress?.read && (
-                <span className="badge badge--read" title="Marked as read">
-                  Read
-                </span>
-              )}
             </div>
+            <button
+              type="button"
+              className={`lesson-read-btn${isRead ? ' lesson-read-btn--done' : ''}`}
+              onClick={toggleRead}
+              aria-pressed={isRead}
+              title={isRead ? 'Marked as read — click to undo' : 'Mark this chapter as read'}
+            >
+              {isRead ? '✓ Marked as read' : 'Mark as read'}
+            </button>
           </div>
           <h1>{meta.title}</h1>
           <p className="lesson-hero-tagline">{meta.tagline}</p>

@@ -1202,7 +1202,37 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
   margin-bottom: 10px;
+}
+.lesson-read-btn {
+  flex-shrink: 0;
+  margin-left: auto;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.lesson-read-btn:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--panel-2));
+}
+.lesson-read-btn--done {
+  border-color: color-mix(in srgb, var(--quiz-correct) 45%, var(--border));
+  background: color-mix(in srgb, var(--quiz-correct) 12%, var(--panel-2));
+  color: var(--quiz-correct);
+}
+.lesson-read-btn--done:hover {
+  border-color: var(--border);
+  background: var(--panel-2);
+  color: var(--text);
 }
 .lesson-hero-icon {
   font-size: 2.4rem;
