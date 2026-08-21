@@ -140,6 +140,29 @@ export default function TimeLesson() {
               answer: 1,
               explain: 'ISO 8601 with a Z/offset states the instant clearly.',
             },
+
+            {
+              q: 'Unix epoch counts seconds since:',
+              options: [
+                '2000-01-01',
+              '1970-01-01 UTC',
+              'Local midnight today',
+              'First HTTP request',
+              ],
+              answer: 1,
+              explain: 'Epoch is 1970-01-01 00:00:00 UTC (ignoring leap seconds in many APIs).',
+            },
+            {
+              q: 'Storing only local time without timezone risks:',
+              options: [
+                'Faster queries',
+              'Ambiguity during DST shifts',
+              'Smaller files',
+              'Better sorting',
+              ],
+              answer: 1,
+              explain: 'Local clocks jump or repeat during DST; UTC + offset is safer.',
+            },
           ]}
         />
       </Section>

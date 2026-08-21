@@ -140,6 +140,29 @@ export default function MemoryLesson() {
               answer: 1,
               explain: "The GC only frees unreachable objects; reachable-but-unneeded objects still accumulate.",
             },
+
+            {
+              q: 'Two variables pointing at the same list means:',
+              options: [
+                'Two copies',
+              'Aliasing — changes via one name affect the other',
+              'Stack overflow',
+              'GC cannot run',
+              ],
+              answer: 1,
+              explain: 'They share one object; assignment copies references, not objects.',
+            },
+            {
+              q: 'Garbage collection frees objects that are:',
+              options: [
+                'On the stack',
+              'Unreachable from live references',
+              'Older than 1 second',
+              'Larger than 1 MB',
+              ],
+              answer: 1,
+              explain: 'GC reclaims memory when no references point to an object.',
+            },
           ]}
         />
       </Section>

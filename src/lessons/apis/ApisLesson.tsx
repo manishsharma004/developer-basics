@@ -50,6 +50,24 @@ for req in [("GET", "/users"), ("GET", "/users/2"), ("GET", "/users/9"), ("DELET
 for code in [200, 201, 301, 400, 404, 500]:
     print(code, "->", family(code))`,
   },
+  {
+    label: 'Status code meanings',
+    code: `    STATUS = {
+        200: "OK",
+        201: "Created",
+        400: "Bad Request",
+        401: "Unauthorized",
+        404: "Not Found",
+        500: "Server Error",
+    }
+    
+    def describe(code):
+        return STATUS.get(code, "unknown")
+    
+    for code in [200, 404, 418]:
+        print(code, describe(code))`,
+  },
+
 ]
 
 export default function ApisLesson() {
@@ -170,6 +188,29 @@ export default function ApisLesson() {
               ],
               answer: 1,
               explain: 'Statelessness lets any server instance handle any request.',
+            },
+
+            {
+              q: 'REST POST to `/users` typically:',
+              options: [
+                'Deletes a user',
+              'Creates a new user resource',
+              'Lists all users',
+              'Returns 404',
+              ],
+              answer: 1,
+              explain: 'POST on a collection URL usually creates a new item.',
+            },
+            {
+              q: 'HTTP 201 Created often means:',
+              options: [
+                'Server error',
+              'Resource was created successfully',
+              'Redirect',
+              'Unauthorized',
+              ],
+              answer: 1,
+              explain: '201 is the standard success response after creation.',
             },
           ]}
         />

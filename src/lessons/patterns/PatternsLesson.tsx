@@ -97,6 +97,29 @@ export default function PatternsLesson() {
               answer: 1,
               explain: 'Applied without a real problem, patterns add indirection without benefit.',
             },
+
+            {
+              q: 'Factory pattern is for:',
+              options: [
+                'Sorting arrays',
+              'Creating objects without naming concrete classes at call site',
+              'DNS lookup',
+              'TLS only',
+              ],
+              answer: 1,
+              explain: 'Factories centralize object construction logic.',
+            },
+            {
+              q: 'Over-using patterns can:',
+              options: [
+                'Always simplify code',
+              'Add unnecessary complexity — pattern soup',
+              'Fix all bugs',
+              'Remove need for tests',
+              ],
+              answer: 1,
+              explain: 'Patterns solve recurring problems; do not apply them everywhere.',
+            },
           ]}
         />
       </Section>

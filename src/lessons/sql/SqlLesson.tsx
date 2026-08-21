@@ -103,6 +103,29 @@ export default function SqlLesson() {
               answer: 1,
               explain: 'Parameters keep data separate from SQL code, so input cannot become commands.',
             },
+
+            {
+              q: 'PRIMARY KEY ensures:',
+              options: [
+                'Fast network',
+              'Each row has a unique identifier',
+              'UTF-8 encoding',
+              'No NULLs anywhere',
+              ],
+              answer: 1,
+              explain: 'Primary keys uniquely identify rows in a table.',
+            },
+            {
+              q: 'JOIN combines rows based on:',
+              options: [
+                'Random order',
+              'Related columns between tables',
+              'File size',
+              'CPU count',
+              ],
+              answer: 1,
+              explain: 'Joins link tables via foreign keys or shared columns.',
+            },
           ]}
         />
       </Section>

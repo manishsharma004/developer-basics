@@ -107,6 +107,29 @@ export default function DataStructuresLesson() {
               answer: 1,
               explain: 'Sequential memory access benefits from CPU caching; scattered list nodes do not.',
             },
+
+            {
+              q: 'Hash map average lookup time:',
+              options: [
+                'O(n)',
+              'O(log n)',
+              'O(1)',
+              'O(n²)',
+              ],
+              answer: 2,
+              explain: 'With a good hash and load factor, lookups are constant average time.',
+            },
+            {
+              q: 'Linked list vs array for front insertions:',
+              options: [
+                'Array is always faster',
+              'Linked list avoids shifting elements',
+              'Both are O(1)',
+              'Neither supports insert',
+              ],
+              answer: 1,
+              explain: 'Arrays must shift elements; linked lists update pointers.',
+            },
           ]}
         />
       </Section>

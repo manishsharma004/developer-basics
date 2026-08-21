@@ -120,6 +120,29 @@ export default function DataLesson() {
               answer: 1,
               explain: 'Non-ASCII code points take 2–4 UTF-8 bytes each.',
             },
+
+            {
+              q: 'How many bits are in one byte?',
+              options: [
+                '4',
+              '8',
+              '16',
+              '32',
+              ],
+              answer: 1,
+              explain: 'A byte is eight bits (256 distinct values).',
+            },
+            {
+              q: 'Why is hex popular for memory dumps?',
+              options: [
+                'Hex is faster',
+              'Two hex digits map cleanly to one byte',
+              'Decimals are illegal',
+              'Unicode requires hex',
+              ],
+              answer: 1,
+              explain: 'Each byte is exactly two hex digits — easy to read at a glance.',
+            },
           ]}
         />
       </Section>

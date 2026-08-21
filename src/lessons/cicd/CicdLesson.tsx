@@ -124,6 +124,29 @@ export default function CicdLesson() {
               answer: 1,
               explain: 'GitHub Actions workflows live under .github/workflows/.',
             },
+
+            {
+              q: 'Branch protection can require:',
+              options: [
+                'Manual deploy only',
+              'Passing CI before merge',
+              'No tests',
+              'Force push always',
+              ],
+              answer: 1,
+              explain: 'Required status checks block merging broken code.',
+            },
+            {
+              q: 'If lint fails in CI, deploy should:',
+              options: [
+                'Run anyway',
+              'Be blocked — fix lint first',
+              'Skip tests',
+              'Delete main',
+              ],
+              answer: 1,
+              explain: 'Pipeline stages stop at the first failure.',
+            },
           ]}
         />
       </Section>

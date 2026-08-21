@@ -39,6 +39,17 @@ print("raw   :", comment)
 print("escaped:", html.escape(comment))
 print("=> escaped angle brackets render as text, not executable HTML")`,
   },
+  {
+    label: 'Safe query pattern',
+    code: `    # Parameterized query — data is not part of the SQL string
+    def login(username, password):
+        query = "SELECT * FROM users WHERE name = ? AND pass = ?"
+      # driver binds username/password as parameters
+        return query, (username, password)
+    
+    print(login("admin", "' OR 1=1 --"))`,
+  },
+
 ]
 
 export default function SecurityLesson() {
@@ -166,6 +177,29 @@ export default function SecurityLesson() {
               ],
               answer: 1,
               explain: 'Minimal access limits the blast radius of any single compromise.',
+            },
+
+            {
+              q: 'Parameterized queries prevent:',
+              options: [
+                'XSS only',
+              'SQL injection by separating code from data',
+              'All attacks',
+              'Slow networks',
+              ],
+              answer: 1,
+              explain: 'Bound parameters are not interpreted as SQL syntax.',
+            },
+            {
+              q: 'Output escaping in HTML prevents:',
+              options: [
+                'SQL injection',
+              'XSS from untrusted text becoming markup',
+              'TLS errors',
+              '404s',
+              ],
+              answer: 1,
+              explain: 'Escaping ensures user text displays as text, not executable HTML.',
             },
           ]}
         />

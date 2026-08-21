@@ -159,6 +159,29 @@ export default function FilesystemLesson() {
               answer: 1,
               explain: 'The last triple is r--, i.e. read but not write or execute.',
             },
+
+            {
+              q: 'A hard link vs copy:',
+              options: [
+                'Hard link duplicates bytes',
+              'Hard link adds another name for the same inode',
+              'Copy is instant',
+              'Hard link works across disks',
+              ],
+              answer: 1,
+              explain: 'Hard links share data; copies duplicate file contents.',
+            },
+            {
+              q: '`..` in a path means:',
+              options: [
+                'Hidden file',
+              'Parent directory',
+              'Root',
+              'Current directory',
+              ],
+              answer: 1,
+              explain: 'Dot-dot walks up one directory level.',
+            },
           ]}
         />
       </Section>

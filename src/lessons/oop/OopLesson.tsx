@@ -139,6 +139,29 @@ export default function OopLesson() {
               answer: 1,
               explain: 'Combining small objects avoids the fragility of deep base-class hierarchies.',
             },
+
+            {
+              q: 'Polymorphism lets you:',
+              options: [
+                'Hide all methods',
+              'Call the same interface on different types',
+              'Disable inheritance',
+              'Remove GC',
+              ],
+              answer: 1,
+              explain: 'Different classes implement the same method name with type-specific behavior.',
+            },
+            {
+              q: 'Encapsulation hides:',
+              options: [
+                'The entire program',
+              'Internal state behind a controlled interface',
+              'All files',
+              'Network ports',
+              ],
+              answer: 1,
+              explain: 'Public methods expose behavior; internals stay private.',
+            },
           ]}
         />
       </Section>

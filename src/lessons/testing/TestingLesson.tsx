@@ -46,6 +46,18 @@ for name, (got, want) in tests.items():
     print(f"{'PASS' if ok else 'FAIL'}  {name}: {got!r}")
 print(f"\\n{passed}/{len(tests)} passed")`,
   },
+  {
+    label: 'Table-driven tests',
+    code: `    def clamp(n, lo, hi):
+        return max(lo, min(n, hi))
+    
+    cases = [(5, 0, 10, 5), (-1, 0, 10, 0), (99, 0, 10, 10)]
+    for n, lo, hi, want in cases:
+        got = clamp(n, lo, hi)
+        assert got == want, (n, lo, hi, got)
+    print("all cases passed")`,
+  },
+
 ]
 
 export default function TestingLesson() {
@@ -171,6 +183,29 @@ export default function TestingLesson() {
               ],
               answer: 1,
               explain: 'Coverage measures execution, not the quality of your assertions.',
+            },
+
+            {
+              q: 'A flaky test:',
+              options: [
+                'Always passes',
+              'Sometimes passes, sometimes fails without code changes',
+              'Runs only once',
+              'Cannot be automated',
+              ],
+              answer: 1,
+              explain: 'Flakiness often comes from timing, order, or external dependencies.',
+            },
+            {
+              q: 'TDD order is:',
+              options: [
+                'Refactor, red, green',
+              'Red, green, refactor',
+              'Green, deploy, red',
+              'Skip tests',
+              ],
+              answer: 1,
+              explain: 'Write failing test, make it pass, then improve design.',
             },
           ]}
         />

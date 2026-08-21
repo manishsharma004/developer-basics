@@ -69,6 +69,32 @@ def shortest_path(start, goal):
 
 print(shortest_path("A", "E"))`,
   },
+  {
+    label: 'BFS with a queue',
+    code: `    from collections import deque
+    
+    graph = {
+        "A": ["B", "C"],
+        "B": ["D"],
+        "C": ["D"],
+        "D": [],
+    }
+    
+    def bfs(start):
+        seen, q = {start}, deque([start])
+        order = []
+        while q:
+            node = q.popleft()
+            order.append(node)
+            for nxt in graph[node]:
+                if nxt not in seen:
+                    seen.add(nxt)
+                    q.append(nxt)
+        return order
+    
+    print(bfs("A"))`,
+  },
+
 ]
 
 export default function TreesLesson() {
@@ -187,6 +213,29 @@ export default function TreesLesson() {
               ],
               answer: 1,
               explain: 'Trees have no cycles; general graphs do, so you must remember what you have seen.',
+            },
+
+            {
+              q: 'BFS explores a graph:',
+              options: [
+                'Depth-first',
+              'Layer by layer from the start',
+              'Random order',
+              'Only trees, not graphs',
+              ],
+              answer: 1,
+              explain: 'BFS uses a queue to visit nearest nodes first.',
+            },
+            {
+              q: 'DFS on a tree can be implemented with:',
+              options: [
+                'Only a queue',
+              'Recursion or an explicit stack',
+              'SQL',
+              'Sorting',
+              ],
+              answer: 1,
+              explain: 'Recursive calls or a stack mimic depth-first descent.',
             },
           ]}
         />

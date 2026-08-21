@@ -166,6 +166,29 @@ export default function NetworkLesson() {
               answer: 2,
               explain: 'GET is meant to read without side effects, so it is safe to repeat.',
             },
+
+            {
+              q: 'A network timeout usually means:',
+              options: [
+                '404 Not Found',
+              'No response arrived within the deadline',
+              'TLS succeeded',
+              'DNS cached',
+              ],
+              answer: 1,
+              explain: 'Timeouts are often connectivity, overload, or hung servers — not always 4xx/5xx.',
+            },
+            {
+              q: 'HTTP/2 can improve performance by:',
+              options: [
+                'Removing TLS',
+              'Multiplexing many requests on one connection',
+              'Using only GET',
+              'Disabling caching',
+              ],
+              answer: 1,
+              explain: 'One TCP connection carries parallel streams, cutting setup overhead.',
+            },
           ]}
         />
       </Section>

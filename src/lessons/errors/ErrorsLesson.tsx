@@ -102,6 +102,29 @@ export default function ErrorsLesson() {
               answer: 2,
               explain: 'The bottom line names the exception type and message.',
             },
+
+            {
+              q: 'What does `finally` guarantee?',
+              options: [
+                'Only on success',
+              'Runs whether or not an exception occurred',
+              'Skips on error',
+              'Retries the block',
+              ],
+              answer: 1,
+              explain: '`finally` runs on every exit path from the try/except.',
+            },
+            {
+              q: 'Bare `except:` catches:',
+              options: [
+                'Only ValueError',
+              'Almost any exception — often too broad',
+              'Syntax errors only',
+              'Nothing',
+              ],
+              answer: 1,
+              explain: 'Catch specific exceptions so you do not hide bugs like KeyboardInterrupt.',
+            },
           ]}
         />
       </Section>

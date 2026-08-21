@@ -55,6 +55,23 @@ print("server looks up:", server_sessions[session_id])
 print("\\nsession  -> tiny cookie, server stores state (easy to revoke)")
 print("token    -> self-contained, nothing to store (scales, harder to revoke)")`,
   },
+  {
+    label: 'Verify a password',
+    code: `    import hashlib, secrets
+    
+    def hash_password(pw):
+        salt = secrets.token_hex(8)
+        digest = hashlib.sha256((salt + pw).encode()).hexdigest()
+        return salt, digest
+    
+    def verify(pw, salt, digest):
+        return hashlib.sha256((salt + pw).encode()).hexdigest() == digest
+    
+    salt, digest = hash_password("secret")
+    print("ok", verify("secret", salt, digest))
+    print("bad", verify("wrong", salt, digest))`,
+  },
+
 ]
 
 export default function AuthLesson() {
@@ -182,6 +199,29 @@ export default function AuthLesson() {
               ],
               answer: 1,
               explain: 'JWTs are signed, not secret — never put confidential data in one.',
+            },
+
+            {
+              q: 'Authentication proves:',
+              options: [
+                'What you may do',
+              'Who you are',
+              'Server location',
+              'JSON schema',
+              ],
+              answer: 1,
+              explain: 'AuthN = identity; AuthZ = permissions.',
+            },
+            {
+              q: 'JWT payload is:',
+              options: [
+                'Encrypted secret',
+              'Base64-encoded JSON — not secret',
+              'Always empty',
+              'Only for DNS',
+              ],
+              answer: 1,
+              explain: 'Anyone can read the payload; the signature proves integrity.',
             },
           ]}
         />

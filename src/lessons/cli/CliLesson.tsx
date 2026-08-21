@@ -102,6 +102,29 @@ export default function CliLesson() {
               answer: 1,
               explain: 'stderr is a distinct stream, so it is not carried through the pipe.',
             },
+
+            {
+              q: 'In a pipeline `a | b`, stdout of `a` becomes:',
+              options: [
+                'A file on disk',
+              'stdin of `b`',
+              'stderr of `b`',
+              'Environment variable',
+              ],
+              answer: 1,
+              explain: 'The pipe connects one process output to the next input.',
+            },
+            {
+              q: 'Exit code 0 usually means:',
+              options: [
+                'Failure',
+              'Success',
+              'Timeout',
+              'Permission denied',
+              ],
+              answer: 1,
+              explain: 'Unix convention: zero is success; non-zero signals an error.',
+            },
           ]}
         />
       </Section>

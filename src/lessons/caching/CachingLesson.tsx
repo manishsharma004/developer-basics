@@ -102,6 +102,29 @@ export default function CachingLesson() {
               answer: 1,
               explain: 'More capacity fits more of the working set, improving hits until diminishing returns.',
             },
+
+            {
+              q: 'A cache miss means:',
+              options: [
+                'Data was deleted',
+              'Requested key was not in cache — must fetch source',
+              'TLS failed',
+              'Disk full',
+              ],
+              answer: 1,
+              explain: 'Misses are slower because you pay the full fetch cost.',
+            },
+            {
+              q: 'LRU evicts:',
+              options: [
+                'Random entry',
+              'Least recently used item',
+              'Largest item',
+              'Newest item',
+              ],
+              answer: 1,
+              explain: 'LRU drops the stale entry when capacity is full.',
+            },
           ]}
         />
       </Section>

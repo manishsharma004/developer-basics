@@ -97,6 +97,29 @@ export default function ClassesLesson() {
               answer: 1,
               explain: 'The constructor sets up the initial state of a newly created instance.',
             },
+
+            {
+              q: 'An instance attribute lives on:',
+              options: [
+                'The class only',
+              'Each object separately',
+              'The module',
+              'DNS cache',
+              ],
+              answer: 1,
+              explain: 'Instance attrs are per-object; class attrs are shared.',
+            },
+            {
+              q: '`self` in Python methods refers to:',
+              options: [
+                'The parent class',
+              'The current instance',
+              'Global scope',
+              'A keyword only in Java',
+              ],
+              answer: 1,
+              explain: 'self is the instance receiving the method call.',
+            },
           ]}
         />
       </Section>

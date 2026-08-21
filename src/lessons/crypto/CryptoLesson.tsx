@@ -113,6 +113,29 @@ export default function CryptoLesson() {
               answer: 2,
               explain: 'Base64 has no secret and is trivially reversible; it provides no confidentiality.',
             },
+
+            {
+              q: 'Hashing is one-way — you cannot:',
+              options: [
+                'Hash twice',
+              'Recover the original input from the hash',
+              'Use SHA-256',
+              'Compare hashes',
+              ],
+              answer: 1,
+              explain: 'Hashes are designed to be irreversible (unlike encryption).',
+            },
+            {
+              q: 'Salting passwords helps against:',
+              options: [
+                'DNS spoofing',
+              'Rainbow table attacks',
+              'HTTP caching',
+              'Git merges',
+              ],
+              answer: 1,
+              explain: 'Unique salts force attackers to crack each password separately.',
+            },
           ]}
         />
       </Section>
