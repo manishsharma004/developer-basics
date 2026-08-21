@@ -2,6 +2,9 @@
 // components so lesson components can read it without creating import cycles.
 // Adding a lesson = add an entry here + a component wired up in `index.tsx`.
 
+import { fastapiLessonsMeta } from './fastapi/chapterMeta.ts'
+import { reactLessonsMeta } from './react/chapterMeta.ts'
+
 export type Level = 'Beginner' | 'Intermediate' | 'Advanced'
 
 export interface SectionMeta {
@@ -69,6 +72,18 @@ export const groups: LessonGroup[] = [
     title: 'Networking & the Web',
     icon: '🌐',
     blurb: 'How machines talk over the network, expose APIs, and prove who you are.',
+  },
+  {
+    id: 'fastapi',
+    title: 'FastAPI',
+    icon: '⚡',
+    blurb: 'Build modern Python HTTP APIs — routes, validation, dependencies, async, and CORS.',
+  },
+  {
+    id: 'react',
+    title: 'React',
+    icon: '⚛️',
+    blurb: 'Interactive UIs with components, state, hooks, Context, and external stores.',
   },
   {
     id: 'security',
@@ -610,68 +625,8 @@ export const lessonsMeta: LessonMeta[] = [
       ...CLOSING,
     ],
   },
-  {
-    id: 'fastapi',
-    path: '/lessons/fastapi',
-    title: 'FastAPI',
-    tagline: 'Modern Python APIs with validation, dependency injection, and auto-generated docs.',
-    icon: '⚡',
-    level: 'Intermediate',
-    minutes: 42,
-    summary:
-      'Build REST endpoints with path operations, Pydantic models, query/path parameters, dependencies, auth, errors, async ASGI, OpenAPI docs, and CORS — the Python backend that pairs with a React frontend.',
-    group: 'web',
-    sections: [
-      { id: 'intro', title: 'Why it matters' },
-      { id: 'routes-basics', title: 'GET routes & JSON responses' },
-      { id: 'routes-crud', title: 'POST, PUT & DELETE' },
-      { id: 'models-request', title: 'Request models (Pydantic)' },
-      { id: 'models-response', title: 'Response models & status codes' },
-      { id: 'params-path', title: 'Path parameters' },
-      { id: 'params-query', title: 'Query parameters' },
-      { id: 'params-body', title: 'Request body' },
-      { id: 'deps-database', title: 'Database dependencies' },
-      { id: 'deps-auth', title: 'Auth dependencies' },
-      { id: 'errors', title: 'Errors & HTTPException' },
-      { id: 'hood-asgi', title: 'ASGI & async handlers' },
-      { id: 'hood-openapi', title: 'OpenAPI & /docs' },
-      { id: 'hood-cors', title: 'CORS & React integration' },
-      { id: 'hood', title: 'Under the hood' },
-      ...CLOSING,
-    ],
-  },
-  {
-    id: 'react',
-    path: '/lessons/react',
-    title: 'React',
-    tagline: 'Components, props, state, and hooks — building interactive UIs that scale.',
-    icon: '⚛️',
-    level: 'Intermediate',
-    minutes: 48,
-    summary:
-      'Learn JSX, components, props, useState, events, lists, useEffect, global state with Context and stores — with separate labs for counter, props, and todo list demos.',
-    group: 'web',
-    sections: [
-      { id: 'intro', title: 'Why it matters' },
-      { id: 'jsx-basics', title: 'Components & JSX' },
-      { id: 'jsx-rules', title: 'JSX syntax rules' },
-      { id: 'props', title: 'Props: data flows down' },
-      { id: 'state', title: 'State with useState' },
-      { id: 'events', title: 'Event handlers' },
-      { id: 'lists', title: 'Lists & keys' },
-      { id: 'effects', title: 'Side effects with useEffect' },
-      { id: 'store-lift', title: 'Prop drilling & lifting state' },
-      { id: 'store-context', title: 'Context API' },
-      { id: 'store-external', title: 'External stores (Zustand / Redux)' },
-      { id: 'lab-counter', title: 'Lab: counter & state' },
-      { id: 'lab-props', title: 'Lab: props playground' },
-      { id: 'lab-lists', title: 'Lab: todo list' },
-      { id: 'hood-vdom', title: 'Virtual DOM & reconciliation' },
-      { id: 'hood-hooks', title: 'Rules of hooks' },
-      { id: 'hood-stack', title: 'React ecosystem' },
-      ...CLOSING,
-    ],
-  },
+  ...fastapiLessonsMeta,
+  ...reactLessonsMeta,
 
   // ── Security & Cryptography ────────────────────────────────────────────
   {

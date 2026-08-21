@@ -37,8 +37,8 @@ import FunctionalLesson from './functional/FunctionalLesson.tsx'
 import JsonLesson from './json/JsonLesson.tsx'
 import SearchLesson from './search/SearchLesson.tsx'
 import DebuggingLesson from './debugging/DebuggingLesson.tsx'
-import FastapiLesson from './fastapi/FastapiLesson.tsx'
-import ReactLesson from './react/ReactLesson.tsx'
+import { REACT_CHAPTERS } from './react/chapters.tsx'
+import { FASTAPI_CHAPTERS } from './fastapi/chapters.tsx'
 
 // Wire each metadata entry to its component. Adding a lesson = add a metadata
 // entry in meta.ts and a component here; nav, routes, and the home page update
@@ -81,8 +81,8 @@ const COMPONENTS: Record<string, ComponentType> = {
   testing: TestingLesson,
   debugging: DebuggingLesson,
   functional: FunctionalLesson,
-  fastapi: FastapiLesson,
-  react: ReactLesson,
+  ...REACT_CHAPTERS,
+  ...FASTAPI_CHAPTERS,
 }
 
 export interface RegisteredLesson extends LessonMeta {

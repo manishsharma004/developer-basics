@@ -1,6 +1,6 @@
-import { Fragment, useEffect, useState } from 'react'
-import { NavLink, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
-import { lessons, type RegisteredLesson } from './lessons/index.tsx'
+import { useEffect, useState } from 'react'
+import { NavLink, Route, Routes, useLocation } from 'react-router-dom'
+import { lessons } from './lessons/index.tsx'
 import { groups, type Level } from './lessons/meta.ts'
 import Home from './pages/Home.tsx'
 import TeacherHome from './pages/TeacherHome.tsx'
@@ -12,24 +12,12 @@ import { FeedbackDialog } from './components/FeedbackDialog.tsx'
 
 const LEVELS: Level[] = ['Beginner', 'Intermediate', 'Advanced']
 const COLLAPSE_KEY = 'devbasics.sidebarCollapsed'
-const EXPANDED_LESSONS_KEY = 'devbasics.expandedLessons'
-const SECTION_NAV_MIN = 10
-
-function readExpandedLessons(): Record<string, boolean> {
-  try {
-    const raw = localStorage.getItem(EXPANDED_LESSONS_KEY)
-    return raw ? (JSON.parse(raw) as Record<string, boolean>) : {}
-  } catch {
-    return {}
-  }
-}
 
 function App() {
   const { experience, setExperience } = useExperience()
   const { theme, setTheme } = useTheme()
   const teacher = experience === 'teacher'
   const location = useLocation()
-  const navigate = useNavigate()
 
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     try {
@@ -41,87 +29,11 @@ function App() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   const [closedGroups, setClosedGroups] = useState<Record<string, boolean>>({})
-  const [expandedLessons, setExpandedLessons] = useState<Record<string, boolean>>(readExpandedLessons)
 
   const activeLesson = lessons.find((l) => l.path === location.pathname)
-  const closeMobile = () => setMobileOpen(false)
 
   const toggleGroup = (id: string) =>
     setClosedGroups((g) => ({ ...g, [id]: !g[id] }))
-
-  const toggleLessonSections = (lessonId: string) => {
-    setExpandedLessons((prev) => {
-      const next = { ...prev, [lessonId]: !prev[lessonId] }
-      try {
-        localStorage.setItem(EXPANDED_LESSONS_KEY, JSON.stringify(next))
-      } catch {
-        /* ignore */
-      }
-      return next
-    })
-  }
-
-  const goToLessonSection = (lesson: RegisteredLesson, sectionId: string) => {
-    closeMobile()
-    if (location.pathname === lesson.path) {
-      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      return
-    }
-    navigate(lesson.path, { state: { scrollTo: sectionId } })
-  }
-
-  const renderLessonNav = (lesson: RegisteredLesson, childClass = '') => {
-    const hasSectionNav = lesson.sections.length >= SECTION_NAV_MIN
-    const sectionsOpen =
-      !collapsed &&
-      hasSectionNav &&
-      (expandedLessons[lesson.id] || activeLesson?.id === lesson.id)
-
-    return (
-      <Fragment key={lesson.id}>
-        <div className={`nav-lesson${sectionsOpen ? ' nav-lesson--open' : ''}`}>
-          <div className="nav-lesson-row">
-            <NavLink
-              to={lesson.path}
-              className={`nav-link${childClass}`}
-              title={lesson.title}
-              onClick={closeMobile}
-            >
-              <span className="nav-icon">{lesson.icon}</span>
-              <span className="nav-label">{lesson.title}</span>
-            </NavLink>
-            {hasSectionNav && !collapsed && (
-              <button
-                type="button"
-                className="nav-lesson-toggle"
-                aria-expanded={sectionsOpen}
-                aria-label={`${sectionsOpen ? 'Collapse' : 'Expand'} ${lesson.title} sections`}
-                title={`${sectionsOpen ? 'Collapse' : 'Expand'} sections`}
-                onClick={() => toggleLessonSections(lesson.id)}
-              >
-                {sectionsOpen ? '▾' : '▸'}
-              </button>
-            )}
-          </div>
-          {sectionsOpen && (
-            <div className="nav-lesson-sections" aria-label={`${lesson.title} sections`}>
-              {lesson.sections.map((section) => (
-                <button
-                  key={section.id}
-                  type="button"
-                  className="nav-link nav-link--section"
-                  title={section.title}
-                  onClick={() => goToLessonSection(lesson, section.id)}
-                >
-                  <span className="nav-label">{section.title}</span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </Fragment>
-    )
-  }
 
   const toggleCollapsed = () => {
     setCollapsed((c) => {
@@ -140,20 +52,7 @@ function App() {
     setMobileOpen(false)
   }, [location.pathname])
 
-  // Auto-expand section nav for the active lesson.
-  useEffect(() => {
-    if (!activeLesson || activeLesson.sections.length < SECTION_NAV_MIN) return
-    setExpandedLessons((prev) => {
-      if (prev[activeLesson.id]) return prev
-      const next = { ...prev, [activeLesson.id]: true }
-      try {
-        localStorage.setItem(EXPANDED_LESSONS_KEY, JSON.stringify(next))
-      } catch {
-        /* ignore */
-      }
-      return next
-    })
-  }, [activeLesson?.id, activeLesson?.sections.length])
+  const closeMobile = () => setMobileOpen(false)
 
   const renderLink = (to: string, icon: string, label: string, end = false) => (
     <NavLink to={to} end={end} className="nav-link" title={label} onClick={closeMobile}>
@@ -240,7 +139,18 @@ function App() {
               return (
                 <div key={level} className="nav-group">
                   <div className="nav-group-title">{level}</div>
-                  {group.map((lesson) => renderLessonNav(lesson))}
+                  {group.map((lesson) => (
+                    <NavLink
+                      key={lesson.id}
+                      to={lesson.path}
+                      className="nav-link"
+                      title={lesson.title}
+                      onClick={closeMobile}
+                    >
+                      <span className="nav-icon">{lesson.icon}</span>
+                      <span className="nav-label">{lesson.title}</span>
+                    </NavLink>
+                  ))}
                 </div>
               )
             })
@@ -268,7 +178,19 @@ function App() {
                     <span className="nav-group-toggle-title nav-label">{group.title}</span>
                     <span className="nav-group-caret nav-label" aria-hidden>{open ? '▾' : '▸'}</span>
                   </button>
-                  {open && items.map((lesson) => renderLessonNav(lesson, ' nav-link--child'))}
+                  {open &&
+                    items.map((lesson) => (
+                      <NavLink
+                        key={lesson.id}
+                        to={lesson.path}
+                        className="nav-link nav-link--child"
+                        title={lesson.title}
+                        onClick={closeMobile}
+                      >
+                        <span className="nav-icon">{lesson.icon}</span>
+                        <span className="nav-label">{lesson.title}</span>
+                      </NavLink>
+                    ))}
                 </div>
               )
             })

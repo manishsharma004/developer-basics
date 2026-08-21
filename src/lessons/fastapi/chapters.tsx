@@ -167,7 +167,7 @@ const fastapiRoutesCrud = createChapterLesson({
       answer: 1,
     },
     {
-      q: 'DELETE /users/{'{id}'} typically returns:',
+      q: "DELETE /users/{id} typically returns:",
       options: ['201 with the deleted object', '204 with no body', '422 validation error', '500 always'],
       answer: 1,
     },
