@@ -1,7 +1,7 @@
 import { Lesson } from '../components/Lesson.tsx'
 import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { ReactPlayground } from './ReactPlayground.tsx'
-import { ReactStorePlayground } from './ReactStorePlayground.tsx'
+import { ContextStoreDemo, ExternalStoreDemo } from './ReactStorePlayground.tsx'
 
 export default function ReactLesson() {
   return (
@@ -101,65 +101,91 @@ useEffect(() => {
         </Callout>
       </Section>
 
-      <Section id="stores" title="Global state & stores">
+      <Section id="store-lift" title="Prop drilling & lifting state">
         <p className="prose">
-          <code>useState</code> works for local UI state, but what when many distant
-          components need the same data — logged-in user, theme, shopping cart? Passing
-          props through every layer is <strong>prop drilling</strong>. React offers
-          several patterns to share state globally.
+          <code>useState</code> works for local UI state, but when many distant
+          components need the same data — logged-in user, theme, shopping cart —
+          passing props through every intermediate layer is <strong>prop drilling</strong>.
         </p>
         <ul className="prose-list">
           <li>
             <strong>Lift state up</strong> — move shared state to the nearest common
-            ancestor and pass props down. Simple, but gets awkward deep in the tree.
+            ancestor and pass props down. Simple for shallow trees.
           </li>
           <li>
-            <strong>Context</strong> — <code>createContext</code> + <code>Provider</code>{' '}
-            lets descendants read/write shared values without intermediate props.
+            As the tree deepens, you pass the same props through components that
+            don't use them — just to reach one grandchild.
           </li>
           <li>
-            <strong>External stores</strong> — Zustand, Redux, Jotai keep state outside
-            the component tree; components <em>subscribe</em> to slices they need.
+            The fix: share state via <strong>Context</strong> or an external{' '}
+            <strong>store</strong> instead of threading props.
           </li>
         </ul>
-        <pre className="term-output">{`// Context: good for theme, locale, auth user
-const ThemeContext = createContext('light')
+        <Callout kind="note" title="Start local">
+          Keep state in the component that owns it until a second branch genuinely
+          needs the same value — then lift or introduce shared state.
+        </Callout>
+      </Section>
+
+      <Section id="store-context" title="Context API">
+        <p className="prose">
+          <strong>Context</strong> lets you provide a value at the top of a subtree
+          and read it anywhere below — no intermediate props required.
+        </p>
+        <pre className="term-output">{`const UserContext = createContext(null)
 
 function App() {
-  const [theme, setTheme] = useState('light')
+  const [user, setUser] = useState({ name: 'Ada', role: 'admin' })
   return (
-    <ThemeContext.Provider value={theme}>
-      <Toolbar />
-    </ThemeContext.Provider>
+    <UserContext.Provider value={{ user, setUser }}>
+      <Header />    {/* reads user via useContext */}
+      <Sidebar />   {/* same — no props passed down */}
+    </UserContext.Provider>
   )
-}
+}`}</pre>
+        <ContextStoreDemo />
+        <TryThis>
+          Edit the profile name and role — Header and Sidebar update together without
+          any props between them.
+        </TryThis>
+        <Callout kind="tip" title="Good for">
+          Infrequently-changing global data: current user, theme, locale, feature flags.
+          Avoid putting fast-updating values in Context — every consumer re-renders.
+        </Callout>
+      </Section>
 
-// Zustand-style store (simplified)
+      <Section id="store-external" title="External stores (Zustand / Redux)">
+        <p className="prose">
+          <strong>External stores</strong> keep state outside the React tree. Components{' '}
+          <em>subscribe</em> to the slices they need — Zustand and Redux are the most
+          common libraries.
+        </p>
+        <pre className="term-output">{`// Zustand (minimal API)
 const useCartStore = create((set) => ({
   items: [],
   add: (item) => set((s) => ({ items: [...s.items, item] })),
-}))`}</pre>
-        <ReactStorePlayground />
-        <Callout kind="tip" title="When to use what">
-          Keep state local until you need to share it. Context fits infrequently-changing
-          global data (user, theme). Stores fit frequently-updated shared state (cart,
-          notifications) or complex update logic. Server state often belongs in TanStack
-          Query, not a client store.
-        </Callout>
-        <UnderTheHood title="Redux in one sentence">
+}))
+
+// Redux Toolkit: actions + reducers + one store
+dispatch(addItem({ id: 1, name: 'Keyboard' }))`}</pre>
+        <ExternalStoreDemo />
+        <UnderTheHood title="Redux vs Zustand">
           <p className="prose">
-            Redux keeps one immutable state tree, dispatches <strong>actions</strong> to
-            describe what happened, and <strong>reducers</strong> compute the next state.
-            Redux Toolkit is the modern standard — less boilerplate, same predictable
-            data flow. Zustand is lighter when you don't need middleware or time-travel
-            debugging.
+            <strong>Redux</strong> keeps one immutable state tree; actions describe
+            events, reducers compute the next state. Great for large apps with complex
+            update logic and devtools. <strong>Zustand</strong> is lighter — a hook per
+            store, less boilerplate, fine for most medium apps.
           </p>
         </UnderTheHood>
         <TryThis>
-          Change the profile name and role — watch Header and Sidebar update together.
-          Add items to the cart from Cart store and see Cart badge update without passing
-          props between them.
+          Add cart items and watch the badge count update. The cart lives outside any
+          single component — both Cart badge and Cart panel subscribe to the same store.
         </TryThis>
+        <Callout kind="tip" title="Server state">
+          Data from APIs (users list, product catalog) often belongs in{' '}
+          <strong>TanStack Query</strong>, not a client store — it handles caching,
+          refetching, and stale data for you.
+        </Callout>
       </Section>
 
       <Section id="playground" title="Build UI live">

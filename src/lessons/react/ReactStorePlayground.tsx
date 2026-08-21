@@ -139,13 +139,9 @@ function CartPanel() {
   )
 }
 
-export function ReactStorePlayground() {
+export function ContextStoreDemo() {
   return (
     <div className="store-demo">
-      <p className="panel-hint" style={{ marginBottom: 12 }}>
-        <strong>Context</strong> — edit the profile; Header and Sidebar update without prop drilling.
-        <strong> Store</strong> — add cart items; the badge and list share the same external state.
-      </p>
       <UserProvider>
         <div className="store-grid">
           <Header />
@@ -153,9 +149,27 @@ export function ReactStorePlayground() {
           <ProfileEditor />
         </div>
       </UserProvider>
-      <div className="store-grid" style={{ marginTop: 12 }}>
+    </div>
+  )
+}
+
+export function ExternalStoreDemo() {
+  return (
+    <div className="store-demo">
+      <div className="store-grid">
         <CartBadge />
         <CartPanel />
+      </div>
+    </div>
+  )
+}
+
+export function ReactStorePlayground() {
+  return (
+    <div className="store-demo">
+      <ContextStoreDemo />
+      <div style={{ marginTop: 12 }}>
+        <ExternalStoreDemo />
       </div>
     </div>
   )

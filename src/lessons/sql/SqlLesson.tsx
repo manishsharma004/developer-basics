@@ -203,53 +203,84 @@ export default function SqlLesson() {
         </ul>
       </Section>
 
-      <Section id="connectors" title="Connectors & drivers">
+      <Section id="conn-sqlite" title="SQLite & sqlite3">
         <p className="prose">
-          SQL runs on a <strong>database server</strong> (or embedded engine like SQLite).
-          Your application talks to it through a <strong>connector</strong> or{' '}
-          <strong>driver</strong> — a library that opens connections, sends queries, and
-          returns rows. The SQL you write is mostly portable; the connection setup is not.
+          <strong>SQLite</strong> embeds the database engine in your process — no
+          separate server. Python's stdlib <code>sqlite3</code> module is perfect for
+          tests, prototypes, and the playground in this lesson.
         </p>
-        <ul className="prose-list">
-          <li>
-            <strong>sqlite3</strong> (stdlib) — file or <code>:memory:</code> database, zero
-            server setup, great for dev and tests.
-          </li>
-          <li>
-            <strong>psycopg2</strong> / <strong>asyncpg</strong> — PostgreSQL drivers; use
-            a DSN like <code>postgresql://user:pass@host:5432/db</code>.
-          </li>
-          <li>
-            <strong>SQLAlchemy</strong> — ORM + Core; generates SQL from Python objects and
-            manages connections/pools.
-          </li>
-          <li>
-            <strong>Connection pools</strong> — reuse open connections across requests
-            instead of paying TCP + auth cost every time.
-          </li>
-        </ul>
-        <pre className="term-output">{`# FastAPI + SQLAlchemy (typical stack)
-from sqlalchemy import create_engine
+        <pre className="term-output">{`import sqlite3
+
+conn = sqlite3.connect("app.db")      # file on disk
+conn = sqlite3.connect(":memory:")    # ephemeral (tests)
+
+cur = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,))
+rows = cur.fetchall()
+conn.close()`}</pre>
+        <SnippetRunner snippets={SNIPPETS.filter((s) => s.label === 'Connect & query')} />
+        <TryThis>
+          Run <strong>Connect & query</strong> and trace how <code>?</code> placeholders
+          keep values separate from SQL text.
+        </TryThis>
+      </Section>
+
+      <Section id="conn-postgres" title="PostgreSQL drivers">
+        <p className="prose">
+          Production apps usually run <strong>PostgreSQL</strong> or MySQL as a separate
+          server. <strong>psycopg2</strong> (sync) and <strong>asyncpg</strong> (async)
+          are the standard Python drivers. Connection details go in a{' '}
+          <strong>DSN</strong> (data source name):
+        </p>
+        <pre className="term-output">{`postgresql://user:password@db.example.com:5432/shop
+
+# psycopg2 uses %s placeholders (not ?)
+cur.execute("SELECT name FROM users WHERE id = %s", (user_id,))`}</pre>
+        <SnippetRunner snippets={SNIPPETS.filter((s) => s.label === 'Postgres-style connector')} />
+        <Callout kind="note" title="Same SQL, different wire">
+          Your SELECT/JOIN queries are largely portable between SQLite and Postgres —
+          only connection setup and a few dialect differences change.
+        </Callout>
+      </Section>
+
+      <Section id="conn-pool" title="Connection pools">
+        <p className="prose">
+          Opening a database connection costs TCP handshake + authentication. A{' '}
+          <strong>connection pool</strong> keeps a set of warm connections and lends
+          them to request handlers, then recycles them — critical in web servers
+          handling thousands of requests.
+        </p>
+        <SnippetRunner snippets={SNIPPETS.filter((s) => s.label === 'Connection pool pattern')} />
+        <Callout kind="warning" title="Always close or pool">
+          Leaked connections exhaust the database limit and stall your app. Use{' '}
+          <code>with</code> blocks, context managers, or a pool that recycles automatically.
+        </Callout>
+        <TryThis>
+          In <strong>Connection pool pattern</strong>, acquire more connections than
+          the pool size and observe the exhaustion error.
+        </TryThis>
+      </Section>
+
+      <Section id="conn-orm" title="ORMs & SQLAlchemy">
+        <p className="prose">
+          An <strong>ORM</strong> (object-relational mapper) maps Python classes to
+          tables and generates SQL for you. <strong>SQLAlchemy</strong> is the most
+          popular choice in Python — it also offers a lower-level Core API when you
+          need raw SQL control.
+        </p>
+        <pre className="term-output">{`from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session
 
 engine = create_engine("postgresql://user:pass@localhost/app")
 with Session(engine) as session:
     users = session.execute(text("SELECT * FROM users")).all()`}</pre>
-        <SnippetRunner
-          snippets={SNIPPETS.filter((s) =>
-            ['Connect & query', 'Postgres-style connector', 'Connection pool pattern', 'ORM-style query (SQLAlchemy idea)'].includes(s.label),
-          )}
-        />
-        <Callout kind="warning" title="Always close or pool">
-          Leaked connections exhaust the database's limit and stall your app. Use{' '}
-          <code>with</code> blocks, context managers, or a pool that recycles connections
-          automatically.
-        </Callout>
-        <TryThis>
-          Run <strong>Connection pool pattern</strong> and acquire more connections than
-          the pool size — see the exhaustion error. Compare parameterized queries in{' '}
-          <strong>Connect & query</strong> vs string building.
-        </TryThis>
+        <SnippetRunner snippets={SNIPPETS.filter((s) => s.label === 'ORM-style query (SQLAlchemy idea)')} />
+        <UnderTheHood title="ORM trade-offs">
+          <p className="prose">
+            ORMs speed up CRUD and migrations but can generate slow queries if you
+            don't understand what SQL they emit. Use an ORM for most app code; drop
+            to raw SQL for hot paths you have profiled.
+          </p>
+        </UnderTheHood>
       </Section>
 
       <Section id="playground" title="Run SQL live">
