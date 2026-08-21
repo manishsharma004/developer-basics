@@ -2,6 +2,7 @@
 // components so lesson components can read it without creating import cycles.
 // Adding a lesson = add an entry here + a component wired up in `index.tsx`.
 
+import { cssLessonsMeta } from './css/chapterMeta.ts'
 import { databasesLessonsMeta } from './databases/chapterMeta.ts'
 import { fastapiLessonsMeta } from './fastapi/chapterMeta.ts'
 import { mongodbLessonsMeta } from './mongodb/chapterMeta.ts'
@@ -94,6 +95,12 @@ export const groups: LessonGroup[] = [
     title: 'Networking & the Web',
     icon: '🌐',
     blurb: 'HTTP, DNS, TLS, load balancing, reverse proxies, API gateways, and rate limits.',
+  },
+  {
+    id: 'css',
+    title: 'CSS & Layout',
+    icon: '🎨',
+    blurb: 'The tricky parts new developers hit — box model, flex/grid layout, position, overflow, themes, and cascade.',
   },
   {
     id: 'fastapi',
@@ -603,6 +610,7 @@ export const lessonsMeta: LessonMeta[] = [
     ],
   },
   ...webLessonsMeta,
+  ...cssLessonsMeta,
   ...fastapiLessonsMeta,
   ...reactLessonsMeta,
 

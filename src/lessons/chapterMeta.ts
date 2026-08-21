@@ -13,6 +13,7 @@ const GROUP_ICON: Record<string, string> = {
   sql: '🗄️',
   mongodb: '🍃',
   web: '🌐',
+  css: '🎨',
 }
 
 export interface ChapterMetaInput {
@@ -20,7 +21,7 @@ export interface ChapterMetaInput {
   title: string
   tagline: string
   summary: string
-  group: 'react' | 'fastapi' | 'databases' | 'sql' | 'mongodb' | 'web'
+  group: 'react' | 'fastapi' | 'databases' | 'sql' | 'mongodb' | 'web' | 'css'
   minutes: number
   level?: Level
   modelTitle?: string
@@ -48,7 +49,7 @@ export function chapterMeta(input: ChapterMetaInput): LessonMeta {
     title: input.title,
     tagline: input.tagline,
     icon: GROUP_ICON[input.group],
-    level: input.level ?? (input.group === 'sql' || input.group === 'databases' ? 'Beginner' : 'Intermediate'),
+    level: input.level ?? (input.group === 'sql' || input.group === 'databases' || input.group === 'css' ? 'Beginner' : 'Intermediate'),
     minutes: input.minutes,
     summary: input.summary,
     group: input.group,

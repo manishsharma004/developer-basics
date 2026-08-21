@@ -257,6 +257,65 @@ export const databasesChapterGuides: Record<string, TeacherGuide> = {
   'databases-hood': chapterGuide('Production basics', 'Replication, backups, sharding overview.', ['Replica sets', 'Test restores', 'Index trade-offs'], 'Emphasize untested backups are a risk.', ['What does replication help?', 'When shard?']),
 }
 
+export const cssChapterGuides: Record<string, TeacherGuide> = {
+  'css-intro': chapterGuide(
+    'Why CSS feels hard',
+    'Explain declarative CSS, cascade, and why DevTools beat guessing.',
+    ['Cascade and inheritance', 'Every element is a box', 'Browser default styles', 'Computed styles in DevTools'],
+    'Have students inspect this app’s sidebar in DevTools and find which rule sets width and overflow.',
+    ['What does the cascade resolve?', 'First step when a style “does not apply”?'],
+  ),
+  'css-box-model': chapterGuide(
+    'The box model',
+    'Diagram content, padding, border, margin, and box-sizing.',
+    ['Four layers of every element', 'content-box vs border-box', 'Margin collapse'],
+    'Run the box model lab; toggle content-box with padding and watch outer width exceed 200px.',
+    ['Where does margin sit?', 'What does border-box include in width?'],
+  ),
+  'css-layout': chapterGuide(
+    'Flex & Grid',
+    'Contrast one-dimensional flex with two-dimensional grid page shells.',
+    ['display: flex on parent', 'justify-content and align-items', 'grid-template-columns and fr'],
+    'Center a row in FlexPlayground without margin: auto; relate grid columns to this app’s sidebar layout.',
+    ['Flexbox is best for what dimension?', 'What does 1fr mean in grid?'],
+  ),
+  'css-position': chapterGuide(
+    'Position & stacking',
+    'Teach static/relative/absolute/fixed/sticky and z-index stacking contexts.',
+    ['Relative parent + absolute child', 'fixed vs viewport', 'z-index needs positioned element'],
+    'Move the badge from absolute to fixed; discuss dropdown clipping from overflow: hidden parents.',
+    ['Absolute is positioned relative to what?', 'Why might z-index appear ignored?'],
+  ),
+  'css-overflow': chapterGuide(
+    'Overflow & scrolling',
+    'Compare visible, hidden, scroll, and auto; link to sidebar scroll.',
+    ['Scroll containers', 'hidden clips descendants', 'auto vs scroll'],
+    'Overflow lab with tall content; point at this course nav using overflow-y: auto.',
+    ['When does auto show scrollbars?', 'How can overflow: hidden break dropdowns?'],
+  ),
+  'css-themes': chapterGuide(
+    'Themes & CSS variables',
+    'Define tokens with custom properties and swap palettes via data-theme.',
+    ['--token syntax and var()', 'Semantic tokens vs raw hex', 'data-theme on html'],
+    'ThemePlayground presets; open Theme dropdown in app sidebar to show the same mechanism.',
+    ['How are CSS variables declared?', 'Why semantic tokens beat hard-coded colors?'],
+  ),
+  'css-cascade': chapterGuide(
+    'Cascade & specificity',
+    'Read specificity scores and when inheritance applies.',
+    ['id vs class vs element weight', 'Source order tie-break', '!important as last resort'],
+    'Write two conflicting rules on the board; have students predict the winner before revealing specificity.',
+    ['Which selector usually wins: #id or .class?', 'Does margin inherit from parent?'],
+  ),
+  'css-hacks': chapterGuide(
+    'Hacks vs proper fixes',
+    'Map float clears, magic margins, and z-index wars to flex/grid/border-box fixes.',
+    ['Float layout is legacy', 'Stacking context over huge z-index', 'DevTools debugging checklist'],
+    'Walk the Under the hood checklist on a real misaligned element in DevTools layout overlay.',
+    ['Modern replacement for float columns?', 'First tool when CSS looks wrong?'],
+  ),
+}
+
 export const webChapterGuides: Record<string, TeacherGuide> = {
   'web-reverse-proxy': chapterGuide('Reverse proxy', 'Contrast forward vs reverse proxies; nginx at the edge.', ['Reverse vs forward', 'TLS termination', 'upstream'], 'Draw client → nginx → two backends.', ['Where does nginx sit?', 'Why terminate TLS at edge?']),
   'web-nginx-routing': chapterGuide('nginx routing', 'Teach location blocks and proxy_pass.', ['Longest prefix', 'upstream pools', 'path routing'], 'Use RouteSim with /api and /admin paths.', ['What wins: / or /api/?', 'What does proxy_pass do?']),
