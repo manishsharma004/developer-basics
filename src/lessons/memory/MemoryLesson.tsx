@@ -1,6 +1,7 @@
 import { Lesson } from '../components/Lesson.tsx'
 import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { ReferencePlayground, StackHeapVisualizer } from './MemoryPlayground.tsx'
+import { ShallowDeepViz } from './ShallowDeepViz.tsx'
 
 export default function MemoryLesson() {
   return (
@@ -88,11 +89,9 @@ export default function MemoryLesson() {
             for all calls — a classic leak of mutable state.
           </li>
         </ul>
+        <ShallowDeepViz />
         <TryThis>
-          In the references playground, run <strong>Shallow vs deep</strong> and
-          compare what happens when you mutate an inner list. Then try{' '}
-          <strong>Mutable default trap</strong> and fix it with <code>None</code> plus
-          a fresh list inside the function.
+          Use the visual lab above, then run <strong>Shallow vs deep</strong> in the references playground and compare outputs.
         </TryThis>
       </Section>
 

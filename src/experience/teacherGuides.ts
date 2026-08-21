@@ -35,7 +35,7 @@ export const teacherGuides: Record<string, TeacherGuide> = {
       'When is dynamic typing a productivity win vs a footgun?',
       'Why store money as integer cents instead of float dollars?',
     ],
-    lab: 'Run Names & values and Truthiness; have students predict output before running, then rebind a name to a different type.',
+    lab: 'Run Names & values, Truthiness, and Type conversion; have students predict output before running, then rebind a name to a different type.',
     assess: [
       'Classify values as truthy or falsy.',
       'Explain why int("42") works but "3" + 1 fails.',
@@ -63,7 +63,7 @@ export const teacherGuides: Record<string, TeacherGuide> = {
       'When is a while clearer than a for?',
       'How does loop-else differ from if-else?',
     ],
-    lab: 'Edit grade thresholds in if/elif; add a for-else search loop; demonstrate an infinite while and fix it.',
+    lab: 'Edit grade thresholds in if/elif; use the boolean logic playground to toggle a/b/c and predict results before revealing; demonstrate loop-else with a search.',
     assess: [
       'Predict output of range(0, 10, 2).',
       'Trace which branch runs for a given score.',
@@ -91,7 +91,7 @@ export const teacherGuides: Record<string, TeacherGuide> = {
       'When are floats still the right tool?',
       'Why do games and physics engines get away with floats?',
     ],
-    lab: 'Run The classic surprise; sum 0.1 ten times; implement cart total with integer cents.',
+    lab: 'Run The classic surprise; use the isclose slider lab with 0.1+0.2 vs 0.3; sum 0.1 ten times; implement cart total with integer cents.',
     assess: [
       'Fix a broken if total == 19.99 check.',
       'Name one special float value and its comparison behavior.',
@@ -237,7 +237,7 @@ export const teacherGuides: Record<string, TeacherGuide> = {
       'When would you reach for deepcopy instead of .copy()?',
       'What makes the stack fast but size-limited?',
     ],
-    lab: 'Run Aliasing vs Copy, then Shallow vs deep and Mutable default trap in the references playground. Use the stack/heap visualizer to trigger overflow and label garbage objects.',
+    lab: 'Run Aliasing vs Copy, then Shallow vs deep visual + playground snippets; use the stack/heap visualizer to trigger overflow and label garbage objects.',
     assess: [
       'Predict the output of an aliasing vs. copy snippet.',
       'Explain shallow copy behavior on nested lists.',
@@ -272,7 +272,7 @@ export const teacherGuides: Record<string, TeacherGuide> = {
       'When is async better than threads for I/O-bound work?',
       'What conditions produce a deadlock?',
     ],
-    lab: 'Run the race simulation lock off/on, then Code labs (lost update vs lock). Run the async snippet and discuss overlap vs parallelism.',
+    lab: 'Run the race simulation lock off/on, AsyncParallelSim sequential vs concurrent, then Code labs (lost update vs lock).',
     assess: [
       'Explain why the unlocked counter loses updates.',
       'Name two ways to make the increment safe.',
@@ -328,7 +328,7 @@ export const teacherGuides: Record<string, TeacherGuide> = {
       'Why do CDNs reduce latency?',
       'When is a failure your fault (4xx) vs. the server\'s (5xx)?',
     ],
-    lab: 'Use the request tracer: send once cold, then enable DNS cache + keep-alive and resend to watch the total latency fall.',
+    lab: 'Use the request tracer cold then cached; match HTTP methods and status codes in the pairing quiz.',
     assess: [
       'Classify a set of status codes by family.',
       'Explain why the first page load is slower than the next.',
@@ -780,7 +780,7 @@ export const teacherGuides: Record<string, TeacherGuide> = {
       'When is DFS a better fit than BFS?',
       'What changes when edges have weights?',
     ],
-    lab: 'Run the DFS and BFS snippets on the same tree and compare order; then use BFS shortest-path and change the goal node.',
+    lab: 'Run the DFS and BFS snippets, then animate the visual traversal and compare order; switch to BFS shortest-path and change the goal node.',
     assess: [
       'State which traversal finds the shortest unweighted path.',
       'Explain why a visited set is needed for graphs but not trees.',
@@ -905,7 +905,7 @@ export const teacherGuides: Record<string, TeacherGuide> = {
       'When is TDD worth the overhead?',
       'What makes a test flaky, and how do you fix it?',
     ],
-    lab: 'Run Red then Green; extend table-driven clamp cases; run Fake clock; discuss what a React RTL test would assert for a Counter button.',
+    lab: 'Click through the TDD cycle sim (red → green → refactor), then run Red/Green snippets; extend table-driven clamp cases.',
     assess: [
       'State the TDD cycle in order.',
       'Explain why most tests should be unit tests.',

@@ -1,6 +1,7 @@
 import { Lesson } from '../components/Lesson.tsx'
 import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { RequestTracer, UrlAnatomy } from './RequestTracer.tsx'
+import { HttpMatchQuiz } from './HttpMatchQuiz.tsx'
 
 const METHODS = [
   { m: 'GET', d: 'read a resource (no side effects)' },
@@ -104,6 +105,7 @@ export default function NetworkLesson() {
           <code>5xx</code> means "the server broke". Only <code>5xx</code> (and
           timeouts) are truly the server's problem.
         </Callout>
+        <HttpMatchQuiz />
       </Section>
 
       <Section id="hood" title="Under the hood">

@@ -1,6 +1,7 @@
 import { Lesson } from '../components/Lesson.tsx'
 import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { SnippetRunner, type Snippet } from '../components/SnippetRunner.tsx'
+import { BooleanLogicPlayground } from './BooleanLogicPlayground.tsx'
 
 const SNIPPETS: Snippet[] = [
   {
@@ -123,6 +124,7 @@ export default function ControlFlowLesson() {
           Short-circuit: <code>False and expensive()</code> never calls{' '}
           <code>expensive()</code>. Same for <code>True or expensive()</code>.
         </Callout>
+        <BooleanLogicPlayground />
       </Section>
 
       <Section id="hood" title="Under the hood">
