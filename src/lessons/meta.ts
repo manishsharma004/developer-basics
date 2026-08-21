@@ -444,9 +444,9 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Store, relate, and query data — with a real database in your browser.',
     icon: '🗄️',
     level: 'Beginner',
-    minutes: 28,
+    minutes: 32,
     summary:
-      'Master tables, keys, JOINs, aggregates, subqueries, and writes — then run real SQL against a live SQLite database with Python code labs.',
+      'Master tables, keys, JOINs, aggregates, subqueries, writes, and database connectors (sqlite3, psycopg2, pools, ORMs) — with a live SQLite playground and Python labs.',
     group: 'persistence',
     sections: [
       { id: 'intro', title: 'Why it matters' },
@@ -454,6 +454,7 @@ export const lessonsMeta: LessonMeta[] = [
       { id: 'schema', title: 'Schema, keys & relationships' },
       { id: 'writes', title: 'Insert, update & delete' },
       { id: 'advanced', title: 'Joins, aggregates & subqueries' },
+      { id: 'connectors', title: 'Connectors & drivers' },
       { id: 'playground', title: 'Run SQL live' },
       { id: 'labs', title: 'Code lab' },
       { id: 'hood', title: 'Under the hood' },
@@ -467,9 +468,9 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Flexible JSON documents, queries, and aggregation pipelines.',
     icon: '🍃',
     level: 'Intermediate',
-    minutes: 26,
+    minutes: 30,
     summary:
-      'Learn documents, collections, MongoDB query operators, aggregation pipelines, and when to embed vs reference — with a live shell playground and Python labs.',
+      'Learn documents, collections, query operators, aggregation pipelines, embed vs reference, and MongoDB connectors (PyMongo, Motor, URIs) — with a live shell playground and Python labs.',
     group: 'persistence',
     sections: [
       { id: 'intro', title: 'Why it matters' },
@@ -477,6 +478,7 @@ export const lessonsMeta: LessonMeta[] = [
       { id: 'queries', title: 'Finding documents' },
       { id: 'writes', title: 'Insert, update & delete' },
       { id: 'aggregation', title: 'Aggregation pipelines' },
+      { id: 'connectors', title: 'Connectors & drivers' },
       { id: 'playground', title: 'Run MongoDB commands' },
       { id: 'labs', title: 'Code lab' },
       { id: 'hood', title: 'Under the hood' },
@@ -631,9 +633,9 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Components, props, state, and hooks — building interactive UIs that scale.',
     icon: '⚛️',
     level: 'Intermediate',
-    minutes: 28,
+    minutes: 32,
     summary:
-      'Learn JSX, components, props, useState, useEffect, and list rendering — with a live playground for counters, props, and todo lists.',
+      'Learn JSX, components, props, useState, useEffect, global state with Context and stores, and list rendering — with live playgrounds for UI and shared state.',
     group: 'web',
     sections: [
       { id: 'intro', title: 'Why it matters' },
@@ -641,6 +643,7 @@ export const lessonsMeta: LessonMeta[] = [
       { id: 'props', title: 'Props: data flows down' },
       { id: 'state', title: 'State with useState' },
       { id: 'effects', title: 'Side effects with useEffect' },
+      { id: 'stores', title: 'Global state & stores' },
       { id: 'playground', title: 'Build UI live' },
       { id: 'hood', title: 'Under the hood' },
       ...CLOSING,
