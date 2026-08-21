@@ -36,22 +36,13 @@ function getLessonNavState(
   }
 }
 
-function NavStatusMarker({
-  read,
-  opened,
-  openCount,
-}: {
-  read: boolean
-  opened: boolean
-  openCount: number
-}) {
-  if (!opened && !read) return null
-  const title = read ? 'Marked as read' : `Opened ${openCount}×`
+function NavStatusMarker({ read }: { read: boolean }) {
+  if (!read) return null
   return (
     <span
-      className={`nav-status-marker${read ? ' nav-status-marker--read' : ' nav-status-marker--opened'}`}
-      title={title}
-      aria-label={title}
+      className="nav-status-marker nav-status-marker--read"
+      title="Marked as read"
+      aria-label="Marked as read"
     />
   )
 }
@@ -218,6 +209,8 @@ function App() {
                   <div className="nav-group-title">{level}</div>
                   {group.map((lesson) => {
                     const { read, opened, openCount } = getLessonNavState(getProgress, lesson.id)
+                    const linkTitle =
+                      opened && !read ? `${lesson.title} · opened ${openCount}×` : lesson.title
                     return (
                     <NavLink
                       key={lesson.id}
@@ -225,12 +218,12 @@ function App() {
                       className={({ isActive }) =>
                         navLinkClass(isActive, read, opened)
                       }
-                      title={lesson.title}
+                      title={linkTitle}
                       onClick={closeMobile}
                     >
                       <span className="nav-icon">{lesson.icon}</span>
                       <span className="nav-label">{lesson.title}</span>
-                      <NavStatusMarker read={read} opened={opened} openCount={openCount} />
+                      <NavStatusMarker read={read} />
                     </NavLink>
                     )
                   })}
@@ -263,6 +256,8 @@ function App() {
                   {open &&
                     items.map((lesson) => {
                       const { read, opened, openCount } = getLessonNavState(getProgress, lesson.id)
+                      const linkTitle =
+                        opened && !read ? `${lesson.title} · opened ${openCount}×` : lesson.title
                       return (
                       <NavLink
                         key={lesson.id}
@@ -270,12 +265,12 @@ function App() {
                         className={({ isActive }) =>
                           navLinkClass(isActive, read, opened, 'nav-link nav-link--child')
                         }
-                        title={lesson.title}
+                        title={linkTitle}
                         onClick={closeMobile}
                       >
                         <span className="nav-icon">{lesson.icon}</span>
                         <span className="nav-label">{lesson.title}</span>
-                        <NavStatusMarker read={read} opened={opened} openCount={openCount} />
+                        <NavStatusMarker read={read} />
                       </NavLink>
                       )
                     })}

@@ -223,24 +223,20 @@ a {
   opacity: 0.82;
 }
 
-.nav-link--opened:not(.active) {
-  color: color-mix(in srgb, var(--muted) 92%, var(--accent));
+.nav-link--opened:not(.active):not(.nav-link--read) .nav-label {
+  opacity: 0.9;
 }
 
-.nav-link--opened:not(.active):hover {
-  color: var(--text);
+.nav-link--opened:not(.active):not(.nav-link--read) .nav-icon {
+  opacity: 0.88;
 }
 
 .nav-status-marker {
   flex-shrink: 0;
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   margin-left: auto;
-}
-.nav-status-marker--opened {
-  background: var(--accent);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, transparent);
 }
 .nav-status-marker--read {
   background: var(--quiz-correct);
