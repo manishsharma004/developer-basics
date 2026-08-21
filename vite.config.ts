@@ -17,4 +17,7 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['pyodide'],
   },
+  worker: {
+    format: 'es',
+  },
 })

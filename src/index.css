@@ -1468,6 +1468,36 @@ a {
   padding: 12px 14px;
   resize: vertical;
 }
+
+/* Monaco editor host (lesson snippets & playgrounds) */
+.monaco-editor-host {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--code-bg);
+  margin-bottom: 2px;
+}
+
+.monaco-editor-host:not(.monaco-editor-host--ready) {
+  background-image: linear-gradient(180deg, rgba(148, 163, 184, 0.06), rgba(148, 163, 184, 0));
+}
+
+.monaco-editor-host .monaco-editor,
+.monaco-editor-host .monaco-editor-background,
+.monaco-editor-host .margin {
+  background-color: transparent !important;
+}
+
+/* Prevent global form styles from breaking Monaco's hidden textarea */
+.monaco-editor-host textarea.inputarea {
+  background: transparent !important;
+  border: none !important;
+  color: inherit !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  resize: none !important;
+}
 .ref-run-row {
   margin: 10px 0;
 }

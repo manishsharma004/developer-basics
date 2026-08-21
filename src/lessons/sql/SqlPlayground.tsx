@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { usePyodide } from '../../lib/usePyodide.ts'
+import { MonacoEditor } from '../../components/MonacoEditor.tsx'
 import { RuntimeBanner } from '../../components/RuntimeBanner.tsx'
-import { handleEditorTab } from '../../lib/editorKeys.ts'
+import { usePyodide } from '../../lib/usePyodide.ts'
 import { SQL_PROGRAM } from './program.ts'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -62,7 +62,7 @@ export function SqlPlayground() {
       <RuntimeBanner phase={phase} message={message} error={error} />
       <div className="panel">
         <div className="panel-title">Query</div>
-        <textarea className="code-editor" rows={Math.max(3, query.split('\n').length)} value={query} spellCheck={false} onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => handleEditorTab(e, query, setQuery)} aria-label="SQL query" />
+        <MonacoEditor value={query} onChange={setQuery} language="sql" minLines={3} ariaLabel="SQL query" />
         <div className="ref-run-row">
           <button className="btn" disabled={!ready} onClick={run}>{ready ? '▶ Run query' : 'starting database…'}</button>
         </div>

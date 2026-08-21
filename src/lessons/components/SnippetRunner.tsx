@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { usePyodide } from '../../lib/usePyodide.ts'
+import { MonacoEditor } from '../../components/MonacoEditor.tsx'
 import { RuntimeBanner } from '../../components/RuntimeBanner.tsx'
-import { handleEditorTab } from '../../lib/editorKeys.ts'
+import { usePyodide } from '../../lib/usePyodide.ts'
 import { RUNNER_PROGRAM } from '../../lib/pyRunner.ts'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -61,14 +61,12 @@ export function SnippetRunner({ snippets }: { snippets: Snippet[] }) {
             </button>
           ))}
         </div>
-        <textarea
-          className="code-editor"
-          rows={Math.max(4, code.split('\n').length + 1)}
+        <MonacoEditor
           value={code}
-          spellCheck={false}
-          onChange={(e) => setCode(e.target.value)}
-          onKeyDown={(e) => handleEditorTab(e, code, setCode)}
-          aria-label="Python code"
+          onChange={setCode}
+          language="python"
+          minLines={4}
+          ariaLabel="Python code"
         />
         <div className="ref-run-row">
           <button className="btn" disabled={!ready} onClick={run}>
