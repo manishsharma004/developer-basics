@@ -38,14 +38,20 @@ function App() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
-  const [closedGroups, setClosedGroups] = useState<Record<string, boolean>>({})
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({})
 
   const { getProgress } = useProgress()
 
   const activeLesson = lessons.find((l) => l.path === location.pathname)
 
   const toggleGroup = (id: string) =>
-    setClosedGroups((g) => ({ ...g, [id]: !g[id] }))
+    setOpenGroups((g) => ({ ...g, [id]: !g[id] }))
+
+  // Start with every module collapsed; expand only the group for the current lesson.
+  useEffect(() => {
+    if (teacher) return
+    setOpenGroups(activeLesson ? { [activeLesson.group]: true } : {})
+  }, [location.pathname, activeLesson?.group, teacher])
 
   const toggleCollapsed = () => {
     setCollapsed((c) => {
@@ -199,8 +205,7 @@ function App() {
               if (items.length === 0) return null
               // When the rail is collapsed to icons, always show the lessons so
               // every chapter icon stays reachable.
-              const open =
-                collapsed || !closedGroups[group.id] || activeLesson?.group === group.id
+              const open = collapsed || !!openGroups[group.id]
               return (
                 <div
                   key={group.id}
