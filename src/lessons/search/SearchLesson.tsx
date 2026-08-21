@@ -179,6 +179,29 @@ export default function SearchLesson() {
               answer: 1,
               explain: 'Constant factors and setup cost matter; linear is simple and fine for small n.',
             },
+
+            {
+              q: 'Binary search needs:',
+              options: [
+                'A hash function',
+              'Sorted (or ordered) data',
+              'A graph',
+              'Parallel CPUs',
+              ],
+              answer: 1,
+              explain: 'Ordering lets you discard half each step.',
+            },
+            {
+              q: 'For one lookup in a huge sorted list, prefer:',
+              options: [
+                'Always linear',
+              'Binary search',
+              'Sort then forget',
+              'Random pick',
+              ],
+              answer: 1,
+              explain: 'Binary search is O(log n) vs O(n) linear scan.',
+            },
           ]}
         />
       </Section>

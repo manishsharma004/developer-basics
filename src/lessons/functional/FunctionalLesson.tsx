@@ -55,6 +55,15 @@ base = (1, 2, 3)             # a tuple can't be changed
 extended = base + (4,)       # a NEW tuple
 print("base:", base, "extended:", extended)`,
   },
+  {
+    label: 'map & filter',
+    code: `    nums = [1, 2, 3, 4, 5]
+    squares = list(map(lambda n: n * n, nums))
+    evens = list(filter(lambda n: n % 2 == 0, nums))
+    print("squares", squares)
+    print("evens", evens)`,
+  },
+
 ]
 
 export default function FunctionalLesson() {
@@ -179,6 +188,29 @@ export default function FunctionalLesson() {
               ],
               answer: 1,
               explain: 'Immutable data cannot be mutated out from under you, avoiding aliasing/race bugs.',
+            },
+
+            {
+              q: 'A pure function:',
+              options: [
+                'Reads global state',
+              'Same inputs → same outputs, no side effects',
+              'Must use classes',
+              'Cannot call other functions',
+              ],
+              answer: 1,
+              explain: 'Purity makes reasoning and testing easier.',
+            },
+            {
+              q: '`map(f, items)` returns:',
+              options: [
+                'Filtered items',
+              'f applied to each element (new iterable)',
+              'Sum of items',
+              'Sorted list',
+              ],
+              answer: 1,
+              explain: 'map transforms every element with f.',
             },
           ]}
         />

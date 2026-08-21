@@ -175,6 +175,29 @@ export default function ProcessLesson() {
               answer: 1,
               explain: 'fork() returns 0 to the child and the new PID to the parent, so each can branch.',
             },
+
+            {
+              q: 'Round Robin uses a:',
+              options: [
+                'Priority queue only',
+              'Time quantum per process',
+              'Random pick',
+              'Single long job first',
+              ],
+              answer: 1,
+              explain: 'Each process gets a slice; the scheduler rotates.',
+            },
+            {
+              q: 'A process in "waiting" state is usually:',
+              options: [
+                'Crashed',
+              'Blocked on I/O or a lock',
+              'Using 100% CPU',
+              'Finished',
+              ],
+              answer: 1,
+              explain: 'Waiting means not runnable until an event (I/O, signal) completes.',
+            },
           ]}
         />
       </Section>

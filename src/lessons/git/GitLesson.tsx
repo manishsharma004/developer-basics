@@ -112,6 +112,29 @@ export default function GitLesson() {
               answer: 1,
               explain: 'Merge preserves the branching shape; rebase rewrites commits onto a new base for a straight line.',
             },
+
+            {
+              q: 'A merge commit has:',
+              options: [
+                'One parent',
+              'Two parents when merging branches',
+              'No parents',
+              'Only tags',
+              ],
+              answer: 1,
+              explain: 'Merge commits join two lines of history.',
+            },
+            {
+              q: '`git checkout -b feature` creates:',
+              options: [
+                'A remote only',
+              'A new branch and switches to it',
+              'A merge conflict',
+              'Deletes main',
+              ],
+              answer: 1,
+              explain: '-b creates the branch name and moves HEAD there.',
+            },
           ]}
         />
       </Section>

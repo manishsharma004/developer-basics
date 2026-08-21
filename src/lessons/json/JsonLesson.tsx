@@ -55,6 +55,16 @@ print("---")
 print("bytes pretty:", len(pretty))
 print(pretty)`,
   },
+  {
+    label: 'Round-trip types',
+    code: `    import json
+    data = {"ok": True, "count": 3, "tags": ["api", "json"]}
+    raw = json.dumps(data)
+    back = json.loads(raw)
+    print(raw)
+    print(back["ok"], type(back["ok"]))`,
+  },
+
 ]
 
 export default function JsonLesson() {
@@ -173,6 +183,29 @@ export default function JsonLesson() {
               ],
               answer: 1,
               explain: 'Whitespace is optional; compact form is smaller but equivalent.',
+            },
+
+            {
+              q: 'JSON `null` in Python becomes:',
+              options: [
+                '0',
+              'False',
+              'None',
+              'empty string',
+              ],
+              answer: 2,
+              explain: 'JSON null maps to Python None on load.',
+            },
+            {
+              q: 'Why might pretty JSON be larger on the wire?',
+              options: [
+                'Different data',
+              'Extra whitespace',
+              'Encryption',
+              'Base64 encoding',
+              ],
+              answer: 1,
+              explain: 'Indentation and newlines add bytes but the parsed data is the same.',
             },
           ]}
         />

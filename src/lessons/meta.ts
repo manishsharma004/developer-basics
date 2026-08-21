@@ -99,7 +99,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Names for values — and the types that decide what you can do with them.',
     icon: '🏷️',
     level: 'Beginner',
-    minutes: 12,
+    minutes: 15,
     summary:
       'Learn how variables bind to values, explore Python’s core types, dynamic typing, truthiness, and safe type conversion with runnable snippets.',
     group: 'foundations',
@@ -119,7 +119,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Branching, looping, and boolean logic — how programs choose what runs next.',
     icon: '🔀',
     level: 'Beginner',
-    minutes: 14,
+    minutes: 17,
     summary:
       'Master if/elif/else, for and while loops, break/continue, and boolean combinations with editable Python examples.',
     group: 'foundations',
@@ -139,7 +139,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Everything is bits: numbers, text, and how they are represented.',
     icon: '🔢',
     level: 'Beginner',
-    minutes: 13,
+    minutes: 16,
     summary:
       'Learn how computers store numbers in binary and hex, how text becomes bytes via Unicode/UTF-8, and convert between them with an interactive tool.',
     group: 'foundations',
@@ -159,7 +159,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Turn objects into text and back — the lingua franca of APIs and config.',
     icon: '📦',
     level: 'Beginner',
-    minutes: 13,
+    minutes: 16,
     summary:
       'Learn what serialization is, which types JSON can represent, and practice dumping and loading real JSON in Python.',
     group: 'foundations',
@@ -178,7 +178,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Why 0.1 + 0.2 ≠ 0.3 — and how to compare numbers safely.',
     icon: '🔬',
     level: 'Beginner',
-    minutes: 13,
+    minutes: 16,
     summary:
       'See IEEE float approximation in action, compare with isclose, and learn integer-cents and Decimal patterns for money.',
     group: 'foundations',
@@ -198,7 +198,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Variables, references, and where things live while your program runs.',
     icon: '🧠',
     level: 'Intermediate',
-    minutes: 16,
+    minutes: 19,
     summary:
       'See the difference between the stack and the heap, understand value vs. reference semantics, watch memory grow and shrink, and learn how garbage collection works.',
     group: 'foundations',
@@ -218,7 +218,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Epochs, UTC, and the bugs that come from getting time wrong.',
     icon: '🕒',
     level: 'Beginner',
-    minutes: 15,
+    minutes: 18,
     summary:
       'Learn Unix timestamps, UTC vs. local time, offsets, and common format pitfalls — and convert between an epoch and a human date interactively.',
     group: 'foundations',
@@ -238,7 +238,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'How failures propagate, and how to handle them without hiding them.',
     icon: '🧯',
     level: 'Beginner',
-    minutes: 13,
+    minutes: 16,
     summary:
       'Understand exceptions, try/except/finally, and stack traces by triggering and catching real errors in Python.',
     group: 'foundations',
@@ -259,7 +259,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Where your code and data live: files, folders, paths, links, and permissions.',
     icon: '🗂️',
     level: 'Beginner',
-    minutes: 14,
+    minutes: 17,
     summary:
       'Navigate a real filesystem, master absolute vs. relative paths, read permissions, copy and link files, and learn what a file really is under the hood.',
     group: 'systems',
@@ -279,7 +279,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'How your program actually runs, and how the OS shares one CPU across many.',
     icon: '⚙️',
     level: 'Beginner',
-    minutes: 16,
+    minutes: 19,
     summary:
       'Learn what a process is, how fork/exec starts one, the states it moves through, and how a scheduler decides who runs next — by driving a real simulation.',
     group: 'systems',
@@ -299,7 +299,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Doing many things at once — and the subtle bugs that come with it.',
     icon: '🔀',
     level: 'Intermediate',
-    minutes: 15,
+    minutes: 18,
     summary:
       'Understand threads vs. processes, why shared mutable state causes race conditions, and how locks fix them — by running a real interleaving simulation.',
     group: 'systems',
@@ -318,7 +318,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'VMs, containers, and serverless — where your code actually runs, and how it scales.',
     icon: '🖥️',
     level: 'Intermediate',
-    minutes: 15,
+    minutes: 18,
     summary:
       'Compare VMs, containers, and serverless, then drive an autoscaling simulator to see how instances, load, capacity, and cost interact.',
     group: 'systems',
@@ -339,7 +339,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Arrays, linked lists, and hash maps — and when to reach for each.',
     icon: '🧱',
     level: 'Intermediate',
-    minutes: 16,
+    minutes: 19,
     summary:
       'See how a hash map turns keys into buckets, why lookups are O(1), what a collision is, and how arrays differ from linked lists.',
     group: 'dsa',
@@ -358,7 +358,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'How to reason about whether code will still be fast at scale.',
     icon: '📈',
     level: 'Intermediate',
-    minutes: 15,
+    minutes: 18,
     summary:
       'Build intuition for Big-O notation and watch sorting algorithms run step by step to feel the difference between O(n²) and O(n log n).',
     group: 'dsa',
@@ -377,7 +377,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Find a needle in a haystack — and why sorted data makes it fast.',
     icon: '🔍',
     level: 'Beginner',
-    minutes: 14,
+    minutes: 17,
     summary:
       'Compare linear and binary search, count the steps each takes, and learn when sorting first is worth it.',
     group: 'dsa',
@@ -396,7 +396,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Functions that call themselves — and how to reason about them.',
     icon: '🔁',
     level: 'Beginner',
-    minutes: 13,
+    minutes: 16,
     summary:
       'Understand base cases and recursive cases, visualize the call tree, and see why naive Fibonacci explodes while memoization tames it.',
     group: 'dsa',
@@ -415,7 +415,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Hierarchies and networks: the shapes behind filesystems, routing, and search.',
     icon: '🌳',
     level: 'Intermediate',
-    minutes: 16,
+    minutes: 19,
     summary:
       'Model data as trees and graphs, then traverse them depth-first and breadth-first to search and order nodes — by running real traversals in Python.',
     group: 'dsa',
@@ -436,7 +436,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Store, relate, and query data — with a real database in your browser.',
     icon: '🗄️',
     level: 'Beginner',
-    minutes: 16,
+    minutes: 19,
     summary:
       'Learn tables, rows, and queries, then run real SQL (SELECT, WHERE, JOIN, GROUP BY) against a live SQLite database.',
     group: 'persistence',
@@ -455,7 +455,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Trading memory for speed — and deciding what to forget.',
     icon: '⚡',
     level: 'Intermediate',
-    minutes: 14,
+    minutes: 17,
     summary:
       'Learn hits, misses, and eviction, then drive a live LRU cache and watch the hit rate change as capacity and access patterns change.',
     group: 'persistence',
@@ -474,7 +474,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Decoupling producers from consumers with message queues and backpressure.',
     icon: '📨',
     level: 'Intermediate',
-    minutes: 15,
+    minutes: 18,
     summary:
       'Learn producers, consumers, brokers, and backpressure, then run a live queue where you can outrun the consumers and watch the backlog build.',
     group: 'persistence',
@@ -495,7 +495,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'What really happens between typing a URL and seeing a response.',
     icon: '🌐',
     level: 'Intermediate',
-    minutes: 15,
+    minutes: 18,
     summary:
       'Follow a request through DNS, the TCP handshake, TLS, and HTTP — step by step — learn methods and status codes, and see where latency comes from.',
     group: 'web',
@@ -515,7 +515,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Spread traffic across backends — round robin, least connections, and overload.',
     icon: '⚖️',
     level: 'Intermediate',
-    minutes: 14,
+    minutes: 17,
     summary:
       'Compare load-balancing algorithms, send bursts to capacity-limited servers, and see how L4/L7 balancers keep services available at scale.',
     group: 'web',
@@ -535,7 +535,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'How programs talk to each other over HTTP with resources, verbs, and JSON.',
     icon: '🔌',
     level: 'Beginner',
-    minutes: 14,
+    minutes: 17,
     summary:
       'Learn how REST maps HTTP methods to actions on resources, how JSON carries data, and what status codes mean — by building and parsing real responses in Python.',
     group: 'web',
@@ -554,7 +554,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Proving who you are and what you may do — passwords, sessions, and tokens.',
     icon: '🪪',
     level: 'Intermediate',
-    minutes: 15,
+    minutes: 18,
     summary:
       'Separate authentication from authorization, see why passwords are salted and hashed, and decode a JWT to learn why a token is signed, not secret.',
     group: 'web',
@@ -575,7 +575,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Fingerprints, secrets, and why you never store plain passwords.',
     icon: '🔐',
     level: 'Intermediate',
-    minutes: 14,
+    minutes: 17,
     summary:
       'Understand hashing vs. encryption and see a real SHA-256 hash change completely with the tiniest input tweak (the avalanche effect).',
     group: 'security',
@@ -594,7 +594,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'The everyday defenses: injection, escaping, secrets, and least privilege.',
     icon: '🛡️',
     level: 'Intermediate',
-    minutes: 15,
+    minutes: 18,
     summary:
       'Think like an attacker to spot injection and XSS, then fix them with parameterized queries and output escaping — with runnable before/after examples.',
     group: 'security',
@@ -615,7 +615,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Small programs, composed: how the shell turns tools into pipelines.',
     icon: '🐚',
     level: 'Beginner',
-    minutes: 13,
+    minutes: 16,
     summary:
       'Learn how stdin/stdout and the pipe operator let you chain tiny programs into powerful one-liners — by composing a real pipeline.',
     group: 'tooling',
@@ -634,7 +634,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'How teams track history, branch, and merge without stepping on each other.',
     icon: '🌿',
     level: 'Beginner',
-    minutes: 14,
+    minutes: 17,
     summary:
       'Understand commits, branches, and merges as a graph of snapshots — then build a small project history interactively.',
     group: 'tooling',
@@ -653,7 +653,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'A mini-language for describing and matching patterns in text.',
     icon: '🔎',
     level: 'Beginner',
-    minutes: 14,
+    minutes: 17,
     summary:
       'Learn the core regex building blocks and test patterns against your own text with live match highlighting.',
     group: 'tooling',
@@ -672,7 +672,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Confidence to change code: assertions, unit tests, and red-green-refactor.',
     icon: '✅',
     level: 'Beginner',
-    minutes: 14,
+    minutes: 17,
     summary:
       'Learn what makes a good test, the testing pyramid, and the test-first loop — by writing failing tests and making them pass with real Python asserts.',
     group: 'tooling',
@@ -691,7 +691,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Automated lint, test, build, and deploy on every change.',
     icon: '🔄',
     level: 'Intermediate',
-    minutes: 14,
+    minutes: 17,
     summary:
       'Walk through a four-stage CI pipeline, simulate failures, and learn how branch protection keeps broken code off main.',
     group: 'tooling',
@@ -711,7 +711,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Reproduce, observe, and fix — with prints, logs, and asserts.',
     icon: '🐛',
     level: 'Beginner',
-    minutes: 14,
+    minutes: 17,
     summary:
       'Learn a repeatable debugging loop, practice print probes and log levels, and use assertions to catch broken invariants early.',
     group: 'tooling',
@@ -732,7 +732,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Blueprints and instances: the atom of object-oriented design.',
     icon: '🧩',
     level: 'Beginner',
-    minutes: 13,
+    minutes: 16,
     summary:
       'Understand how a class is a blueprint and objects are instances with their own state but shared behavior — by building objects interactively.',
     group: 'design',
@@ -751,7 +751,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Encapsulation, inheritance, polymorphism, abstraction — and SOLID.',
     icon: '🧬',
     level: 'Intermediate',
-    minutes: 18,
+    minutes: 21,
     summary:
       'Master the four pillars of OOP with runnable Python examples, then learn the five SOLID principles that keep object-oriented code maintainable.',
     group: 'design',
@@ -771,7 +771,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'The catalog of reusable solutions every engineer should recognize.',
     icon: '🏛️',
     level: 'Advanced',
-    minutes: 24,
+    minutes: 27,
     summary:
       'Browse the full catalog of Gang-of-Four patterns plus common industry ones — grouped, searchable, each with intent, a runnable example, and real-world uses.',
     group: 'design',
@@ -790,7 +790,7 @@ export const lessonsMeta: LessonMeta[] = [
     tagline: 'Pure functions, immutability, and composing behavior from small pieces.',
     icon: 'λ',
     level: 'Intermediate',
-    minutes: 15,
+    minutes: 18,
     summary:
       'Understand pure functions and side effects, replace loops with map/filter/reduce, and see why immutability makes code easier to reason about — all runnable.',
     group: 'design',

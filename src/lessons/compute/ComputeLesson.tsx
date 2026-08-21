@@ -125,6 +125,29 @@ export default function ComputeLesson() {
               answer: 2,
               explain: 'Serverless scales to zero and spins up on demand, incurring cold-start latency.',
             },
+
+            {
+              q: 'Containers vs VMs — containers typically:',
+              options: [
+                'Include full OS kernel',
+              'Share host kernel, isolate processes',
+              'Cannot scale',
+              'Are always serverless',
+              ],
+              answer: 1,
+              explain: 'Containers share the kernel; VMs virtualize hardware + OS.',
+            },
+            {
+              q: 'Autoscaling adds instances when:',
+              options: [
+                'Disk is full',
+              'Load exceeds capacity thresholds',
+              'Code is committed',
+              'DNS fails',
+              ],
+              answer: 1,
+              explain: 'Metrics like CPU, latency, or queue depth trigger scale-out.',
+            },
           ]}
         />
       </Section>

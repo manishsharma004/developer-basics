@@ -45,6 +45,18 @@ try:
 except AssertionError as e:
     print("caught:", e)`,
   },
+  {
+    label: 'Narrow the bug',
+    code: `    def divide_all(nums, divisor):
+        out = []
+        for i, n in enumerate(nums):
+            print(f"step {i}: {n}/{divisor}")
+            out.append(n / divisor)
+        return out
+    
+    print(divide_all([10, 20, 0, 40], 10))`,
+  },
+
 ]
 
 export default function DebuggingLesson() {
@@ -161,6 +173,29 @@ export default function DebuggingLesson() {
               ],
               answer: 1,
               explain: 'Asserts guard programmer assumptions, not expected user errors.',
+            },
+
+            {
+              q: 'First step in debugging should be:',
+              options: [
+                'Rewrite everything',
+              'Reproduce the bug reliably',
+              'Deploy to prod',
+              'Disable logs',
+              ],
+              answer: 1,
+              explain: 'You need a consistent repro before you can verify a fix.',
+            },
+            {
+              q: 'DEBUG log level is for:',
+              options: [
+                'User-facing errors only',
+              'Detailed diagnostic detail during development',
+              'Production alerts',
+              'TLS handshakes',
+              ],
+              answer: 1,
+              explain: 'DEBUG is verbose; often off in production.',
             },
           ]}
         />

@@ -102,6 +102,29 @@ export default function QueueLesson() {
               answer: 1,
               explain: 'Idempotent consumers handle duplicate deliveries safely.',
             },
+
+            {
+              q: 'Backpressure signals:',
+              options: [
+                'Faster producers',
+              'Consumers are overwhelmed — slow down or buffer',
+              'DNS failure',
+              'TLS expiry',
+              ],
+              answer: 1,
+              explain: 'When queues grow, producers should throttle or drop per policy.',
+            },
+            {
+              q: 'A message queue decouples:',
+              options: [
+                'CPU and RAM',
+              'Producer and consumer lifetimes',
+              'Git branches',
+              'CSS themes',
+              ],
+              answer: 1,
+              explain: 'Producers can fire-and-forget; consumers process asynchronously.',
+            },
           ]}
         />
       </Section>

@@ -98,6 +98,29 @@ export default function RecursionLesson() {
               answer: 1,
               explain: 'Cached results are returned immediately, collapsing repeated work.',
             },
+
+            {
+              q: 'Every recursive function needs:',
+              options: [
+                'Two loops',
+              'A base case',
+              'Global variables',
+              'Threads',
+              ],
+              answer: 1,
+              explain: 'Base case stops recursion; without it you overflow the stack.',
+            },
+            {
+              q: 'Memoization helps when:',
+              options: [
+                'No repeated subproblems',
+              'Same inputs are recomputed many times',
+              'Using only loops',
+              'Memory is unlimited',
+              ],
+              answer: 1,
+              explain: 'Caching results avoids exponential recomputation (e.g. naive Fibonacci).',
+            },
           ]}
         />
       </Section>

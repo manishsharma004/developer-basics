@@ -153,6 +153,29 @@ export default function FloatingPointLesson() {
               answer: 1,
               explain: 'NaN is defined to compare unequal even to itself.',
             },
+
+            {
+              q: 'Best way to compare floats for equality?',
+              options: [
+                '== always',
+              'math.isclose with tolerance',
+              'Convert to int',
+              'Use strings',
+              ],
+              answer: 1,
+              explain: 'Tolerance-based comparison handles representation error.',
+            },
+            {
+              q: 'Summing many small floats can:',
+              options: [
+                'Always be exact',
+              'Accumulate tiny errors',
+              'Crash Python',
+              'Return NaN only',
+              ],
+              answer: 1,
+              explain: 'Repeated approximation can drift from the mathematically exact total.',
+            },
           ]}
         />
       </Section>

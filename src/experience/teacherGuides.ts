@@ -37,6 +37,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Classify values as truthy or falsy.',
       'Explain why int("42") works but "3" + 1 fails.',
+      'What does is test versus ==?',
+      'Which is truthy?',
     ],
   },
   controlflow: {
@@ -63,6 +65,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Predict output of range(0, 10, 2).',
       'Trace which branch runs for a given score.',
+      'What does break do inside a loop?',
+      'while True: without a break is:',
     ],
   },
   floatingpoint: {
@@ -89,6 +93,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Fix a broken if total == 19.99 check.',
       'Name one special float value and its comparison behavior.',
+      'Best way to compare floats for equality?',
+      'Summing many small floats can:',
     ],
   },
   cicd: {
@@ -115,6 +121,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Order pipeline stages correctly.',
       'Explain one reason a green local build might fail in CI.',
+      'Branch protection can require:',
+      'If lint fails in CI, deploy should:',
     ],
   },
   loadbalancing: {
@@ -141,6 +149,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Pick an algorithm for long-polling vs uniform API calls.',
       'Name one L7 routing criterion.',
+      'Health checks let a balancer:',
+      'Sticky sessions trade:',
     ],
   },
   filesystem: {
@@ -167,6 +177,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Predict the link count after `ln a b`.',
       'Decode a permission string like -rw-r--r--.',
+      'A hard link vs copy:',
+      '.. in a path means:',
     ],
   },
   process: {
@@ -193,6 +205,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Given processes, choose the algorithm with the lowest average wait.',
       'Explain what a context switch costs.',
+      'Round Robin uses a:',
+      'A process in "waiting" state is usually:',
     ],
   },
   memory: {
@@ -219,6 +233,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Predict the output of an aliasing vs. copy snippet.',
       'Explain one way a GC language can still leak.',
+      'Two variables pointing at the same list means:',
+      'Garbage collection frees objects that are:',
     ],
   },
   concurrency: {
@@ -245,6 +261,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Explain why the unlocked counter loses updates.',
       'Name two ways to make the increment safe.',
+      'A race condition happens when:',
+      'A lock prevents:',
     ],
   },
   data: {
@@ -271,6 +289,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Convert ff to decimal.',
       'Explain why an emoji increases the byte count more than the character count.',
+      'How many bits are in one byte?',
+      'Why is hex popular for memory dumps?',
     ],
   },
   network: {
@@ -297,6 +317,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Classify a set of status codes by family.',
       'Explain why the first page load is slower than the next.',
+      'A network timeout usually means:',
+      'HTTP/2 can improve performance by:',
     ],
   },
   git: {
@@ -323,6 +345,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'How many parents does a merge commit have?',
       'In one sentence, what is HEAD?',
+      'A merge commit has:',
+      'git checkout -b feature creates:',
     ],
   },
   cli: {
@@ -349,6 +373,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Write a pipeline that counts lines matching a word.',
       'Explain why errors still appear when stdout is redirected.',
+      'In a pipeline a | b, stdout of a becomes:',
+      'Exit code 0 usually means:',
     ],
   },
   datastructures: {
@@ -375,6 +401,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Pick the right structure for fast lookup by id.',
       'Define a collision and how it\'s resolved.',
+      'Hash map average lookup time:',
+      'Linked list vs array for front insertions:',
     ],
   },
   algorithms: {
@@ -401,6 +429,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'If O(n²) takes 1s at n=1000, estimate the time at n=2000.',
       'Order a list of complexities from fastest-growing to slowest.',
+      'O(n²) means doubling input size roughly:',
+      'Bubble sort is mainly useful for:',
     ],
   },
   recursion: {
@@ -427,6 +457,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Explain why naive Fibonacci is O(2ⁿ).',
       'State what memoization changes about repeated calls.',
+      'Every recursive function needs:',
+      'Memoization helps when:',
     ],
   },
   sql: {
@@ -453,6 +485,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Write a query totaling spend per city.',
       'Explain how parameterized queries stop injection.',
+      'PRIMARY KEY ensures:',
+      'JOIN combines rows based on:',
     ],
   },
   regex: {
@@ -479,6 +513,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'State what \\d{3} matches.',
       'Make .* match as little as possible.',
+      '^ in a regex anchors to:',
+      '\d+ matches:',
     ],
   },
   errors: {
@@ -505,6 +541,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Point to the actual error in a traceback.',
       'State when a finally block runs.',
+      'What does finally guarantee?',
+      'Bare except: catches:',
     ],
   },
   caching: {
@@ -531,6 +569,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'State what LRU evicts.',
       'Name one cache-invalidation strategy.',
+      'A cache miss means:',
+      'LRU evicts:',
     ],
   },
   crypto: {
@@ -557,6 +597,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Describe how to store user passwords.',
       'Explain why Base64 provides no confidentiality.',
+      'Hashing is one-way — you cannot:',
+      'Salting passwords helps against:',
     ],
   },
   time: {
@@ -584,6 +626,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'State where timestamps should be stored.',
       'Define the Unix epoch and spot a naive datetime.',
+      'Unix epoch counts seconds since:',
+      'Storing only local time without timezone risks:',
     ],
   },
   compute: {
@@ -610,6 +654,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Given a load and per-instance capacity, compute instances needed.',
       'Explain why stateless design enables horizontal scaling.',
+      'Containers vs VMs — containers typically:',
+      'Autoscaling adds instances when:',
     ],
   },
   queues: {
@@ -636,6 +682,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Explain what a growing queue depth indicates.',
       'Why should consumers be idempotent?',
+      'Backpressure signals:',
+      'A message queue decouples:',
     ],
   },
   classes: {
@@ -662,6 +710,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Predict the effect of calling a method on one object.',
       'Explain where methods live vs. fields.',
+      'An instance attribute lives on:',
+      'self in Python methods refers to:',
     ],
   },
   oop: {
@@ -688,6 +738,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Identify which pillar a code sample demonstrates.',
       'State the Dependency Inversion principle.',
+      'Polymorphism lets you:',
+      'Encapsulation hides:',
     ],
   },
   patterns: {
@@ -714,6 +766,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Match a scenario to the right pattern.',
       'Name the three GoF categories with an example each.',
+      'Factory pattern is for:',
+      'Over-using patterns can:',
     ],
   },
   trees: {
@@ -740,6 +794,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'State which traversal finds the shortest unweighted path.',
       'Explain why a visited set is needed for graphs but not trees.',
+      'BFS explores a graph:',
+      'DFS on a tree can be implemented with:',
     ],
   },
   apis: {
@@ -766,6 +822,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Choose the right verb for creating vs. reading a resource.',
       'Classify a set of status codes by family.',
+      'REST POST to /users typically:',
+      'HTTP 201 Created often means:',
     ],
   },
   auth: {
@@ -792,6 +850,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Explain the difference between AuthN and AuthZ.',
       'State why a JWT must not contain secrets.',
+      'Authentication proves:',
+      'JWT payload is:',
     ],
   },
   security: {
@@ -818,6 +878,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Give the correct fix for SQL injection.',
       'Explain how escaping stops XSS.',
+      'Parameterized queries prevent:',
+      'Output escaping in HTML prevents:',
     ],
   },
   testing: {
@@ -844,6 +906,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'State the TDD cycle in order.',
       'Explain why most tests should be unit tests.',
+      'A flaky test:',
+      'TDD order is:',
     ],
   },
   functional: {
@@ -870,6 +934,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Identify whether a function is pure.',
       'Rewrite a loop using map/filter/reduce.',
+      'A pure function:',
+      'map(f, items) returns:',
     ],
   },
   json: {
@@ -896,6 +962,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Name three native JSON types and one that is not.',
       'Explain what a round-trip preserves.',
+      'JSON null in Python becomes:',
+      'Why might pretty JSON be larger on the wire?',
     ],
   },
   search: {
@@ -922,6 +990,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Estimate binary-search steps for n = 1,000,000.',
       'Explain one off-by-one pitfall in the binary-search loop.',
+      'Binary search needs:',
+      'For one lookup in a huge sorted list, prefer:',
     ],
   },
   debugging: {
@@ -948,6 +1018,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Order the debugging loop.',
       'Pick the right log level for a handled bad amount vs. a crash.',
+      'First step in debugging should be:',
+      'DEBUG log level is for:',
     ],
   },
 }

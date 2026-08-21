@@ -101,6 +101,29 @@ export default function AlgorithmsLesson() {
               answer: 0,
               explain: 'Average-case hash lookups are constant time.',
             },
+
+            {
+              q: 'O(n²) means doubling input size roughly:',
+              options: [
+                'Doubles work',
+              'Quadruples work',
+              'Halves work',
+              'No change',
+              ],
+              answer: 1,
+              explain: 'n² grows with the square — 2n → 4× comparisons in many quadratic algorithms.',
+            },
+            {
+              q: 'Bubble sort is mainly useful for:',
+              options: [
+                'Production at scale',
+              'Teaching — simple but slow on large n',
+              'Sorting millions of rows',
+              'Hash tables',
+              ],
+              answer: 1,
+              explain: 'It is easy to visualize but O(n²) is too slow for large data.',
+            },
           ]}
         />
       </Section>

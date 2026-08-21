@@ -123,6 +123,29 @@ export default function ConcurrencyLesson() {
               answer: 1,
               explain: 'If nothing mutable is shared, there is nothing to race on.',
             },
+
+            {
+              q: 'A race condition happens when:',
+              options: [
+                'Two CPUs exist',
+              'Outcome depends on thread interleaving',
+              'Code is too fast',
+              'Locks are used',
+              ],
+              answer: 1,
+              explain: 'Shared mutable state without synchronization yields nondeterministic results.',
+            },
+            {
+              q: 'A lock prevents:',
+              options: [
+                'All parallelism',
+              'Two threads entering a critical section at once',
+              'Memory leaks',
+              'DNS lookups',
+              ],
+              answer: 1,
+              explain: 'Only one holder at a time protects shared updates.',
+            },
           ]}
         />
       </Section>

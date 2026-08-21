@@ -47,6 +47,15 @@ describe([0])
 describe(None)
 describe("hello")`,
   },
+  {
+    label: '== vs is',
+    code: `    a = [1, 2]
+    b = a
+    c = [1, 2]
+    print("==", a == b, a == c)   # same contents
+    print("is", a is b, a is c)   # same object in memory`,
+  },
+
 ]
 
 export default function VariablesLesson() {
@@ -167,6 +176,29 @@ export default function VariablesLesson() {
               ],
               answer: 1,
               explain: '"3" + 1 is invalid; int("3") + 1 is 4.',
+            },
+
+            {
+              q: 'What does `is` test versus `==`?',
+              options: [
+                'Value equality',
+              'Identity (same object in memory)',
+              'Type match',
+              'String length',
+              ],
+              answer: 1,
+              explain: '`is` compares object identity; `==` compares values.',
+            },
+            {
+              q: 'Which is truthy?',
+              options: [
+                'None',
+              '[]',
+              '[0]',
+              '""',
+              ],
+              answer: 2,
+              explain: 'A list containing 0 is non-empty, so it is truthy.',
             },
           ]}
         />

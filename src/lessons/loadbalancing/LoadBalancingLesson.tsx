@@ -120,6 +120,29 @@ export default function LoadBalancingLesson() {
               answer: 1,
               explain: 'Overload needs backpressure or more capacity — not infinite accepts.',
             },
+
+            {
+              q: 'Health checks let a balancer:',
+              options: [
+                'Encrypt traffic',
+              'Skip dead backends',
+              'Run SQL',
+              'Compile code',
+              ],
+              answer: 1,
+              explain: 'Unhealthy nodes are removed from rotation until they recover.',
+            },
+            {
+              q: 'Sticky sessions trade:',
+              options: [
+                'Security for speed',
+              'Even load distribution for session locality',
+              'JSON for XML',
+              'TCP for UDP',
+              ],
+              answer: 1,
+              explain: 'Pinning users to one server simplifies state but can skew load.',
+            },
           ]}
         />
       </Section>

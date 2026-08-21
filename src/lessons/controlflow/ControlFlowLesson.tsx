@@ -45,6 +45,21 @@ for x in range(10):
     print(x, end=" ")
 print("\\n(stopped at 5)")`,
   },
+  {
+    label: 'continue & for-else',
+    code: `    for n in range(10):
+        if n % 2 == 0:
+            continue
+        print(n, end=" ")
+    print()
+    
+    for x in range(5):
+        if x == 99:
+            break
+    else:
+        print("loop finished without break")`,
+  },
+
 ]
 
 export default function ControlFlowLesson() {
@@ -164,6 +179,29 @@ export default function ControlFlowLesson() {
               options: ['True', 'False', 'Error', 'None'],
               answer: 0,
               explain: 'and binds tighter: (True and False) or True → False or True → True.',
+            },
+
+            {
+              q: 'What does `break` do inside a loop?',
+              options: [
+                'Skip one iteration',
+              'Exit the loop immediately',
+              'Return from the function',
+              'Restart the program',
+              ],
+              answer: 1,
+              explain: '`break` leaves the innermost loop right away.',
+            },
+            {
+              q: '`while True:` without a break is:',
+              options: [
+                'Always valid',
+              'An infinite loop',
+              'Syntax error',
+              'Same as for-loop',
+              ],
+              answer: 1,
+              explain: 'The condition never becomes false unless you break or return.',
             },
           ]}
         />

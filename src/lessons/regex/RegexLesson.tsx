@@ -97,6 +97,29 @@ export default function RegexLesson() {
               answer: 1,
               explain: 'Appending ? makes the quantifier lazy: .*?',
             },
+
+            {
+              q: '`^` in a regex anchors to:',
+              options: [
+                'End of string',
+              'Start of string (or line in multiline)',
+              'Any digit',
+              'Whitespace',
+              ],
+              answer: 1,
+              explain: 'Caret matches the beginning position.',
+            },
+            {
+              q: '`\d+` matches:',
+              options: [
+                'Letters',
+              'One or more digits',
+              'Exactly one dot',
+              'Nothing',
+              ],
+              answer: 1,
+              explain: '\d is a digit; + means one or more.',
+            },
           ]}
         />
       </Section>
