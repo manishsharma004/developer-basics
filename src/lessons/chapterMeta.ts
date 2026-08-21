@@ -1,4 +1,4 @@
-import type { LessonMeta, SectionMeta } from './meta.ts'
+import type { LessonMeta, Level, SectionMeta } from './meta.ts'
 
 const CLOSING: SectionMeta[] = [
   { id: 'terms', title: 'Key terms' },
@@ -6,13 +6,22 @@ const CLOSING: SectionMeta[] = [
   { id: 'recap', title: 'Recap' },
 ]
 
+const GROUP_ICON: Record<string, string> = {
+  react: '⚛️',
+  fastapi: '⚡',
+  databases: '🗃️',
+  sql: '🗄️',
+  mongodb: '🍃',
+}
+
 export interface ChapterMetaInput {
   id: string
   title: string
   tagline: string
   summary: string
-  group: 'react' | 'fastapi'
+  group: 'react' | 'fastapi' | 'databases' | 'sql' | 'mongodb'
   minutes: number
+  level?: Level
   modelTitle?: string
   playgroundTitle?: string
   hasPlayground?: boolean
@@ -37,8 +46,8 @@ export function chapterMeta(input: ChapterMetaInput): LessonMeta {
     path: `/lessons/${input.id}`,
     title: input.title,
     tagline: input.tagline,
-    icon: input.group === 'react' ? '⚛️' : '⚡',
-    level: 'Intermediate',
+    icon: GROUP_ICON[input.group],
+    level: input.level ?? (input.group === 'sql' || input.group === 'databases' ? 'Beginner' : 'Intermediate'),
     minutes: input.minutes,
     summary: input.summary,
     group: input.group,
