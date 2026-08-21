@@ -1,11 +1,23 @@
 {
   "name": "developer-basics",
   "install": "bash .cursor/install.sh",
+  "repositoryDependencies": [
+    "github.com/manishsharma004/retro-games",
+    "github.com/manishsharma004/system-design-copilot"
+  ],
   "terminals": [
     {
-      "name": "dev",
+      "name": "developer-basics",
       "command": "export PATH=\"$HOME/.bun/bin:$PATH\" && bun run dev -- --host 0.0.0.0 --port 5173"
+    },
+    {
+      "name": "retro-games",
+      "command": "export PATH=\"$HOME/.bun/bin:$PATH\" && cd all-repositories/retro-games && bun run dev -- --host 0.0.0.0 --port 5174"
+    },
+    {
+      "name": "system-design-copilot",
+      "command": "export PATH=\"$HOME/.bun/bin:$PATH\" && cd all-repositories/system-design-copilot && bun run dev"
     }
   ],
-  "ports": [5173]
+  "ports": [5173, 5174, 4173]
 }

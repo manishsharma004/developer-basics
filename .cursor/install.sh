@@ -14,3 +14,7 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 bun --version
 bun install --frozen-lockfile
+
+if [[ -f all-repositories/setup.sh ]]; then
+  bash all-repositories/setup.sh
+fi

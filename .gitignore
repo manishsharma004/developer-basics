@@ -23,3 +23,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Cloned sibling repos (installed by all-repositories/setup.sh)
+all-repositories/retro-games/
+all-repositories/system-design-copilot/
