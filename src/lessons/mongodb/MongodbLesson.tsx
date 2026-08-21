@@ -210,58 +210,77 @@ export default function MongodbLesson() {
         </Callout>
       </Section>
 
-      <Section id="connectors" title="Connectors & drivers">
+      <Section id="conn-pymongo" title="PyMongo driver">
         <p className="prose">
-          MongoDB runs as a server (or Atlas cluster in the cloud). Your Python or
-          Node app connects through a <strong>driver</strong> — a library that speaks
-          the MongoDB wire protocol, manages connections, and returns documents as
-          native dicts/objects.
+          <strong>PyMongo</strong> is the standard synchronous Python driver. A{' '}
+          <code>MongoClient</code> manages the connection pool; you pick a database and
+          collection, then call methods like <code>find</code>, <code>insert_one</code>,
+          and <code>update_many</code>.
         </p>
-        <ul className="prose-list">
-          <li>
-            <strong>PyMongo</strong> — the standard synchronous Python driver;{' '}
-            <code>MongoClient(uri)</code> returns a database handle.
-          </li>
-          <li>
-            <strong>Motor</strong> — async wrapper around PyMongo for asyncio/FastAPI
-            handlers that <code>await</code> database calls.
-          </li>
-          <li>
-            <strong>Connection URI</strong> —{' '}
-            <code>mongodb+srv://user:pass@cluster.mongodb.net/db?retryWrites=true</code>{' '}
-            encodes host, credentials, database, and options.
-          </li>
-          <li>
-            <strong>ODM libraries</strong> — Beanie, MongoEngine map Python classes to
-            documents (like SQLAlchemy for SQL).
-          </li>
-        </ul>
         <pre className="term-output">{`from pymongo import MongoClient
 
 client = MongoClient("mongodb://localhost:27017")
 db = client["shop"]
 orders = db.orders.find({"status": "shipped"}).limit(10)
 
-# FastAPI + Motor (async)
-from motor.motor_asyncio import AsyncIOMotorClient
+for doc in orders:
+    print(doc["city"], doc["amount"])`}</pre>
+        <SnippetRunner snippets={SNIPPETS.filter((s) => s.label === 'PyMongo-style client')} />
+        <TryThis>
+          Run the snippet, insert a document, then find it back by city.
+        </TryThis>
+      </Section>
+
+      <Section id="conn-uri" title="Connection URIs">
+        <p className="prose">
+          Connection details are encoded in a <strong>URI</strong>. Atlas (managed
+          hosting) uses <code>mongodb+srv://</code> with TLS; self-hosted uses{' '}
+          <code>mongodb://host:27017/dbname</code>. Query parameters set options like{' '}
+          <code>retryWrites</code> and <code>w=majority</code>.
+        </p>
+        <pre className="term-output">{`mongodb+srv://user:pass@cluster0.abc.mongodb.net/shop?retryWrites=true&w=majority`}</pre>
+        <SnippetRunner snippets={SNIPPETS.filter((s) => s.label === 'Connection URI & options')} />
+        <Callout kind="note" title="Atlas vs self-hosted">
+          The driver API is identical — only the URI and TLS setup differ. Never commit
+          credentials; use environment variables in production.
+        </Callout>
+      </Section>
+
+      <Section id="conn-motor" title="Motor (async driver)">
+        <p className="prose">
+          <strong>Motor</strong> wraps PyMongo for <code>asyncio</code>. In FastAPI
+          handlers you <code>await</code> database calls so the event loop can serve
+          other requests while waiting on the network — the same concurrency idea as
+          async HTTP handlers.
+        </p>
+        <pre className="term-output">{`from motor.motor_asyncio import AsyncIOMotorClient
+
 client = AsyncIOMotorClient(uri)
 doc = await client.shop.orders.find_one({"_id": order_id})`}</pre>
-        <SnippetRunner
-          snippets={SNIPPETS.filter((s) =>
-            ['PyMongo-style client', 'Connection URI & options', 'Motor async pattern'].includes(s.label),
-          )}
-        />
-        <Callout kind="note" title="Atlas vs self-hosted">
-          <strong>MongoDB Atlas</strong> is managed hosting — connection string uses{' '}
-          <code>mongodb+srv://</code> with TLS built in. Self-hosted MongoDB uses{' '}
-          <code>mongodb://host:27017</code>. The driver API is the same; only the URI
-          changes.
-        </Callout>
+        <SnippetRunner snippets={SNIPPETS.filter((s) => s.label === 'Motor async pattern')} />
         <TryThis>
-          Run <strong>Connection URI &amp; options</strong> and identify the database name
-          and <code>retryWrites</code> option. In <strong>PyMongo-style client</strong>,
-          insert a document and find it back.
+          Run the Motor snippet and note the simulated network delay — the event loop
+          stays free during <code>await</code>.
         </TryThis>
+      </Section>
+
+      <Section id="conn-odm" title="ODMs (Beanie / MongoEngine)">
+        <p className="prose">
+          <strong>ODMs</strong> (object-document mappers) map Python classes to MongoDB
+          collections — like SQLAlchemy for SQL. <strong>Beanie</strong> (async, Pydantic-based)
+          and <strong>MongoEngine</strong> (sync) add validation, defaults, and query helpers.
+        </p>
+        <pre className="term-output">{`# Beanie + Pydantic (conceptual)
+class Order(Document):
+    city: str
+    amount: float
+    status: str = "pending"
+
+# await Order.find(Order.amount > 100).to_list()`}</pre>
+        <Callout kind="tip" title="When to use an ODM">
+          ODMs shine when documents map cleanly to typed models and you want validation
+          on write. Raw PyMongo is fine for ad-hoc queries, aggregations, and scripts.
+        </Callout>
       </Section>
 
       <Section id="playground" title="Run MongoDB commands">
