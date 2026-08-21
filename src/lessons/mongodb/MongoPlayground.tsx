@@ -63,10 +63,21 @@ const SAMPLES: { label: string; query: string }[] = [
   },
 ]
 
-export function MongoPlayground() {
+export interface MongoPlaygroundProps {
+  sampleLabels?: string[]
+  defaultLabel?: string
+  title?: string
+}
+
+export function MongoPlayground({ sampleLabels, defaultLabel, title = 'MongoDB shell command' }: MongoPlaygroundProps = {}) {
+  const samples = sampleLabels?.length
+    ? SAMPLES.filter((s) => sampleLabels.includes(s.label))
+    : SAMPLES
+  const initial = samples.find((s) => s.label === defaultLabel) ?? samples[0]!
+
   const { pyodide, phase, message, error } = usePyodide()
   const [ready, setReady] = useState(false)
-  const [query, setQuery] = useState(SAMPLES[0].query)
+  const [query, setQuery] = useState(initial.query)
   const [result, setResult] = useState<MongoResult | null>(null)
   const runRef = useRef<PyCallable | null>(null)
 
@@ -98,7 +109,7 @@ export function MongoPlayground() {
     <>
       <RuntimeBanner phase={phase} message={message} error={error} />
       <div className="panel">
-        <div className="panel-title">MongoDB shell command</div>
+        <div className="panel-title">{title}</div>
         <MonacoEditor value={query} onChange={setQuery} language="javascript" minLines={4} ariaLabel="MongoDB query" />
         <div className="ref-run-row">
           <button className="btn" disabled={!ready} onClick={run}>
@@ -106,7 +117,7 @@ export function MongoPlayground() {
           </button>
         </div>
         <div className="quick-commands">
-          {SAMPLES.map((s) => (
+          {samples.map((s) => (
             <button key={s.label} className="chip" disabled={!ready} onClick={() => setQuery(s.query)}>
               {s.label}
             </button>

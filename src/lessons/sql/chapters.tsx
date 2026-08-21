@@ -25,6 +25,14 @@ export const SQL_CHAPTERS: Record<string, ComponentType> = {
         engine figures out how to produce it efficiently.
       </Callout>
     ),
+    playground: (
+      <>
+        <SqlPlayground sampleLabels={['All customers']} />
+        <TryThis>
+          Run the query, then change <code>SELECT *</code> to <code>SELECT name, city</code> and re-run.
+        </TryThis>
+      </>
+    ),
     terms: [
       { term: 'SQL', def: 'Structured Query Language — the standard way to read and write relational data.' },
       { term: 'table', def: 'A set of rows with typed columns.' },
@@ -78,6 +86,12 @@ export const SQL_CHAPTERS: Record<string, ComponentType> = {
           <li><code>JOIN</code> combines rows from two tables on a matching key.</li>
           <li><code>GROUP BY</code> with <code>COUNT</code>/<code>SUM</code> aggregates rows.</li>
         </ul>
+      </>
+    ),
+    playground: (
+      <>
+        <SqlPlayground sampleLabels={['All customers', 'Filter & sort']} />
+        <TryThis>Try <strong>Filter & sort</strong> — WHERE runs before ORDER BY in the clause order.</TryThis>
       </>
     ),
     terms: [
@@ -139,6 +153,14 @@ export const SQL_CHAPTERS: Record<string, ComponentType> = {
           fields for speed) trades storage and consistency for simpler reads. Most
           apps start normalized and denormalize only where profiling shows pain.
         </Callout>
+      </>
+    ),
+    playground: (
+      <>
+        <SqlPlayground sampleLabels={['Inner join', 'Left join (all customers)']} />
+        <TryThis>
+          Compare <strong>Inner join</strong> vs <strong>Left join (all customers)</strong> — find customers with zero orders.
+        </TryThis>
       </>
     ),
     terms: [
@@ -203,6 +225,12 @@ export const SQL_CHAPTERS: Record<string, ComponentType> = {
         </Callout>
       </>
     ),
+    playground: (
+      <>
+        <SqlPlayground sampleLabels={['Insert row', 'Update & delete']} />
+        <TryThis>Run <strong>Insert row</strong>, then re-run <strong>All customers</strong> in sql-intro to confirm the new order.</TryThis>
+      </>
+    ),
     terms: [
       { term: 'INSERT', def: 'Adds new rows to a table.' },
       { term: 'UPDATE', def: 'Modifies existing rows matching a WHERE condition.' },
@@ -256,6 +284,12 @@ export const SQL_CHAPTERS: Record<string, ComponentType> = {
           <li><code>HAVING</code> filters <em>after</em> grouping (like <code>WHERE</code> but for groups).</li>
           <li>A <strong>subquery</strong> nests one SELECT inside another — e.g. products priced above the average.</li>
         </ul>
+      </>
+    ),
+    playground: (
+      <>
+        <SqlPlayground sampleLabels={['Aggregate + HAVING', 'Subquery']} />
+        <TryThis>Change the revenue threshold in <strong>Aggregate + HAVING</strong> and watch which cities disappear.</TryThis>
       </>
     ),
     terms: [
@@ -679,6 +713,7 @@ with Session(engine) as session:
         user input into queries determines whether your app stays secure.
       </p>
     ),
+    playground: <SqlPlayground sampleLabels={['Inner join']} />,
     hood: (
       <>
         <UnderTheHood title="Indexes: the database's table of contents">

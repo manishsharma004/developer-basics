@@ -10,6 +10,8 @@ export const fastapiLessonsMeta: LessonMeta[] = [
     group: 'fastapi',
     minutes: 4,
     modelTitle: 'Why FastAPI',
+    hasPlayground: true,
+    playgroundTitle: 'Hello FastAPI lab',
   }),
   chapterMeta({
     id: 'fastapi-routes-basics',
@@ -30,6 +32,8 @@ export const fastapiLessonsMeta: LessonMeta[] = [
     group: 'fastapi',
     minutes: 4,
     modelTitle: 'CRUD routes',
+    hasPlayground: true,
+    playgroundTitle: 'CRUD routes lab',
   }),
   chapterMeta({
     id: 'fastapi-models-request',
@@ -50,6 +54,8 @@ export const fastapiLessonsMeta: LessonMeta[] = [
     group: 'fastapi',
     minutes: 4,
     modelTitle: 'Response models',
+    hasPlayground: true,
+    playgroundTitle: 'Response models lab',
   }),
   chapterMeta({
     id: 'fastapi-params-path',
@@ -59,6 +65,8 @@ export const fastapiLessonsMeta: LessonMeta[] = [
     group: 'fastapi',
     minutes: 3,
     modelTitle: 'Path parameters',
+    hasPlayground: true,
+    playgroundTitle: 'Path parameters lab',
   }),
   chapterMeta({
     id: 'fastapi-params-query',
@@ -79,6 +87,8 @@ export const fastapiLessonsMeta: LessonMeta[] = [
     group: 'fastapi',
     minutes: 4,
     modelTitle: 'Request body',
+    hasPlayground: true,
+    playgroundTitle: 'Request body lab',
   }),
   chapterMeta({
     id: 'fastapi-deps-database',
@@ -133,6 +143,8 @@ export const fastapiLessonsMeta: LessonMeta[] = [
     group: 'fastapi',
     minutes: 3,
     modelTitle: 'OpenAPI docs',
+    hasPlayground: true,
+    playgroundTitle: 'OpenAPI explorer',
   }),
   chapterMeta({
     id: 'fastapi-hood-cors',
@@ -153,6 +165,8 @@ export const fastapiLessonsMeta: LessonMeta[] = [
     group: 'fastapi',
     minutes: 3,
     modelTitle: 'Architecture',
+    hasPlayground: true,
+    playgroundTitle: 'Full-stack path',
     hasHood: true,
   }),
 ]

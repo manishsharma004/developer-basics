@@ -10,6 +10,8 @@ export const reactLessonsMeta: LessonMeta[] = [
     group: 'react',
     minutes: 4,
     modelTitle: 'UI as a function of state',
+    hasPlayground: true,
+    playgroundTitle: 'See UI = f(state)',
   }),
   chapterMeta({
     id: 'react-jsx-basics',
@@ -19,6 +21,8 @@ export const reactLessonsMeta: LessonMeta[] = [
     group: 'react',
     minutes: 5,
     modelTitle: 'Components & JSX',
+    hasPlayground: true,
+    playgroundTitle: 'Compose components',
   }),
   chapterMeta({
     id: 'react-jsx-rules',
@@ -28,6 +32,8 @@ export const reactLessonsMeta: LessonMeta[] = [
     group: 'react',
     minutes: 4,
     modelTitle: 'JSX syntax rules',
+    hasPlayground: true,
+    playgroundTitle: 'Fix JSX mistakes',
   }),
   chapterMeta({
     id: 'react-props',
@@ -37,6 +43,8 @@ export const reactLessonsMeta: LessonMeta[] = [
     group: 'react',
     minutes: 4,
     modelTitle: 'Props',
+    hasPlayground: true,
+    playgroundTitle: 'Props lab',
   }),
   chapterMeta({
     id: 'react-state',
@@ -46,6 +54,8 @@ export const reactLessonsMeta: LessonMeta[] = [
     group: 'react',
     minutes: 5,
     modelTitle: 'useState',
+    hasPlayground: true,
+    playgroundTitle: 'Counter lab',
   }),
   chapterMeta({
     id: 'react-events',
@@ -55,6 +65,8 @@ export const reactLessonsMeta: LessonMeta[] = [
     group: 'react',
     minutes: 4,
     modelTitle: 'Event handlers',
+    hasPlayground: true,
+    playgroundTitle: 'Events lab',
   }),
   chapterMeta({
     id: 'react-lists',
@@ -64,6 +76,8 @@ export const reactLessonsMeta: LessonMeta[] = [
     group: 'react',
     minutes: 5,
     modelTitle: 'Lists & keys',
+    hasPlayground: true,
+    playgroundTitle: 'Todo list lab',
   }),
   chapterMeta({
     id: 'react-effects',
@@ -73,6 +87,8 @@ export const reactLessonsMeta: LessonMeta[] = [
     group: 'react',
     minutes: 5,
     modelTitle: 'useEffect',
+    hasPlayground: true,
+    playgroundTitle: 'Effects lab',
   }),
   chapterMeta({
     id: 'react-store-lift',
@@ -82,6 +98,8 @@ export const reactLessonsMeta: LessonMeta[] = [
     group: 'react',
     minutes: 4,
     modelTitle: 'Lifting state',
+    hasPlayground: true,
+    playgroundTitle: 'Lift state lab',
   }),
   chapterMeta({
     id: 'react-store-context',
@@ -148,6 +166,8 @@ export const reactLessonsMeta: LessonMeta[] = [
     minutes: 4,
     modelTitle: 'Overview',
     hasHood: true,
+    hasPlayground: true,
+    playgroundTitle: 'Reconciliation demo',
   }),
   chapterMeta({
     id: 'react-hood-hooks',
@@ -158,6 +178,8 @@ export const reactLessonsMeta: LessonMeta[] = [
     minutes: 3,
     modelTitle: 'Hook rules',
     hasHood: true,
+    hasPlayground: true,
+    playgroundTitle: 'Hook rules lab',
   }),
   chapterMeta({
     id: 'react-hood-stack',
@@ -168,5 +190,7 @@ export const reactLessonsMeta: LessonMeta[] = [
     minutes: 4,
     modelTitle: 'Beyond the core library',
     hasHood: true,
+    hasPlayground: true,
+    playgroundTitle: 'Ecosystem map',
   }),
 ]

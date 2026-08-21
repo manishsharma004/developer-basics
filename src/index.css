@@ -4384,3 +4384,117 @@ a {
   background: rgba(56, 189, 248, 0.08);
   border-radius: 0 8px 8px 0;
 }
+
+/* Interactive lesson labs (react, db, css concepts) --------------------- */
+.react-lab,
+.db-lab {
+  margin: 8px 0;
+}
+
+.react-lift-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.react-lift-child {
+  padding: 10px 14px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.react-vdom-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+
+.react-vdom-list li {
+  padding: 8px 12px;
+  margin: 4px 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.react-vdom-new {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.css-inherit-parent {
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.css-inherit-child {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+
+.css-cascade-demo {
+  margin: 12px 0;
+  padding: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.css-cascade-target {
+  margin: 8px 0;
+}
+
+.css-hack-stage {
+  min-height: 100px;
+  margin: 12px 0;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  background: rgba(148, 163, 184, 0.06);
+}
+
+.css-hack-stage--fix {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.css-hack-stage--hack {
+  position: relative;
+  padding: 12px;
+}
+
+.css-hack-stage--hack .css-hack-box {
+  float: left;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 20px;
+}
+
+.css-hack-box {
+  padding: 12px 20px;
+  background: var(--accent);
+  color: var(--bg, #0b1120);
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.waterfall-row--active .waterfall-label {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+button.waterfall-row {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}

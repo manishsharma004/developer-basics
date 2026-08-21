@@ -73,10 +73,22 @@ SELECT status, COUNT(*) FROM orders GROUP BY status;`,
   },
 ]
 
-export function SqlPlayground() {
+export interface SqlPlaygroundProps {
+  /** Show only samples whose labels are in this list */
+  sampleLabels?: string[]
+  defaultLabel?: string
+  title?: string
+}
+
+export function SqlPlayground({ sampleLabels, defaultLabel, title = 'Query' }: SqlPlaygroundProps = {}) {
+  const samples = sampleLabels?.length
+    ? SAMPLES.filter((s) => sampleLabels.includes(s.label))
+    : SAMPLES
+  const initial = samples.find((s) => s.label === defaultLabel) ?? samples[0]!
+
   const { pyodide, phase, message, error } = usePyodide()
   const [ready, setReady] = useState(false)
-  const [query, setQuery] = useState(SAMPLES[0].query)
+  const [query, setQuery] = useState(initial.query)
   const [result, setResult] = useState<SqlResult | null>(null)
   const runRef = useRef<PyCallable | null>(null)
 
@@ -108,7 +120,7 @@ export function SqlPlayground() {
     <>
       <RuntimeBanner phase={phase} message={message} error={error} />
       <div className="panel">
-        <div className="panel-title">Query</div>
+        <div className="panel-title">{title}</div>
         <MonacoEditor value={query} onChange={setQuery} language="sql" minLines={4} ariaLabel="SQL query" />
         <div className="ref-run-row">
           <button className="btn" disabled={!ready} onClick={run}>
@@ -116,7 +128,7 @@ export function SqlPlayground() {
           </button>
         </div>
         <div className="quick-commands">
-          {SAMPLES.map((s) => (
+          {samples.map((s) => (
             <button key={s.label} className="chip" disabled={!ready} onClick={() => setQuery(s.query)}>
               {s.label}
             </button>

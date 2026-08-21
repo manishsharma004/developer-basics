@@ -30,6 +30,14 @@ const mongodbIntro = createChapterLesson({
       </p>
     </>
   ),
+  playground: (
+    <>
+      <MongoPlayground sampleLabels={['Find all orders']} />
+      <TryThis>
+        Run <strong>Find all orders</strong>, then add <code>"status": "shipped"</code> to the filter.
+      </TryThis>
+    </>
+  ),
   terms: [
     { term: 'document', def: 'A JSON-like record stored in MongoDB.' },
     { term: 'collection', def: 'A group of documents — loosely like a SQL table.' },
@@ -92,6 +100,7 @@ const mongodbDocuments = createChapterLesson({
       </Callout>
     </>
   ),
+  playground: <MongoPlayground sampleLabels={['Find all orders', 'Filter by city']} />,
   terms: [
     { term: 'document', def: 'A JSON-like record stored in MongoDB.' },
     { term: 'collection', def: 'A group of documents — loosely like a SQL table.' },
@@ -145,6 +154,9 @@ const mongodbQueries = createChapterLesson({
         <li><code>db.customers.find(&#123; "tags": &#123; "$in": ["vip"] &#125; &#125;)</code></li>
       </ul>
     </>
+  ),
+  playground: (
+    <MongoPlayground sampleLabels={['Filter by city', 'Comparison operators', 'Array membership']} />
   ),
   terms: [
     { term: 'operator', def: 'A query keyword like $gt, $in, or $set.' },
@@ -204,6 +216,9 @@ const mongodbWrites = createChapterLesson({
       </Callout>
     </>
   ),
+  playground: (
+    <MongoPlayground sampleLabels={['Insert document', 'Update many', 'Delete cancelled']} />
+  ),
   terms: [
     { term: 'insertOne', def: 'Adds a single document to a collection.' },
     { term: '$set', def: 'Update operator that changes specific fields without replacing the whole document.' },
@@ -258,6 +273,9 @@ const mongodbAggregation = createChapterLesson({
         until the output shape is what you need.
       </Callout>
     </>
+  ),
+  playground: (
+    <MongoPlayground sampleLabels={['Aggregate revenue', 'Average price by category']} />
   ),
   terms: [
     { term: 'aggregation pipeline', def: 'A sequence of stages ($match, $group, …) transforming documents.' },
@@ -511,6 +529,7 @@ class Order(Document):
       </Callout>
     </>
   ),
+  playground: <SnippetRunner snippets={snippets('ODM-style model (Beanie idea)')} />,
   terms: [
     { term: 'ODM', def: 'Object-document mapper — Python classes mapped to collections.' },
     { term: 'Beanie', def: 'Async ODM built on Motor and Pydantic models.' },
@@ -664,6 +683,7 @@ const mongodbHood = createChapterLesson({
       the same production concerns as SQL, with document-specific trade-offs.
     </p>
   ),
+  playground: <MongoPlayground sampleLabels={['Aggregate revenue']} />,
   hood: (
     <>
       <UnderTheHood title="When to embed vs reference">

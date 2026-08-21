@@ -10,6 +10,8 @@ export const mongodbLessonsMeta: LessonMeta[] = [
     group: 'mongodb',
     minutes: 4,
     modelTitle: 'Document databases',
+    hasPlayground: true,
+    playgroundTitle: 'Find documents lab',
   }),
   chapterMeta({
     id: 'mongodb-documents',
@@ -19,6 +21,8 @@ export const mongodbLessonsMeta: LessonMeta[] = [
     group: 'mongodb',
     minutes: 5,
     modelTitle: 'Documents & collections',
+    hasPlayground: true,
+    playgroundTitle: 'Document explorer',
   }),
   chapterMeta({
     id: 'mongodb-queries',
@@ -28,6 +32,8 @@ export const mongodbLessonsMeta: LessonMeta[] = [
     group: 'mongodb',
     minutes: 4,
     modelTitle: 'Query filters',
+    hasPlayground: true,
+    playgroundTitle: 'Query filters lab',
   }),
   chapterMeta({
     id: 'mongodb-writes',
@@ -37,6 +43,8 @@ export const mongodbLessonsMeta: LessonMeta[] = [
     group: 'mongodb',
     minutes: 4,
     modelTitle: 'Document writes',
+    hasPlayground: true,
+    playgroundTitle: 'Write commands lab',
   }),
   chapterMeta({
     id: 'mongodb-aggregation',
@@ -46,6 +54,8 @@ export const mongodbLessonsMeta: LessonMeta[] = [
     group: 'mongodb',
     minutes: 5,
     modelTitle: 'Aggregation',
+    hasPlayground: true,
+    playgroundTitle: 'Aggregation lab',
   }),
   chapterMeta({
     id: 'mongodb-conn-pymongo',
@@ -88,6 +98,8 @@ export const mongodbLessonsMeta: LessonMeta[] = [
     group: 'mongodb',
     minutes: 4,
     modelTitle: 'ODMs',
+    hasPlayground: true,
+    playgroundTitle: 'ODM model lab',
   }),
   chapterMeta({
     id: 'mongodb-playground',
@@ -119,6 +131,8 @@ export const mongodbLessonsMeta: LessonMeta[] = [
     group: 'mongodb',
     minutes: 5,
     modelTitle: 'Overview',
+    hasPlayground: true,
+    playgroundTitle: 'Aggregate lab',
     hasHood: true,
   }),
 ]

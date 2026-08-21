@@ -6,6 +6,7 @@ import { FlexPlayground } from './FlexPlayground.tsx'
 import { PositionPlayground } from './PositionPlayground.tsx'
 import { OverflowPlayground } from './OverflowPlayground.tsx'
 import { ThemePlayground } from './ThemePlayground.tsx'
+import { CascadePlayground, CssIntroPlayground, HackFixPlayground } from './CssConceptPlaygrounds.tsx'
 
 const cssIntro = createChapterLesson({
   id: 'css-intro',
@@ -35,6 +36,15 @@ const cssIntro = createChapterLesson({
         When stuck, ask: <em>Which box am I sizing?</em> <em>Which rule wins?</em>{' '}
         <em>Is overflow hidden somewhere?</em> The next chapters answer each one.
       </Callout>
+    </>
+  ),
+  playground: (
+    <>
+      <CssIntroPlayground />
+      <TryThis>
+        Toggle <strong>Child sets margin</strong> — margin does not inherit from the parent,
+        but color and font-size do.
+      </TryThis>
     </>
   ),
   terms: [
@@ -333,6 +343,14 @@ const cssCascade = createChapterLesson({
       </p>
     </>
   ),
+  playground: (
+    <>
+      <CascadePlayground />
+      <TryThis>
+        Turn off <code>#save</code> but leave <code>.btn</code> on — see class beat element selector.
+      </TryThis>
+    </>
+  ),
   terms: [
     { term: 'specificity', def: 'Score determining which selector wins when rules conflict.' },
     { term: 'inheritance', def: 'Child elements copy certain properties from parents.' },
@@ -396,6 +414,12 @@ const cssHacks = createChapterLesson({
         Centering: <code>display: flex; justify-content: center; align-items: center;</code>{' '}
         on the parent beats absolute + 50% transforms for most cases.
       </Callout>
+    </>
+  ),
+  playground: (
+    <>
+      <HackFixPlayground />
+      <TryThis>Switch Float hack → Flex fix and compare how fragile each centering approach feels.</TryThis>
     </>
   ),
   hood: (
