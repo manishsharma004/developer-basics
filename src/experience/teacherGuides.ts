@@ -3,6 +3,8 @@
 // for an instructor: what to achieve, what to emphasize, what students get wrong,
 // how to run the interactive lab, and how to assess understanding.
 
+import { fastapiChapterGuides, reactChapterGuides } from './chapterGuides.ts'
+
 export interface TeacherGuide {
   objectives: string[]
   keyConcepts: string[]
@@ -911,90 +913,8 @@ export const teacherGuides: Record<string, TeacherGuide> = {
       'JWT payload is:',
     ],
   },
-  fastapi: {
-    objectives: [
-      'Define path operations and map HTTP methods to Python functions.',
-      'Use Pydantic-style models to validate request and response bodies.',
-      'Distinguish path, query, and body parameters.',
-      'Explain dependency injection with Depends for shared logic and auth.',
-      'Return appropriate HTTP status codes and error responses.',
-      'Configure CORS so a React frontend can call the API from the browser.',
-    ],
-    keyConcepts: [
-      'Decorators (@app.get, @app.post) register route handlers.',
-      'Type hints drive automatic parsing and OpenAPI schema generation.',
-      'Pydantic validates JSON before the handler runs (422 on failure).',
-      'Depends() injects DB sessions, auth, and other shared setup.',
-      'HTTPException returns structured error responses.',
-      'ASGI enables async I/O without blocking threads.',
-      'CORSMiddleware allows cross-origin fetch from Vite/React dev servers.',
-    ],
-    misconceptions: [
-      '"FastAPI and Flask are identical."',
-      '"You must manually json.dumps every response."',
-      '"422 means the server crashed."',
-      '"Dependencies are only for databases."',
-      '"CORS is a React problem — the frontend should fix it."',
-    ],
-    discussion: [
-      'How does FastAPI connect to the REST concepts from the APIs chapter?',
-      'When would you override a dependency in tests?',
-      'Why is async valuable for API handlers that call databases?',
-      'Why does a React app on port 5173 need CORS headers from port 8000?',
-    ],
-    lab: 'Work through each subsection: Route handlers (GET/404), Pydantic validation (422), path & query params, DI and auth dependencies, HTTPException, async handler, and CORS simulation.',
-    assess: [
-      'Name the three parameter sources FastAPI distinguishes.',
-      'What status code does invalid body validation typically return?',
-      'What does Depends(get_db) accomplish?',
-      '@app.get("/items/{id}") makes id a:',
-      'Why configure allow_origins in CORSMiddleware?',
-    ],
-  },
-  react: {
-    objectives: [
-      'Explain components as functions that return JSX.',
-      'Apply JSX syntax rules (fragments, className, expressions).',
-      'Describe props as read-only inputs from parent to child.',
-      'Use useState to manage local component state.',
-      'Wire event handlers (onClick, onChange) to state setters.',
-      'Render lists with keys and immutable state updates.',
-      'Introduce useEffect for side effects after render.',
-      'Compare Context, lifted state, and external stores for global state.',
-    ],
-    keyConcepts: [
-      'UI = f(state) — render is a function of current state.',
-      'Props flow down; state is owned by the component that declares it.',
-      'useState returns [value, setter]; never mutate state directly.',
-      'Event handlers call setters; pass a function, not handleClick().',
-      'useEffect runs after render; dependency array controls re-runs.',
-      'Context avoids prop drilling for shared values like user/theme.',
-      'Stores (Zustand/Redux) subscribe components to external state.',
-      'key on list items helps React match elements across renders.',
-    ],
-    misconceptions: [
-      '"React updates the DOM directly on every setState."',
-      '"Props can be changed by the child component."',
-      '"useEffect with [] runs before the first render."',
-      '"You need Redux for any shared state."',
-      '"Context replaces all state management."',
-      '"Array index is always fine as a list key."',
-    ],
-    discussion: [
-      'When should state be lifted to a parent vs kept local?',
-      'When is Context enough vs needing a store library?',
-      'How does React pair with FastAPI in a full-stack app?',
-      'Why is onClick={handleClick()} a bug?',
-    ],
-    lab: 'Use the three labs (counter, props, todo list) plus store demos (Context profile + cart store). Relate each to useState, props, immutable list updates, or shared state.',
-    assess: [
-      'What is the difference between props and state?',
-      'When would you use Context vs a Zustand/Redux store?',
-      'Why use setTodos(t => t.map(...)) instead of mutating the array?',
-      'What is prop drilling?',
-      'Why use key={todo.id} instead of the array index?',
-    ],
-  },
+  ...fastapiChapterGuides,
+  ...reactChapterGuides,
   security: {
     objectives: [
       'Recognize injection and XSS.',
