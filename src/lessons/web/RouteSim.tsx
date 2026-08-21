@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react'
+import { MermaidDiagram } from '../../components/MermaidDiagram.tsx'
+import { NGINX_ROUTING_DIAGRAM, WEB_NODE_META } from './diagrams.ts'
 
 interface RouteRule {
   id: string
@@ -15,6 +17,8 @@ const RULES: RouteRule[] = [
 export function RouteSim() {
   const [path, setPath] = useState('/api/users')
   const [log, setLog] = useState<string[]>([])
+  const [activeNodes, setActiveNodes] = useState<string[]>([])
+  const [selected, setSelected] = useState<string | null>(null)
 
   const match = useMemo(() => {
     const sorted = [...RULES].sort((a, b) => b.prefix.length - a.prefix.length)
@@ -22,22 +26,34 @@ export function RouteSim() {
   }, [path])
 
   const route = () => {
+    setActiveNodes(['req', 'nginx'])
     if (match) {
+      setActiveNodes(['req', 'nginx', match.id])
       setLog((entries) => [
         ...entries.slice(-7),
         `${path} → proxy_pass http://${match.upstream}`,
       ])
       return
     }
+    setActiveNodes(['req', 'nginx', 'err'])
     setLog((entries) => [...entries.slice(-7), `${path} → 404 (no location match)`])
   }
 
   return (
-    <div className="panel">
+    <div className="panel web-lab">
       <div className="panel-title">nginx-style path router</div>
       <p className="panel-hint">
         Longest prefix wins — same idea as nginx <code>location</code> blocks.
       </p>
+
+      <MermaidDiagram
+        code={NGINX_ROUTING_DIAGRAM}
+        title="Routing diagram"
+        activeNodes={activeNodes}
+        selectedNode={selected}
+        nodeMeta={WEB_NODE_META}
+        onNodeClick={setSelected}
+      />
       <div className="race-controls">
         <input
           className="conv-text"
