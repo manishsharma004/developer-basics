@@ -1,4 +1,6 @@
-import { useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
+import { useCurrentLessonId } from '../../progress/CurrentLessonContext.tsx'
+import { useLessonProgress, useProgress } from '../../progress/ProgressContext.tsx'
 
 // A titled, anchor-able chunk of a lesson. The `id` matches the entry in the
 // lesson's `sections` metadata so the sticky table of contents can link to it.
@@ -87,7 +89,22 @@ export interface QuizQuestion {
 // A lightweight multiple-choice knowledge check. Each question reveals whether
 // the choice was right (with an explanation) as soon as it's picked.
 export function Quiz({ questions }: { questions: QuizQuestion[] }) {
+  const lessonId = useCurrentLessonId()
+  const { saveQuizAnswer } = useProgress()
+  const { progress, ready } = useLessonProgress(lessonId ?? undefined)
   const [picked, setPicked] = useState<Record<number, number>>({})
+
+  useEffect(() => {
+    if (!lessonId || !ready) return
+    if (progress?.quizAnswers) {
+      setPicked(progress.quizAnswers)
+    }
+  }, [lessonId, ready, progress?.quizAnswers])
+
+  const choose = (questionIndex: number, optionIndex: number) => {
+    setPicked((current) => ({ ...current, [questionIndex]: optionIndex }))
+    if (lessonId) void saveQuizAnswer(lessonId, questionIndex, optionIndex)
+  }
 
   return (
     <div className="quiz">
@@ -112,7 +129,7 @@ export function Quiz({ questions }: { questions: QuizQuestion[] }) {
                     key={oi}
                     className={cls}
                     disabled={answered}
-                    onClick={() => setPicked((p) => ({ ...p, [qi]: oi }))}
+                    onClick={() => choose(qi, oi)}
                   >
                     <span className="quiz-marker">
                       {answered && isCorrect ? '✓' : answered && isChosen ? '✗' : String.fromCharCode(65 + oi)}

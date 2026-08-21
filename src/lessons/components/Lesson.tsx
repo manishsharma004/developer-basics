@@ -1,11 +1,14 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { getLessonMeta, getNextLesson, type SectionMeta } from '../meta.ts'
+import { CurrentLessonProvider } from '../../progress/CurrentLessonContext.tsx'
+import { useLessonProgress, useProgress } from '../../progress/ProgressContext.tsx'
 
 interface Props {
   id: string
   children: ReactNode
 }
+
 
 // Shared layout for every lesson: a header, a sticky in-page section nav that
 // tracks scroll position, the lesson body, and a link to the next lesson.
@@ -15,6 +18,9 @@ export function Lesson({ id, children }: Props) {
   const location = useLocation()
   const sections: SectionMeta[] = meta?.sections ?? []
   const [active, setActive] = useState(sections[0]?.id ?? '')
+  const { recordOpen } = useProgress()
+  const { progress } = useLessonProgress(id)
+  const openedRef = useRef<string | null>(null)
 
   useEffect(() => {
     const scrollTo = (location.state as { scrollTo?: string } | null)?.scrollTo
@@ -23,6 +29,23 @@ export function Lesson({ id, children }: Props) {
       document.getElementById(scrollTo)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     })
   }, [location.pathname, location.state])
+
+  useEffect(() => {
+    if (openedRef.current === id) return
+    openedRef.current = id
+
+    const dedupeKey = `devbasics:open:${id}`
+    const now = Date.now()
+    try {
+      const last = sessionStorage.getItem(dedupeKey)
+      if (last && now - Number(last) < 1500) return
+      sessionStorage.setItem(dedupeKey, String(now))
+    } catch {
+      /* ignore */
+    }
+
+    void recordOpen(id)
+  }, [id, recordOpen])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -47,56 +70,70 @@ export function Lesson({ id, children }: Props) {
 
   if (!meta) return null
 
+  const openCount = progress?.openCount ?? 0
+
   return (
-    <div className="lesson">
-      <header className="lesson-hero">
-        <div className="lesson-hero-top">
-          <span className="lesson-hero-icon">{meta.icon}</span>
-          <div className="lesson-badges">
-            <span className={`badge badge--${meta.level.toLowerCase()}`}>{meta.level}</span>
-            <span className="badge badge--muted">{meta.minutes} min</span>
-          </div>
-        </div>
-        <h1>{meta.title}</h1>
-        <p className="lesson-hero-tagline">{meta.tagline}</p>
-      </header>
-
-      <div className="lesson-body">
-        <nav className="lesson-toc" aria-label="Lesson sections">
-          <ol>
-            {sections.map((s) => (
-              <li key={s.id}>
-                <button
-                  className={`toc-link${active === s.id ? ' toc-link--active' : ''}`}
-                  onClick={() => scrollTo(s.id)}
-                >
-                  {s.title}
-                </button>
-              </li>
-            ))}
-          </ol>
-        </nav>
-
-        <div className="lesson-content">
-          {children}
-
-          <div className="lesson-footer">
-            {next ? (
-              <Link to={next.path} className="next-lesson">
-                <span className="next-lesson-label">Next lesson</span>
-                <span className="next-lesson-title">
-                  {next.icon} {next.title} →
+    <CurrentLessonProvider lessonId={id}>
+      <div className="lesson">
+        <header className="lesson-hero">
+          <div className="lesson-hero-top">
+            <span className="lesson-hero-icon">{meta.icon}</span>
+            <div className="lesson-badges">
+              <span className={`badge badge--${meta.level.toLowerCase()}`}>{meta.level}</span>
+              <span className="badge badge--muted">{meta.minutes} min</span>
+              {openCount > 0 && (
+                <span className="badge badge--progress" title="Times you opened this chapter">
+                  Opened {openCount}×
                 </span>
-              </Link>
-            ) : (
-              <Link to="/" className="next-lesson">
-                <span className="next-lesson-label">You reached the end</span>
-                <span className="next-lesson-title">Back to all lessons →</span>
-              </Link>
-            )}
+              )}
+              {progress?.read && (
+                <span className="badge badge--read" title="Marked as read">
+                  Read
+                </span>
+              )}
+            </div>
+          </div>
+          <h1>{meta.title}</h1>
+          <p className="lesson-hero-tagline">{meta.tagline}</p>
+        </header>
+
+        <div className="lesson-body">
+          <nav className="lesson-toc" aria-label="Lesson sections">
+            <ol>
+              {sections.map((s) => (
+                <li key={s.id}>
+                  <button
+                    className={`toc-link${active === s.id ? ' toc-link--active' : ''}`}
+                    onClick={() => scrollTo(s.id)}
+                  >
+                    {s.title}
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </nav>
+
+          <div className="lesson-content">
+            {children}
+
+            <div className="lesson-footer">
+              {next ? (
+                <Link to={next.path} className="next-lesson">
+                  <span className="next-lesson-label">Next lesson</span>
+                  <span className="next-lesson-title">
+                    {next.icon} {next.title} →
+                  </span>
+                </Link>
+              ) : (
+                <Link to="/" className="next-lesson">
+                  <span className="next-lesson-label">You reached the end</span>
+                  <span className="next-lesson-title">Back to all lessons →</span>
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </CurrentLessonProvider>
   )
 }
