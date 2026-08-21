@@ -4,7 +4,7 @@ An interactive React playground for learning **developer basics**. Each topic
 runs a real simulation in your browser (Python via WebAssembly), so you can
 experiment and watch the model respond — no server required.
 
-Current demos include interactive labs across **8 modules and 31 chapters** —
+Current demos include interactive labs across **8 modules and 36 chapters** —
 filesystem shells, CPU scheduling, memory models, SQL, networking, security,
 algorithms, searching, serialization, debugging, and more. Each topic runs a
 real simulation in your browser (often Python via WebAssembly), so you can
@@ -57,7 +57,7 @@ src/
   main.tsx                   # entry point (HashRouter)
   pages/Home.tsx             # landing page (modules × chapters)
   lessons/
-    meta.ts                  # chapter registry (31 lessons, 8 modules)
+    meta.ts                  # chapter registry (36 lessons, 8 modules)
     index.tsx                # id → component wiring
     <topic>/                 # one folder per chapter
   theme/                     # color themes (persisted)

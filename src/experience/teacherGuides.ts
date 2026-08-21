@@ -13,6 +13,136 @@ export interface TeacherGuide {
 }
 
 export const teacherGuides: Record<string, TeacherGuide> = {
+  variables: {
+    objectives: [
+      'Explain that variables are names bound to values.',
+      'Name core Python types and use type() to inspect values.',
+      'Predict truthy vs falsy behavior in conditionals.',
+    ],
+    keyConcepts: [
+      'Assignment binds a name; rebinding replaces the reference.',
+      'Dynamic typing — names are not locked to one type.',
+      'Falsy: 0, "", [], {}, None; most other values are truthy.',
+      'Parse user input with int()/float() before arithmetic.',
+    ],
+    misconceptions: [
+      'Students think variable names have types permanently.',
+      'They compare strings and numbers with == expecting coercion.',
+    ],
+    discussion: [
+      'When is dynamic typing a productivity win vs a footgun?',
+      'Why store money as integer cents instead of float dollars?',
+    ],
+    lab: 'Run Names & values and Truthiness; have students predict output before running, then rebind a name to a different type.',
+    assess: [
+      'Classify values as truthy or falsy.',
+      'Explain why int("42") works but "3" + 1 fails.',
+    ],
+  },
+  controlflow: {
+    objectives: [
+      'Write if/elif/else chains that cover all cases.',
+      'Choose for vs while appropriately.',
+      'Combine boolean conditions with and/or/not.',
+    ],
+    keyConcepts: [
+      'First true branch wins in if/elif chains.',
+      'range stop is exclusive; for-else runs when no break.',
+      'while needs a progress condition to avoid infinite loops.',
+      'Short-circuit evaluation in and/or.',
+    ],
+    misconceptions: [
+      'Off-by-one errors with range bounds.',
+      'Confusing break with return or continue.',
+    ],
+    discussion: [
+      'When is a while clearer than a for?',
+      'How does loop-else differ from if-else?',
+    ],
+    lab: 'Edit grade thresholds in if/elif; add a for-else search loop; demonstrate an infinite while and fix it.',
+    assess: [
+      'Predict output of range(0, 10, 2).',
+      'Trace which branch runs for a given score.',
+    ],
+  },
+  floatingpoint: {
+    objectives: [
+      'Explain why float equality with == is unreliable.',
+      'Use isclose or integer scaling for comparisons.',
+      'Choose Decimal or cents for monetary calculations.',
+    ],
+    keyConcepts: [
+      'IEEE 754 binary floats are approximations.',
+      '0.1 has no exact binary representation.',
+      'NaN != NaN; inf exists for overflow.',
+      'Display rounding hides internal error.',
+    ],
+    misconceptions: [
+      '"Python is wrong because 0.1+0.2 != 0.3."',
+      'Using float for currency "because it looks like dollars."',
+    ],
+    discussion: [
+      'When are floats still the right tool?',
+      'Why do games and physics engines get away with floats?',
+    ],
+    lab: 'Run The classic surprise; sum 0.1 ten times; implement cart total with integer cents.',
+    assess: [
+      'Fix a broken if total == 19.99 check.',
+      'Name one special float value and its comparison behavior.',
+    ],
+  },
+  cicd: {
+    objectives: [
+      'Describe lint, test, build, and deploy stages.',
+      'Explain why the first failure stops a pipeline.',
+      'Relate CI to this repo’s GitHub Actions workflow.',
+    ],
+    keyConcepts: [
+      'CI integrates every change with automated checks.',
+      'CD delivers artifacts that passed CI.',
+      'Clean runners expose env/dependency drift.',
+      'Branch protection enforces green checks before merge.',
+    ],
+    misconceptions: [
+      '"CI replaces code review."',
+      '"Deploy can run even if tests fail."',
+    ],
+    discussion: [
+      'What belongs in CI vs running only locally?',
+      'When should production deploy require manual approval?',
+    ],
+    lab: 'Toggle Test fail in the simulator; compare logs to a green run; open .github/workflows/deploy.yml and map stages.',
+    assess: [
+      'Order pipeline stages correctly.',
+      'Explain one reason a green local build might fail in CI.',
+    ],
+  },
+  loadbalancing: {
+    objectives: [
+      'Contrast round robin, least connections, and random routing.',
+      'Explain L4 vs L7 load balancing.',
+      'Describe behavior when all backends are saturated.',
+    ],
+    keyConcepts: [
+      'Balancer picks a healthy backend per request.',
+      'Least-conn suits variable-duration work.',
+      'Health checks remove failed servers from rotation.',
+      'Sticky sessions trade even load for state locality.',
+    ],
+    misconceptions: [
+      '"Random is always as good as round robin at low volume."',
+      'Ignoring capacity limits on backends.',
+    ],
+    discussion: [
+      'When would you need session stickiness?',
+      'How does autoscaling relate to load balancing?',
+    ],
+    lab: 'Burst traffic under least-conn vs round robin; saturate backends and discuss 503/queue/scale-out options.',
+    assess: [
+      'Pick an algorithm for long-polling vs uniform API calls.',
+      'Name one L7 routing criterion.',
+    ],
+  },
   filesystem: {
     objectives: [
       'Explain the filesystem as a single tree rooted at /.',
