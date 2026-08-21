@@ -3077,7 +3077,7 @@ a {
   margin-bottom: 14px;
 }
 .type-btn {
-  background: var(--code-bg);
+  background: var(--panel-2);
   border: 1px solid var(--border);
   color: var(--text);
   border-radius: 9px;
@@ -3087,7 +3087,7 @@ a {
 }
 .type-btn--active {
   border-color: var(--accent);
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.16), rgba(167, 139, 250, 0.16));
+  background: color-mix(in srgb, var(--accent) 16%, var(--panel-2));
 }
 .modal-field {
   display: flex;
@@ -3099,7 +3099,7 @@ a {
 }
 .modal-field input,
 .modal-field textarea {
-  background: var(--code-bg);
+  background: var(--panel-2);
   border: 1px solid var(--border);
   color: var(--text);
   border-radius: 9px;
