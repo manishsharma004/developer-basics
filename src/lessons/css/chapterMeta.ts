@@ -10,6 +10,8 @@ export const cssLessonsMeta: LessonMeta[] = [
     group: 'css',
     minutes: 5,
     modelTitle: 'The mental model',
+    hasPlayground: true,
+    playgroundTitle: 'Cascade & inheritance lab',
   }),
   chapterMeta({
     id: 'css-box-model',
@@ -74,6 +76,8 @@ export const cssLessonsMeta: LessonMeta[] = [
     group: 'css',
     minutes: 5,
     modelTitle: 'Specificity & inheritance',
+    hasPlayground: true,
+    playgroundTitle: 'Specificity calculator',
   }),
   chapterMeta({
     id: 'css-hacks',
@@ -83,6 +87,8 @@ export const cssLessonsMeta: LessonMeta[] = [
     group: 'css',
     minutes: 6,
     modelTitle: 'Common pitfalls',
+    hasPlayground: true,
+    playgroundTitle: 'Hack vs fix lab',
     hasHood: true,
   }),
 ]

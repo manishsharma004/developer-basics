@@ -1,6 +1,14 @@
 import type { ComponentType } from 'react'
 import { createChapterLesson } from '../components/ChapterLesson.tsx'
-import { Callout, UnderTheHood } from '../components/blocks.tsx'
+import { Callout, UnderTheHood, TryThis } from '../components/blocks.tsx'
+import {
+  AcidSim,
+  DataModelSim,
+  DbArchitectureSim,
+  DbChooserSim,
+  RamVsDbSim,
+  ReplicationSim,
+} from './DbSims.tsx'
 
 const databasesIntro = createChapterLesson({
   id: 'databases-intro',
@@ -25,6 +33,15 @@ const databasesIntro = createChapterLesson({
         concurrent access, transactions, and indexes so many clients can read and write
         safely at the same time.
       </p>
+    </>
+  ),
+  playground: (
+    <>
+      <RamVsDbSim />
+      <TryThis>
+        Leave data in RAM only, crash the process, then enable <strong>Persist to database</strong> and
+        crash again — watch what survives.
+      </TryThis>
     </>
   ),
   terms: [
@@ -94,6 +111,7 @@ const databasesArchitecture = createChapterLesson({
       </Callout>
     </>
   ),
+  playground: <DbArchitectureSim />,
   terms: [
     { term: 'embedded database', def: 'Engine linked into your app process, e.g. SQLite.' },
     { term: 'client-server', def: 'Separate DB process that many apps connect to over the network.' },
@@ -160,6 +178,7 @@ const databasesModels = createChapterLesson({
       </Callout>
     </>
   ),
+  playground: <DataModelSim />,
   terms: [
     { term: 'relational model', def: 'Data in tables with rows, columns, and foreign keys.' },
     { term: 'document model', def: 'Flexible JSON-like records grouped in collections.' },
@@ -213,6 +232,7 @@ const databasesAcid = createChapterLesson({
       </Callout>
     </>
   ),
+  playground: <AcidSim />,
   terms: [
     { term: 'transaction', def: 'A group of operations treated as one atomic unit.' },
     { term: 'ACID', def: 'Atomicity, Consistency, Isolation, Durability — core DB guarantees.' },
@@ -265,6 +285,12 @@ const databasesSchemas = createChapterLesson({
         embed related data when you usually read it together; reference when it is shared.
       </Callout>
     </>
+  ),
+  playground: (
+    <DataModelSim
+      title="Normalization explorer"
+      hint="Relational tables store each fact once and join on read; embedded documents duplicate nested data for faster reads."
+    />
   ),
   terms: [
     { term: 'schema', def: 'The structure of stored data — columns, types, and relationships.' },
@@ -324,6 +350,7 @@ const databasesChoosing = createChapterLesson({
       </Callout>
     </>
   ),
+  playground: <DbChooserSim />,
   terms: [
     { term: 'polyglot persistence', def: 'Using multiple database types for different jobs in one system.' },
     { term: 'embed vs reference', def: 'MongoDB choice: nest data in a document or store an _id pointer.' },
@@ -369,6 +396,7 @@ const databasesHood = createChapterLesson({
     and connection limits that match your pool size.
   </Callout>
   ),
+  playground: <ReplicationSim />,
   hood: (
     <UnderTheHood title="Replication, backups & scale">
       <ul className="prose-list">

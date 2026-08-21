@@ -10,6 +10,8 @@ export const databasesLessonsMeta: LessonMeta[] = [
     group: 'databases',
     minutes: 4,
     modelTitle: 'Durable state',
+    hasPlayground: true,
+    playgroundTitle: 'RAM vs database',
   }),
   chapterMeta({
     id: 'databases-architecture',
@@ -19,6 +21,8 @@ export const databasesLessonsMeta: LessonMeta[] = [
     group: 'databases',
     minutes: 5,
     modelTitle: 'Architecture',
+    hasPlayground: true,
+    playgroundTitle: 'Architecture trace',
   }),
   chapterMeta({
     id: 'databases-models',
@@ -28,6 +32,8 @@ export const databasesLessonsMeta: LessonMeta[] = [
     group: 'databases',
     minutes: 5,
     modelTitle: 'Database families',
+    hasPlayground: true,
+    playgroundTitle: 'Data shape explorer',
   }),
   chapterMeta({
     id: 'databases-acid',
@@ -37,6 +43,8 @@ export const databasesLessonsMeta: LessonMeta[] = [
     group: 'databases',
     minutes: 5,
     modelTitle: 'ACID properties',
+    hasPlayground: true,
+    playgroundTitle: 'ACID transfer',
   }),
   chapterMeta({
     id: 'databases-schemas',
@@ -46,6 +54,8 @@ export const databasesLessonsMeta: LessonMeta[] = [
     group: 'databases',
     minutes: 5,
     modelTitle: 'Schema thinking',
+    hasPlayground: true,
+    playgroundTitle: 'Normalization explorer',
   }),
   chapterMeta({
     id: 'databases-choosing',
@@ -55,6 +65,8 @@ export const databasesLessonsMeta: LessonMeta[] = [
     group: 'databases',
     minutes: 5,
     modelTitle: 'Choosing a database',
+    hasPlayground: true,
+    playgroundTitle: 'Database chooser',
   }),
   chapterMeta({
     id: 'databases-hood',
@@ -64,6 +76,8 @@ export const databasesLessonsMeta: LessonMeta[] = [
     group: 'databases',
     minutes: 5,
     modelTitle: 'Overview',
+    hasPlayground: true,
+    playgroundTitle: 'Replication & failover',
     hasHood: true,
   }),
 ]

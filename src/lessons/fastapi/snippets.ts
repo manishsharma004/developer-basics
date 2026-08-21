@@ -2,6 +2,92 @@ import type { Snippet } from '../components/SnippetRunner.tsx'
 
 export const FASTAPI_SNIPPETS: Snippet[] = [
   {
+    label: 'Hello FastAPI',
+    code: `# Minimal API idea — type hints drive validation + OpenAPI
+routes = {}
+
+def get(path):
+    def decorator(fn):
+        routes[("GET", path)] = fn
+        return fn
+    return decorator
+
+@get("/")
+def root():
+    return {"message": "Hello API"}
+
+@get("/health")
+def health():
+    return {"status": "ok"}
+
+for (method, path), fn in routes.items():
+    print(method, path, "->", fn())`,
+  },
+  {
+    label: 'CRUD routes',
+    code: `users = {1: {"name": "Ada"}, 2: {"name": "Linus"}}
+next_id = 3
+
+def create(body):
+    global next_id
+    uid = next_id
+    next_id += 1
+    users[uid] = body
+    return 201, {"id": uid, **body}
+
+def update(uid, body):
+    if uid not in users:
+        return 404, {"detail": "not found"}
+    users[uid].update(body)
+    return 200, users[uid]
+
+def delete(uid):
+    if uid not in users:
+        return 404, {"detail": "not found"}
+    del users[uid]
+    return 204, None
+
+print("POST ->", create({"name": "Grace"}))
+print("PUT  ->", update(1, {"name": "Ada L."}))
+print("DEL  ->", delete(2))`,
+  },
+  {
+    label: 'Response models',
+    code: `def user_out(raw):
+    # response_model hides internal fields
+    return {"id": raw["id"], "name": raw["name"]}
+
+def get_user(user_id):
+    db = {1: {"id": 1, "name": "Ada", "password_hash": "secret"}}
+    row = db.get(user_id)
+    if not row:
+        return 404, {"detail": "not found"}
+    return 200, user_out(row)
+
+print(get_user(1))   # password_hash stripped from response`,
+  },
+  {
+    label: 'Path parameters',
+    code: `def get_item(item_id: int, version: int = 1):
+    if item_id < 1:
+        return 422, {"detail": "invalid id"}
+    return 200, {"item_id": item_id, "version": version}
+
+print(get_item(42))
+print(get_item(0))
+print(get_item(7, version=3))`,
+  },
+  {
+    label: 'Request body',
+    code: `def create_order(body, customer_id: int):
+    # body from JSON POST, customer_id from path
+    if body.get("amount", 0) <= 0:
+        return 422, {"detail": "amount must be positive"}
+    return 201, {"customer_id": customer_id, **body}
+
+print(create_order({"product": "Keyboard", "amount": 79}, customer_id=3))`,
+  },
+  {
     label: 'Route handlers',
     code: `# FastAPI maps HTTP method + path -> Python function
 routes = {}

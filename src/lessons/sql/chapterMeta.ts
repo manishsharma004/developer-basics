@@ -10,6 +10,8 @@ export const sqlLessonsMeta: LessonMeta[] = [
     group: 'sql',
     minutes: 4,
     modelTitle: 'Tables and queries',
+    hasPlayground: true,
+    playgroundTitle: 'Run your first query',
   }),
   chapterMeta({
     id: 'sql-tables',
@@ -19,6 +21,8 @@ export const sqlLessonsMeta: LessonMeta[] = [
     group: 'sql',
     minutes: 5,
     modelTitle: 'Core SQL clauses',
+    hasPlayground: true,
+    playgroundTitle: 'Filter & join lab',
   }),
   chapterMeta({
     id: 'sql-schema',
@@ -28,6 +32,8 @@ export const sqlLessonsMeta: LessonMeta[] = [
     group: 'sql',
     minutes: 5,
     modelTitle: 'Keys & relationships',
+    hasPlayground: true,
+    playgroundTitle: 'Join keys lab',
   }),
   chapterMeta({
     id: 'sql-writes',
@@ -37,6 +43,8 @@ export const sqlLessonsMeta: LessonMeta[] = [
     group: 'sql',
     minutes: 4,
     modelTitle: 'Writing data',
+    hasPlayground: true,
+    playgroundTitle: 'Write operations lab',
   }),
   chapterMeta({
     id: 'sql-advanced',
@@ -46,6 +54,8 @@ export const sqlLessonsMeta: LessonMeta[] = [
     group: 'sql',
     minutes: 5,
     modelTitle: 'Advanced queries',
+    hasPlayground: true,
+    playgroundTitle: 'Advanced queries lab',
   }),
   chapterMeta({
     id: 'sql-conn-sqlite',
@@ -122,6 +132,8 @@ export const sqlLessonsMeta: LessonMeta[] = [
     group: 'sql',
     minutes: 5,
     modelTitle: 'Overview',
+    hasPlayground: true,
+    playgroundTitle: 'Join lab',
     hasHood: true,
   }),
 ]

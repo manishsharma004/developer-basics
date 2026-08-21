@@ -124,6 +124,28 @@ async def handler():
 asyncio.run(handler())
 print("async driver frees the event loop during I/O")`,
   },
+  {
+    label: 'ODM-style model (Beanie idea)',
+    code: `# ODM maps a Python class to a MongoDB collection with validation
+class Order:
+    def __init__(self, city: str, amount: float, status: str = "pending"):
+        self.city = city
+        self.amount = amount
+        self.status = status
+
+    def to_doc(self):
+        return {"city": self.city, "amount": self.amount, "status": self.status}
+
+    @classmethod
+    def from_doc(cls, doc):
+        return cls(doc["city"], doc["amount"], doc.get("status", "pending"))
+
+orders = [Order("London", 80, "shipped"), Order("Paris", 120, "pending")]
+docs = [o.to_doc() for o in orders]
+high_value = [Order.from_doc(d) for d in docs if d["amount"] > 100]
+print("all:", docs)
+print("amount > 100:", [o.to_doc() for o in high_value])`,
+  },
 ]
 
 export function snippets(...labels: string[]) {

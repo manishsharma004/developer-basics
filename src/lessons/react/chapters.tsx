@@ -2,6 +2,15 @@ import type { ComponentType } from 'react'
 import { createChapterLesson } from '../components/ChapterLesson.tsx'
 import { Callout, CodePreview, UnderTheHood, TryThis } from '../components/blocks.tsx'
 import { CounterDemo, PropsDemo, ListsDemo } from './ReactPlayground.tsx'
+import {
+  EventsDemo,
+  EffectsDemo,
+  LiftStateDemo,
+  JsxRulesDemo,
+  VdomDiffDemo,
+  HooksRulesDemo,
+  EcosystemMap,
+} from './ReactConceptDemos.tsx'
 import { ContextStoreDemo, ExternalStoreDemo } from './ReactStorePlayground.tsx'
 
 export const REACT_CHAPTERS: Record<string, ComponentType> = {
@@ -34,6 +43,15 @@ export const REACT_CHAPTERS: Record<string, ComponentType> = {
           <li>State drives what renders; events update state, which triggers a fresh render.</li>
           <li>The same mental model scales from a single button to an entire dashboard.</li>
         </ul>
+      </>
+    ),
+    playground: (
+      <>
+        <CounterDemo />
+        <TryThis>
+          Click + and − — each click updates state and React re-renders the UI. That&apos;s{' '}
+          <strong>UI = f(state)</strong> in action.
+        </TryThis>
       </>
     ),
     terms: [
@@ -99,6 +117,15 @@ export const REACT_CHAPTERS: Record<string, ComponentType> = {
         </ul>
       </>
     ),
+    playground: (
+      <>
+        <PropsDemo />
+        <TryThis>
+          Edit <code>name</code> and <code>role</code> — the Greeting card is a child component
+          that re-renders when its parent passes new props.
+        </TryThis>
+      </>
+    ),
     terms: [
       { term: 'component', def: 'A reusable function (or class) that returns UI.' },
       { term: 'JSX', def: 'Syntax that looks like HTML but compiles to React.createElement calls.' },
@@ -153,6 +180,15 @@ export const REACT_CHAPTERS: Record<string, ComponentType> = {
           Curly braces accept expressions, not statements — use a ternary or move logic
           above the return instead of an <code>if</code> block inline.
         </Callout>
+      </>
+    ),
+    playground: (
+      <>
+        <JsxRulesDemo />
+        <TryThis>
+          Toggle <strong>Broken</strong> vs <strong>Fixed</strong> — compare{' '}
+          <code>className</code>, expression-only braces, and self-closing tags.
+        </TryThis>
       </>
     ),
     terms: [
@@ -212,6 +248,15 @@ export const REACT_CHAPTERS: Record<string, ComponentType> = {
           A child must never mutate its props. If something needs to change, lift state up
           to a parent and pass new props down — or use local state in the child.
         </Callout>
+      </>
+    ),
+    playground: (
+      <>
+        <PropsDemo />
+        <TryThis>
+          Change <code>name</code> and <code>role</code> — the child re-renders with
+          new props while sibling state (if any) stays independent.
+        </TryThis>
       </>
     ),
     terms: [
@@ -278,6 +323,15 @@ function Counter() {
         </ul>
       </>
     ),
+    playground: (
+      <>
+        <CounterDemo />
+        <TryThis>
+          Use the functional form <code>setCount(c =&gt; c + 1)</code> — it always reads
+          the latest count, even when several updates batch together.
+        </TryThis>
+      </>
+    ),
     terms: [
       { term: 'state', def: 'Mutable data owned by a component; changing it triggers a re-render.' },
       { term: 'hook', def: 'A function like useState or useEffect that taps into React features.' },
@@ -336,6 +390,15 @@ function Counter() {
           <li>Prevent default form submit with <code>e.preventDefault()</code> when needed.</li>
           <li>Don&apos;t call the handler during render: <code>onClick={'{handleClick}'}</code>, not <code>onClick={'{handleClick()}'}</code>.</li>
         </ul>
+      </>
+    ),
+    playground: (
+      <>
+        <EventsDemo />
+        <TryThis>
+          Type in the name field and click the button — watch the log show handlers calling
+          setters and React re-rendering.
+        </TryThis>
       </>
     ),
     terms: [
@@ -403,6 +466,15 @@ function Counter() {
         </Callout>
       </>
     ),
+    playground: (
+      <>
+        <ListsDemo />
+        <TryThis>
+          Add a todo, toggle it done, then add another — notice each row keeps a stable{' '}
+          <code>key</code> from <code>todo.id</code>.
+        </TryThis>
+      </>
+    ),
     terms: [
       { term: 'key', def: 'Stable identifier on list items so React matches elements across renders.' },
       { term: 'immutable update', def: 'Creating a new array/object copy instead of mutating the existing one.' },
@@ -463,6 +535,15 @@ useEffect(() => {
           The second argument lists values the effect depends on. Omit it and the effect
           runs after every render; pass <code>[]</code> to run once on mount.
         </Callout>
+      </>
+    ),
+    playground: (
+      <>
+        <EffectsDemo />
+        <TryThis>
+          Toggle <strong>Sync on count change</strong> off — bumping count won&apos;t re-run
+          the effect until you turn sync back on.
+        </TryThis>
       </>
     ),
     terms: [
@@ -528,6 +609,15 @@ useEffect(() => {
           Keep state in the component that owns it until a second branch genuinely
           needs the same value — then lift or introduce shared state.
         </Callout>
+      </>
+    ),
+    playground: (
+      <>
+        <LiftStateDemo />
+        <TryThis>
+          Click + and − in Controls — Display updates too because both siblings share
+          state lifted to their parent.
+        </TryThis>
       </>
     ),
     terms: [
@@ -875,6 +965,15 @@ dispatch(addItem({ id: 1, name: 'Keyboard' }))`}
         </p>
       </UnderTheHood>
     ),
+    playground: (
+      <>
+        <VdomDiffDemo />
+        <TryThis>
+          Insert &quot;Pricing&quot; — only one new list item appears because stable{' '}
+          <code>key</code> values let React patch the DOM minimally.
+        </TryThis>
+      </>
+    ),
     terms: [
       { term: 'virtual DOM', def: 'An in-memory representation of the UI used for efficient updates.' },
       { term: 'reconciliation', def: "React's process of diffing trees and updating the real DOM." },
@@ -920,6 +1019,15 @@ dispatch(addItem({ id: 1, name: 'Keyboard' }))`}
           to associate state with the right component instance.
         </p>
       </UnderTheHood>
+    ),
+    playground: (
+      <>
+        <HooksRulesDemo />
+        <TryThis>
+          Switch between <strong>Valid</strong>, <strong>Inside if</strong>, and{' '}
+          <strong>Inside loop</strong> — see why hook call order must stay stable every render.
+        </TryThis>
+      </>
     ),
     terms: [
       { term: 'hook', def: 'A function like useState or useEffect that taps into React features.' },
@@ -967,6 +1075,15 @@ dispatch(addItem({ id: 1, name: 'Keyboard' }))`}
           JSX and bundle modules for the browser. Pair with a FastAPI backend for JSON APIs.
         </p>
       </UnderTheHood>
+    ),
+    playground: (
+      <>
+        <EcosystemMap />
+        <TryThis>
+          Click each chip — see how routers, data-fetching libraries, and bundlers fit
+          around React in a typical full-stack app.
+        </TryThis>
+      </>
     ),
     terms: [
       { term: 'React Router', def: 'Library for client-side routing between pages in a React app.' },

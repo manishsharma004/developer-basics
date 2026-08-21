@@ -2,6 +2,7 @@ import type { ComponentType } from 'react'
 import { createChapterLesson } from '../components/ChapterLesson.tsx'
 import { Callout, CodePreview, UnderTheHood, TryThis } from '../components/blocks.tsx'
 import { SnippetRunner } from '../components/SnippetRunner.tsx'
+import { OpenApiSim, FastApiStackSim } from './FastApiSims.tsx'
 import { snippets } from './snippets.ts'
 
 const fastapiIntro = createChapterLesson({
@@ -28,6 +29,14 @@ const fastapiIntro = createChapterLesson({
         get async support, automatic request parsing, and machine-readable API docs without
         maintaining a separate spec file.
       </p>
+    </>
+  ),
+  playground: (
+    <>
+      <SnippetRunner snippets={snippets('Hello FastAPI')} />
+      <TryThis>
+        Run the snippet and trace how each <code>@get</code> decorator registers a route handler.
+      </TryThis>
     </>
   ),
   terms: [
@@ -157,6 +166,7 @@ const fastapiRoutesCrud = createChapterLesson({
       </Callout>
     </>
   ),
+  playground: <SnippetRunner snippets={snippets('CRUD routes')} />,
   terms: [
     { term: 'POST', def: 'HTTP method to create a new resource; typically returns 201 Created.' },
     { term: 'PUT', def: 'HTTP method to replace an entire resource at a known URL.' },
@@ -280,6 +290,7 @@ def get_user(user_id: int):
       />
     </>
   ),
+  playground: <SnippetRunner snippets={snippets('Response models')} />,
   terms: [
     { term: 'response model', def: 'Declares and filters the JSON shape returned to clients.' },
     { term: 'response_model', def: 'FastAPI parameter that validates and documents outgoing data.' },
@@ -333,6 +344,7 @@ def get_user(user_id: int):
       />
     </>
   ),
+  playground: <SnippetRunner snippets={snippets('Path parameters')} />,
   terms: [
     { term: 'path parameter', def: 'A URL segment like /users/{id} mapped to a typed function argument.' },
     { term: '422 validation error', def: 'Returned when a path value cannot be coerced to the declared type.' },
@@ -441,6 +453,7 @@ def create_user(body: UserCreate, active: bool = True):
       />
     </>
   ),
+  playground: <SnippetRunner snippets={snippets('Request body')} />,
   terms: [
     { term: 'request body', def: 'JSON payload sent with POST/PUT; mapped to a Pydantic model parameter.' },
     { term: 'UserCreate', def: 'Example input model — fields define required and optional JSON properties.' },
@@ -710,6 +723,7 @@ const fastapiHoodOpenapi = createChapterLesson({
       </Callout>
     </>
   ),
+  playground: <OpenApiSim />,
   terms: [
     { term: 'OpenAPI', def: 'A machine-readable API description; powers /docs in FastAPI.' },
     { term: 'Swagger UI', def: 'Interactive docs at /docs where you can try endpoints in the browser.' },
@@ -812,6 +826,7 @@ const fastapiHoodStack = createChapterLesson({
       business logic; PostgreSQL or MongoDB stores durable data.
     </p>
   ),
+  playground: <FastApiStackSim />,
   hood: (
     <UnderTheHood title="Full-stack stack">
       <p className="prose">
