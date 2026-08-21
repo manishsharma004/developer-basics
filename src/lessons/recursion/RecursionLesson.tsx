@@ -1,6 +1,62 @@
 import { Lesson } from '../components/Lesson.tsx'
 import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
+import { SnippetRunner, type Snippet } from '../components/SnippetRunner.tsx'
 import { RecursionViz } from './RecursionViz.tsx'
+
+const SNIPPETS: Snippet[] = [
+  {
+    label: 'Factorial',
+    code: `def fact(n):
+    if n <= 1:
+        return 1
+    return n * fact(n - 1)
+
+for i in range(1, 7):
+    print(f"fact({i}) = {fact(i)}")`,
+  },
+  {
+    label: 'Naive vs memoized Fibonacci',
+    code: `def fib_naive(n):
+    if n <= 1:
+        return n
+    return fib_naive(n - 1) + fib_naive(n - 2)
+
+cache = {}
+def fib_memo(n):
+    if n in cache:
+        return cache[n]
+    if n <= 1:
+        return n
+    cache[n] = fib_memo(n - 1) + fib_memo(n - 2)
+    return cache[n]
+
+n = 30
+print("naive fib(20):", fib_naive(20))
+print("memo fib(30):", fib_memo(n))
+print("cache size:", len(cache))`,
+  },
+  {
+    label: 'Directory walk',
+    code: `tree = {
+    "src": {
+        "main.py": None,
+        "utils": {"helpers.py": None, "config.py": None},
+    },
+    "README.md": None,
+}
+
+def walk(path, node, depth=0):
+    indent = "  " * depth
+    if isinstance(node, dict):
+        print(f"{indent}{path}/")
+        for name, child in node.items():
+            walk(name, child, depth + 1)
+    else:
+        print(f"{indent}{path}")
+
+walk("project", tree)`,
+  },
+]
 
 export default function RecursionLesson() {
   return (
@@ -27,6 +83,12 @@ export default function RecursionLesson() {
           branches <em>twice</em> (<code>fib(n) = fib(n−1) + fib(n−2)</code>), which
           is where things get interesting.
         </p>
+        <Callout kind="tip" title="When to reach for recursion">
+          Recursion shines when the data is <em>self-similar</em>: a tree is nodes
+          containing trees, a directory contains directories. If you find yourself
+          writing a loop with an explicit stack to simulate depth, recursion might be
+          the clearer expression.
+        </Callout>
       </Section>
 
       <Section id="playground" title="Trace the calls">
@@ -41,6 +103,20 @@ export default function RecursionLesson() {
           count explode (fib(8) makes 67 calls!). Now tick <strong>Memoize</strong>:
           repeated subproblems become "cache hit" leaves and the count collapses to
           roughly linear.
+        </TryThis>
+      </Section>
+
+      <Section id="labs" title="Code lab">
+        <p className="prose">
+          Run factorial to see the base case in action, then compare naive and
+          memoized Fibonacci. The directory walk shows recursion on nested
+          structures — the pattern behind parsing JSON, HTML, and file systems.
+        </p>
+        <SnippetRunner snippets={SNIPPETS} />
+        <TryThis>
+          Run <strong>Naive vs memoized Fibonacci</strong> and compare how far each
+          can go before slowing down. Then run <strong>Directory walk</strong> and
+          trace how depth increases with each nested folder.
         </TryThis>
       </Section>
 
@@ -62,6 +138,14 @@ export default function RecursionLesson() {
             <strong>dynamic programming</strong>.
           </p>
         </UnderTheHood>
+        <UnderTheHood title="Recursion vs iteration">
+          <p className="prose">
+            Any recursion can be rewritten as a loop with an explicit stack — and
+            vice versa. Choose based on clarity: tree walks and divide-and-conquer
+            often read cleaner recursively; simple counting loops are usually clearer
+            as iteration.
+          </p>
+        </UnderTheHood>
       </Section>
 
       <Section id="terms" title="Key terms">
@@ -73,6 +157,7 @@ export default function RecursionLesson() {
             { term: 'memoization', def: 'Caching results of calls to avoid recomputation.' },
             { term: 'stack overflow', def: 'Running out of stack from too-deep recursion.' },
             { term: 'tail call', def: 'A recursive call in the final position, sometimes optimized.' },
+            { term: 'dynamic programming', def: 'Solving problems by caching overlapping subproblems.' },
           ]}
         />
       </Section>
@@ -98,28 +183,23 @@ export default function RecursionLesson() {
               answer: 1,
               explain: 'Cached results are returned immediately, collapsing repeated work.',
             },
-
             {
               q: 'Every recursive function needs:',
-              options: [
-                'Two loops',
-              'A base case',
-              'Global variables',
-              'Threads',
-              ],
+              options: ['Two loops', 'A base case', 'Global variables', 'Threads'],
               answer: 1,
               explain: 'Base case stops recursion; without it you overflow the stack.',
             },
             {
               q: 'Memoization helps when:',
-              options: [
-                'No repeated subproblems',
-              'Same inputs are recomputed many times',
-              'Using only loops',
-              'Memory is unlimited',
-              ],
+              options: ['No repeated subproblems', 'Same inputs are recomputed many times', 'Using only loops', 'Memory is unlimited'],
               answer: 1,
               explain: 'Caching results avoids exponential recomputation (e.g. naive Fibonacci).',
+            },
+            {
+              q: 'Walking a nested file tree is a classic use of:',
+              options: ['Sorting', 'Recursion on self-similar structure', 'Hashing', 'Floating point'],
+              answer: 1,
+              explain: 'Each directory can contain more directories — the same pattern at every level.',
             },
           ]}
         />
@@ -132,6 +212,7 @@ export default function RecursionLesson() {
             <>Each call uses stack; too-deep recursion overflows it.</>,
             <>Branching recursion can recompute subproblems exponentially.</>,
             <><strong>Memoization</strong> caches results and is the basis of dynamic programming.</>,
+            <>Use recursion when data is self-similar (trees, nested structures).</>,
           ]}
         />
       </Section>
