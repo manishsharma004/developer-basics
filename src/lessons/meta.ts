@@ -7,6 +7,7 @@ import { fastapiLessonsMeta } from './fastapi/chapterMeta.ts'
 import { mongodbLessonsMeta } from './mongodb/chapterMeta.ts'
 import { reactLessonsMeta } from './react/chapterMeta.ts'
 import { sqlLessonsMeta } from './sql/chapterMeta.ts'
+import { webLessonsMeta } from './web/chapterMeta.ts'
 
 export type Level = 'Beginner' | 'Intermediate' | 'Advanced'
 
@@ -92,7 +93,7 @@ export const groups: LessonGroup[] = [
     id: 'web',
     title: 'Networking & the Web',
     icon: '🌐',
-    blurb: 'How machines talk over the network, expose APIs, and prove who you are.',
+    blurb: 'HTTP, DNS, TLS, load balancing, reverse proxies, API gateways, and rate limits.',
   },
   {
     id: 'fastapi',
@@ -601,6 +602,7 @@ export const lessonsMeta: LessonMeta[] = [
       ...CLOSING,
     ],
   },
+  ...webLessonsMeta,
   ...fastapiLessonsMeta,
   ...reactLessonsMeta,
 

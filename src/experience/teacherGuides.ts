@@ -3,7 +3,7 @@
 // for an instructor: what to achieve, what to emphasize, what students get wrong,
 // how to run the interactive lab, and how to assess understanding.
 
-import { databasesChapterGuides, fastapiChapterGuides, mongodbChapterGuides, reactChapterGuides, sqlChapterGuides } from './chapterGuides.ts'
+import { databasesChapterGuides, fastapiChapterGuides, mongodbChapterGuides, reactChapterGuides, sqlChapterGuides, webChapterGuides } from './chapterGuides.ts'
 
 export interface TeacherGuide {
   objectives: string[]
@@ -844,6 +844,7 @@ export const teacherGuides: Record<string, TeacherGuide> = {
       'JWT payload is:',
     ],
   },
+  ...webChapterGuides,
   ...fastapiChapterGuides,
   ...reactChapterGuides,
   security: {
