@@ -223,6 +223,30 @@ a {
   opacity: 0.82;
 }
 
+.nav-link--opened:not(.active) {
+  color: color-mix(in srgb, var(--muted) 92%, var(--accent));
+}
+
+.nav-link--opened:not(.active):hover {
+  color: var(--text);
+}
+
+.nav-status-marker {
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-left: auto;
+}
+.nav-status-marker--opened {
+  background: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.nav-status-marker--read {
+  background: var(--quiz-correct);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--quiz-correct) 22%, transparent);
+}
+
 .nav-icon {
   width: 22px;
   text-align: center;

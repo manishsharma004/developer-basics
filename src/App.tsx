@@ -15,11 +15,45 @@ import { useProgress } from './progress/ProgressContext.tsx'
 const LEVELS: Level[] = ['Beginner', 'Intermediate', 'Advanced']
 const COLLAPSE_KEY = 'devbasics.sidebarCollapsed'
 
-function navLinkClass(isActive: boolean, read: boolean, base = 'nav-link') {
+function navLinkClass(isActive: boolean, read: boolean, opened: boolean, base = 'nav-link') {
   let cls = base
   if (isActive) cls += ' active'
   if (read) cls += ' nav-link--read'
+  else if (opened) cls += ' nav-link--opened'
   return cls
+}
+
+function getLessonNavState(
+  getProgress: (lessonId: string) => { read?: boolean; openCount?: number } | undefined,
+  lessonId: string,
+) {
+  const progress = getProgress(lessonId)
+  const openCount = progress?.openCount ?? 0
+  return {
+    read: progress?.read ?? false,
+    opened: openCount > 0,
+    openCount,
+  }
+}
+
+function NavStatusMarker({
+  read,
+  opened,
+  openCount,
+}: {
+  read: boolean
+  opened: boolean
+  openCount: number
+}) {
+  if (!opened && !read) return null
+  const title = read ? 'Marked as read' : `Opened ${openCount}×`
+  return (
+    <span
+      className={`nav-status-marker${read ? ' nav-status-marker--read' : ' nav-status-marker--opened'}`}
+      title={title}
+      aria-label={title}
+    />
+  )
 }
 
 function App() {
@@ -182,20 +216,24 @@ function App() {
               return (
                 <div key={level} className="nav-group">
                   <div className="nav-group-title">{level}</div>
-                  {group.map((lesson) => (
+                  {group.map((lesson) => {
+                    const { read, opened, openCount } = getLessonNavState(getProgress, lesson.id)
+                    return (
                     <NavLink
                       key={lesson.id}
                       to={lesson.path}
                       className={({ isActive }) =>
-                        navLinkClass(isActive, getProgress(lesson.id)?.read ?? false)
+                        navLinkClass(isActive, read, opened)
                       }
                       title={lesson.title}
                       onClick={closeMobile}
                     >
                       <span className="nav-icon">{lesson.icon}</span>
                       <span className="nav-label">{lesson.title}</span>
+                      <NavStatusMarker read={read} opened={opened} openCount={openCount} />
                     </NavLink>
-                  ))}
+                    )
+                  })}
                 </div>
               )
             })
@@ -223,20 +261,24 @@ function App() {
                     <span className="nav-group-caret nav-label" aria-hidden>{open ? '▾' : '▸'}</span>
                   </button>
                   {open &&
-                    items.map((lesson) => (
+                    items.map((lesson) => {
+                      const { read, opened, openCount } = getLessonNavState(getProgress, lesson.id)
+                      return (
                       <NavLink
                         key={lesson.id}
                         to={lesson.path}
                         className={({ isActive }) =>
-                          navLinkClass(isActive, getProgress(lesson.id)?.read ?? false, 'nav-link nav-link--child')
+                          navLinkClass(isActive, read, opened, 'nav-link nav-link--child')
                         }
                         title={lesson.title}
                         onClick={closeMobile}
                       >
                         <span className="nav-icon">{lesson.icon}</span>
                         <span className="nav-label">{lesson.title}</span>
+                        <NavStatusMarker read={read} opened={opened} openCount={openCount} />
                       </NavLink>
-                    ))}
+                      )
+                    })}
                 </div>
               )
             })
