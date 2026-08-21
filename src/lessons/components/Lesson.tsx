@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { getLessonMeta, getNextLesson, type SectionMeta } from '../meta.ts'
 
 interface Props {
@@ -12,8 +12,17 @@ interface Props {
 export function Lesson({ id, children }: Props) {
   const meta = getLessonMeta(id)
   const next = getNextLesson(id)
+  const location = useLocation()
   const sections: SectionMeta[] = meta?.sections ?? []
   const [active, setActive] = useState(sections[0]?.id ?? '')
+
+  useEffect(() => {
+    const scrollTo = (location.state as { scrollTo?: string } | null)?.scrollTo
+    if (!scrollTo) return
+    requestAnimationFrame(() => {
+      document.getElementById(scrollTo)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }, [location.pathname, location.state])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -30,7 +39,7 @@ export function Lesson({ id, children }: Props) {
       if (el) observer.observe(el)
     }
     return () => observer.disconnect()
-  }, [id]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [id, sections])
 
   const scrollTo = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
