@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react'
 import { createChapterLesson } from '../components/ChapterLesson.tsx'
-import { Callout, UnderTheHood, TryThis } from '../components/blocks.tsx'
+import { Callout, CodePreview, UnderTheHood, TryThis } from '../components/blocks.tsx'
 import { SnippetRunner } from '../components/SnippetRunner.tsx'
 import { SQL_SNIPPETS, snippets } from './snippets.ts'
 import { SqlPlayground } from './SqlPlayground.tsx'
@@ -306,14 +306,17 @@ export const SQL_CHAPTERS: Record<string, ComponentType> = {
           separate server. Python's stdlib <code>sqlite3</code> module is perfect for
           tests, prototypes, and the playground in this lesson.
         </p>
-        <pre className="term-output">{`import sqlite3
+        <CodePreview
+          language="python"
+          code={`import sqlite3
 
 conn = sqlite3.connect("app.db")      # file on disk
 conn = sqlite3.connect(":memory:")    # ephemeral (tests)
 
 cur = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,))
 rows = cur.fetchall()
-conn.close()`}</pre>
+conn.close()`}
+        />
       </>
     ),
     playground: (
@@ -372,10 +375,13 @@ conn.close()`}</pre>
           are the standard Python drivers. Connection details go in a{' '}
           <strong>DSN</strong> (data source name):
         </p>
-        <pre className="term-output">{`postgresql://user:password@db.example.com:5432/shop
+        <CodePreview
+          language="python"
+          code={`postgresql://user:password@db.example.com:5432/shop
 
 # psycopg2 uses %s placeholders (not ?)
-cur.execute("SELECT name FROM users WHERE id = %s", (user_id,))`}</pre>
+cur.execute("SELECT name FROM users WHERE id = %s", (user_id,))`}
+        />
         <Callout kind="note" title="Same SQL, different wire">
           Your SELECT/JOIN queries are largely portable between SQLite and Postgres —
           only connection setup and a few dialect differences change.
@@ -492,12 +498,15 @@ cur.execute("SELECT name FROM users WHERE id = %s", (user_id,))`}</pre>
           popular choice in Python — it also offers a lower-level Core API when you
           need raw SQL control.
         </p>
-        <pre className="term-output">{`from sqlalchemy import create_engine, text
+        <CodePreview
+          language="python"
+          code={`from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session
 
 engine = create_engine("postgresql://user:pass@localhost/app")
 with Session(engine) as session:
-    users = session.execute(text("SELECT * FROM users")).all()`}</pre>
+    users = session.execute(text("SELECT * FROM users")).all()`}
+        />
       </>
     ),
     playground: <SnippetRunner snippets={snippets('ORM-style query (SQLAlchemy idea)')} />,

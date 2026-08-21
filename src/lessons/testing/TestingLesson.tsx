@@ -1,5 +1,5 @@
 import { Lesson } from '../components/Lesson.tsx'
-import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
+import { Section, Callout, CodePreview, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { SnippetRunner, type Snippet } from '../components/SnippetRunner.tsx'
 
 const SNIPPETS: Snippet[] = [
@@ -202,14 +202,17 @@ export default function TestingLesson() {
           (<code>@pytest.fixture</code>) build shared setup; <strong>parametrize</strong>{' '}
           runs the same test over many input rows.
         </p>
-        <pre className="term-output">{`# test_math.py
+        <CodePreview
+          language="python"
+          code={`# test_math.py
 def add(a, b):
     return a + b
 
 def test_add():
     assert add(1, 2) == 3
 
-# Run: pytest test_math.py -v`}</pre>
+# Run: pytest test_math.py -v`}
+        />
       </Section>
 
       <Section id="frontend" title="Frontend testing">
@@ -228,7 +231,9 @@ def test_add():
             <strong>E2E</strong> — Playwright or Cypress against staging.
           </li>
         </ul>
-        <pre className="term-output">{`// Vitest + React Testing Library (conceptual)
+        <CodePreview
+          language="javascript"
+          code={`// Vitest + React Testing Library (conceptual)
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Counter } from './Counter'
@@ -237,7 +242,8 @@ test('increments count', async () => {
   render(<Counter />)
   await userEvent.click(screen.getByRole('button', { name: /increment/i }))
   expect(screen.getByText('Count: 1')).toBeInTheDocument()
-})`}</pre>
+})`}
+        />
       </Section>
 
       <Section id="playground" title="Red, green, refactor">

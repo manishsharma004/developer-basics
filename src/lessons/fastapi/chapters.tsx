@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react'
 import { createChapterLesson } from '../components/ChapterLesson.tsx'
-import { Callout, UnderTheHood, TryThis } from '../components/blocks.tsx'
+import { Callout, CodePreview, UnderTheHood, TryThis } from '../components/blocks.tsx'
 import { SnippetRunner } from '../components/SnippetRunner.tsx'
 import { snippets } from './snippets.ts'
 
@@ -76,7 +76,9 @@ const fastapiRoutesBasics = createChapterLesson({
         with HTTP methods. <code>@app.get</code> reads a resource and typically returns
         JSON — a Python <code>dict</code> or list serializes automatically.
       </p>
-      <pre className="term-output">{`from fastapi import FastAPI
+      <CodePreview
+        language="python"
+        code={`from fastapi import FastAPI
 
 app = FastAPI()
 
@@ -86,7 +88,8 @@ def list_users():
 
 @app.get("/users/{user_id}")
 def get_user(user_id: int):
-    ...`}</pre>
+    ...`}
+      />
     </>
   ),
   playground: (
@@ -201,7 +204,9 @@ const fastapiModelsRequest = createChapterLesson({
         incoming data before your handler runs. Invalid requests get a{' '}
         <code>422 Unprocessable Entity</code> with details — for free.
       </p>
-      <pre className="term-output">{`from pydantic import BaseModel, EmailStr
+      <CodePreview
+        language="python"
+        code={`from pydantic import BaseModel, EmailStr
 
 class UserCreate(BaseModel):
     name: str
@@ -209,7 +214,8 @@ class UserCreate(BaseModel):
 
 @app.post("/users", status_code=201)
 def create_user(body: UserCreate):
-    return {"id": 1, **body.model_dump()}`}</pre>
+    return {"id": 1, **body.model_dump()}`}
+      />
       <Callout kind="tip" title="Types are documentation">
         Type hints on parameters aren't just for mypy — FastAPI uses them to parse query
         strings, path segments, and JSON bodies correctly.
@@ -262,13 +268,16 @@ const fastapiModelsResponse = createChapterLesson({
         filters fields and documents the shape in OpenAPI. Pair with explicit status codes
         for create (<code>201</code>) and delete (<code>204</code>).
       </p>
-      <pre className="term-output">{`class UserOut(BaseModel):
+      <CodePreview
+        language="python"
+        code={`class UserOut(BaseModel):
     id: int
     name: str
 
 @app.get("/users/{user_id}", response_model=UserOut)
 def get_user(user_id: int):
-    return UserOut(id=user_id, name="Ada")`}</pre>
+    return UserOut(id=user_id, name="Ada")`}
+      />
     </>
   ),
   terms: [
@@ -316,9 +325,12 @@ const fastapiParamsPath = createChapterLesson({
         arguments. FastAPI validates types before your handler runs — pass a string where
         an <code>int</code> is expected and you get a <code>422</code> validation error.
       </p>
-      <pre className="term-output">{`@app.get("/users/{user_id}")
+      <CodePreview
+        language="python"
+        code={`@app.get("/users/{user_id}")
 def get_user(user_id: int):
-    return {"id": user_id, "name": "Ada"}`}</pre>
+    return {"id": user_id, "name": "Ada"}`}
+      />
     </>
   ),
   terms: [
@@ -367,9 +379,12 @@ const fastapiParamsQuery = createChapterLesson({
         to function parameters with defaults. FastAPI treats undecorated parameters with
         defaults as query params.
       </p>
-      <pre className="term-output">{`@app.get("/items")
+      <CodePreview
+        language="python"
+        code={`@app.get("/items")
 def search_items(q: str = "", limit: int = 10, skip: int = 0):
-    ...`}</pre>
+    ...`}
+      />
     </>
   ),
   playground: <SnippetRunner snippets={snippets('Path & query parameters')} />,
@@ -417,10 +432,13 @@ const fastapiParamsBody = createChapterLesson({
         JSON POST/PUT payloads map to a Pydantic model parameter. Only one body model per
         handler; combine with path and query params in the same function signature.
       </p>
-      <pre className="term-output">{`@app.post("/users")
+      <CodePreview
+        language="python"
+        code={`@app.post("/users")
 def create_user(body: UserCreate, active: bool = True):
     # body from JSON, active from ?active=true
-    ...`}</pre>
+    ...`}
+      />
     </>
   ),
   terms: [
@@ -467,7 +485,9 @@ const fastapiDepsDatabase = createChapterLesson({
         Shared logic — database connections, auth, pagination — belongs in{' '}
         <strong>dependencies</strong> that FastAPI injects into route handlers:
       </p>
-      <pre className="term-output">{`from fastapi import Depends
+      <CodePreview
+        language="python"
+        code={`from fastapi import Depends
 
 def get_db():
     db = connect()
@@ -478,7 +498,8 @@ def get_db():
 
 @app.get("/me")
 def read_me(user = Depends(get_current_user)):
-    return user`}</pre>
+    return user`}
+      />
     </>
   ),
   playground: <SnippetRunner snippets={snippets('Dependency injection')} />,
@@ -535,9 +556,12 @@ const fastapiDepsAuth = createChapterLesson({
         validate it, return the current user. Unauthorized requests raise{' '}
         <code>HTTPException(401)</code> before your handler runs.
       </p>
-      <pre className="term-output">{`@app.get("/me")
+      <CodePreview
+        language="python"
+        code={`@app.get("/me")
 def read_me(user = Depends(get_current_user)):
-    return user`}</pre>
+    return user`}
+      />
     </>
   ),
   playground: <SnippetRunner snippets={snippets('Auth dependency')} />,
@@ -733,9 +757,12 @@ const fastapiHoodCors = createChapterLesson({
         block it unless the API sends CORS headers — configure{' '}
         <code>CORSMiddleware</code> in FastAPI for dev and production origins.
       </p>
-      <pre className="term-output">{`// React frontend
+      <CodePreview
+        language="javascript"
+        code={`// React frontend
 const res = await fetch("http://localhost:8000/users")
-const users = await res.json()`}</pre>
+const users = await res.json()`}
+      />
     </>
   ),
   playground: <SnippetRunner snippets={snippets('CORS for React frontend')} />,
