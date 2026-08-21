@@ -4153,6 +4153,104 @@ a {
   margin-right: 8px;
 }
 
+/* React hood labs (reconciliation, hooks, ecosystem) -------------------- */
+.react-hood {
+  margin-top: 12px;
+}
+
+.react-hood-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 720px) {
+  .react-hood-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.react-hood-col {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  background: var(--panel);
+}
+
+.react-hood-todo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.react-hook-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.react-hook-slot {
+  padding: 10px 14px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.88rem;
+  opacity: 0.55;
+}
+
+.react-hook-slot--on {
+  opacity: 1;
+  border-color: var(--accent);
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.react-stack-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 12px 0;
+}
+
+.react-stack-layer {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 10px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--border);
+  border-radius: 0 8px 8px 0;
+  background: var(--panel);
+  opacity: 0.45;
+}
+
+.react-stack-layer--on {
+  opacity: 1;
+  border-left-color: var(--accent-2);
+  background: rgba(167, 139, 250, 0.1);
+}
+
+.react-stack-name {
+  font-weight: 700;
+}
+
+.react-stack-desc {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.react-eco-card {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel);
+  margin: 10px 0;
+}
+
+.react-eco-card p {
+  margin: 6px 0 0;
+}
+
 /* OOP / SOLID ------------------------------------------------------------- */
 .solid-list {
   display: flex;

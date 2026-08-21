@@ -21,6 +21,16 @@ import {
   ReduxFlowDemo,
   ZustandSelectorDemo,
 } from './ReactStoreDemos.tsx'
+import {
+  ReconciliationKeyDemo,
+  ReconciliationPipelineDemo,
+  MemoSkipDemo,
+  HooksRulesExpandedDemo,
+  HooksSlotDemo,
+  StackFlowDemo,
+  EcosystemExpandedDemo,
+  StackCompareDemo,
+} from './ReactHoodDemos.tsx'
 
 export const REACT_CHAPTERS: Record<string, ComponentType> = {
   'react-intro': createChapterLesson({
@@ -1266,42 +1276,84 @@ dispatch(cartSlice.actions.addItem({ name: 'Keyboard' }))`}
 
   'react-hood-vdom': createChapterLesson({
     id: 'react-hood-vdom',
-    modelTitle: 'Why reconciliation matters',
+    modelTitle: 'Virtual DOM & reconciliation',
     intro: (
       <p className="prose">
         React can re-render whole component trees on every state change and still feel fast.
-        The secret is a lightweight in-memory copy of the UI used to compute minimal DOM updates.
-      </p>
-    ),
-    model: (
-      <p className="prose">
-        When you call a setter, React builds a new element tree, compares it to the previous
-        one, and updates only what changed in the real DOM — a process called{' '}
+        It builds a lightweight in-memory description of the UI, compares it to the last version,
+        and patches only what changed in the real DOM — a process called{' '}
         <strong>reconciliation</strong>.
       </p>
     ),
-    hood: (
-      <UnderTheHood title="Virtual DOM & reconciliation">
+    model: (
+      <>
         <p className="prose">
-          React keeps a lightweight copy of the UI tree in memory. When state changes, it
-          builds a new tree, <strong>diffs</strong> it against the previous one, and
-          applies the smallest set of DOM updates. That&apos;s why you can re-render whole
-          subtrees without rewriting manual DOM code.
+          When you call a setter, React does <em>not</em> wipe the page and start over. It:
         </p>
-      </UnderTheHood>
+        <ol className="prose-list">
+          <li><strong>Renders</strong> — calls your components, producing a tree of plain objects (elements).</li>
+          <li><strong>Reconciles</strong> — diffs the new tree against the previous one (Fiber architecture).</li>
+          <li><strong>Commits</strong> — applies the minimal set of DOM mutations (text, attributes, insert, move, delete).</li>
+        </ol>
+        <CodePreview
+          language="javascript"
+          code={`// Declarative — you describe the whole UI for current state
+function Counter({ count }) {
+  return <button>{count}</button>
+}
+
+// React compares previous <button>1</button> vs new <button>2</button>
+// → one text node update in the real DOM, not a full page reload`}
+        />
+        <ul className="prose-list">
+          <li><strong>Elements vs DOM nodes</strong> — React elements are cheap descriptions; the browser DOM is expensive to touch.</li>
+          <li><strong>Same type + same key</strong> — React updates props in place. Different type → unmount old, mount new.</li>
+          <li><strong>Keys in lists</strong> — tell the reconciler which row is which when order changes.</li>
+          <li><strong>React.memo</strong> — skip re-rendering a child when props are shallow-equal (optimization, not default).</li>
+        </ul>
+        <Callout kind="warning" title="index as key">
+          <code>key=&#123;index&#125;</code> breaks when you reorder, insert, or delete — React reuses the wrong component
+          instance and local state jumps rows.
+        </Callout>
+      </>
+    ),
+    hood: (
+      <>
+        <UnderTheHood title="Fiber — incremental reconciliation">
+          <p className="prose">
+            Modern React uses a <strong>Fiber</strong> tree so work can be split across frames —
+            high-priority updates (typing) can interrupt low-priority work. You still think in
+            render → reconcile → commit; Fiber is how React schedules that work under the hood.
+          </p>
+        </UnderTheHood>
+        <UnderTheHood title="Not a silver bullet">
+          <p className="prose">
+            &quot;Virtual DOM&quot; does not mean faster than the DOM — it means predictable, declarative
+            updates with minimal manual DOM scripting. Bad keys, huge lists without virtualization,
+            or unnecessary re-renders can still hurt performance.
+          </p>
+        </UnderTheHood>
+      </>
     ),
     playground: (
       <>
         <VdomDiffDemo />
+        <ReconciliationKeyDemo />
+        <ReconciliationPipelineDemo />
+        <MemoSkipDemo />
         <TryThis>
-          Insert &quot;Pricing&quot; — only one new list item appears because stable{' '}
-          <code>key</code> values let React patch the DOM minimally.
+          In the <strong>key demo</strong>, check boxes then reverse order — watch index keys break.
+          Step through the pipeline after bumping count. Toggle <strong>React.memo</strong> and increment
+          parent count without changing label.
         </TryThis>
       </>
     ),
     terms: [
-      { term: 'virtual DOM', def: 'An in-memory representation of the UI used for efficient updates.' },
-      { term: 'reconciliation', def: "React's process of diffing trees and updating the real DOM." },
+      { term: 'virtual DOM', def: 'An in-memory tree of React elements describing the UI before DOM updates.' },
+      { term: 'reconciliation', def: "React's diff algorithm matching old and new trees to compute DOM changes." },
+      { term: 'commit phase', def: 'When React applies DOM updates and runs layout effects after diffing.' },
+      { term: 'key', def: 'Stable identity hint for list items so React matches the correct instance on reorder.' },
+      { term: 'React.memo', def: 'Higher-order component that skips re-render if props are unchanged.' },
     ],
     quiz: [
       {
@@ -1314,49 +1366,99 @@ dispatch(cartSlice.actions.addItem({ name: 'Keyboard' }))`}
         options: ['Reloads the entire page', 'Diffs old and new trees and applies minimal DOM changes', 'Skips all updates', 'Only updates on mount'],
         answer: 1,
       },
+      {
+        q: 'Using array index as key when reordering a list often causes:',
+        options: ['Faster renders always', 'Wrong component state attached to the wrong row', 'Automatic sorting', 'Smaller bundle'],
+        answer: 1,
+      },
+      {
+        q: 'React.memo helps when:',
+        options: ['You never pass props', 'A child re-renders often with the same props', 'You use class components only', 'Keys are missing'],
+        answer: 1,
+      },
     ],
     recap: [
-      <>React keeps a <strong>virtual DOM</strong> — an in-memory copy of the UI tree.</>,
-      <><strong>Reconciliation</strong> diffs the new tree against the old and patches only what changed.</>,
+      <>React builds a new <strong>element tree</strong> each render, then <strong>reconciles</strong> against the previous one.</>,
+      <>The <strong>commit</strong> phase patches only changed DOM nodes — not a full page rewrite.</>,
+      <>Stable <strong>keys</strong> keep list identity correct; avoid <code>key=&#123;index&#125;</code> when order changes.</>,
     ],
   }),
 
   'react-hood-hooks': createChapterLesson({
     id: 'react-hood-hooks',
-    modelTitle: 'Why hook rules exist',
+    modelTitle: 'Rules of hooks',
     intro: (
       <p className="prose">
         Hooks like <code>useState</code> and <code>useEffect</code> look like normal functions,
-        but React relies on a strict call order to associate state with the right component instance.
+        but React stores their state in a <strong>fixed-order list</strong> per component instance.
+        Break the order — hooks inside conditions, loops, or after early returns — and state attaches
+        to the wrong slot.
       </p>
     ),
     model: (
-      <p className="prose">
-        Break the rules — calling hooks inside loops, conditions, or nested functions — and
-        React may associate state with the wrong render, causing subtle bugs that are hard to trace.
-      </p>
+      <>
+        <p className="prose"><strong>Two rules:</strong></p>
+        <ol className="prose-list">
+          <li>Only call hooks at the <strong>top level</strong> — not inside loops, conditions, or nested functions.</li>
+          <li>Only call hooks from <strong>React functions</strong> — components or custom hooks (names start with <code>use</code>).</li>
+        </ol>
+        <CodePreview
+          language="javascript"
+          code={`// React internally (conceptual):
+// render #1: slot0=useState(0), slot1=useEffect(...)
+// render #2: MUST be same hooks in same order
+
+// ✓ Extract logic into a custom hook
+function useOnlineStatus() {
+  const [online, setOnline] = useState(navigator.onLine)
+  useEffect(() => { /* subscribe */ }, [])
+  return online
+}`}
+        />
+        <ul className="prose-list">
+          <li><strong>eslint-plugin-react-hooks</strong> catches most violations at build time.</li>
+          <li><strong>Custom hooks</strong> share logic — they are not a loophole; the same rules apply inside them.</li>
+          <li><strong>Early return before hooks</strong> is invalid if some renders skip the hook call.</li>
+        </ul>
+        <Callout kind="tip" title="Fix patterns">
+          Move conditional logic <em>inside</em> the hook body, or split into child components each with
+          their own top-level hooks — never wrap <code>useState</code> in <code>if</code>.
+        </Callout>
+      </>
     ),
     hood: (
-      <UnderTheHood title="Hooks rules">
-        <p className="prose">
-          Hooks (useState, useEffect, etc.) must be called at the top level of a component
-          — not inside loops, conditions, or nested functions. React relies on call order
-          to associate state with the right component instance.
-        </p>
-      </UnderTheHood>
+      <>
+        <UnderTheHood title="Why order, not names">
+          <p className="prose">
+            React does not track hooks by variable name — <code>const [a, setA]</code> and{' '}
+            <code>const [b, setB]</code> are slot 0 and slot 1 by call order. That is why
+            conditional hooks shift every slot after them.
+          </p>
+        </UnderTheHood>
+        <UnderTheHood title="Server Components note">
+          <p className="prose">
+            React Server Components use hooks only on the client boundary. In this course we focus
+            on client components where all hook rules apply on every render.
+          </p>
+        </UnderTheHood>
+      </>
     ),
     playground: (
       <>
         <HooksRulesDemo />
+        <HooksRulesExpandedDemo />
+        <HooksSlotDemo />
         <TryThis>
-          Switch between <strong>Valid</strong>, <strong>Inside if</strong>, and{' '}
-          <strong>Inside loop</strong> — see why hook call order must stay stable every render.
+          Walk all five scenarios in the expanded demo. Toggle the <strong>hook slots</strong> diagram
+          and explain what happens to slot indices when a conditional hook appears.
         </TryThis>
       </>
     ),
     terms: [
       { term: 'hook', def: 'A function like useState or useEffect that taps into React features.' },
-      { term: 'Rules of Hooks', def: 'Only call hooks at the top level of React functions — never conditionally.' },
+      { term: 'Rules of Hooks', def: 'Top-level only, same order every render, only in React functions.' },
+      { term: 'custom hook', def: 'A reusable function named useSomething that calls other hooks at its top level.' },
+      { term: 'hook slot', def: 'The internal index React uses to store state for each hook call in order.' },
     ],
     quiz: [
       {
@@ -1369,50 +1471,99 @@ dispatch(cartSlice.actions.addItem({ name: 'Keyboard' }))`}
         options: ['Variable names', 'The order hooks are called each render', 'File name', 'CSS class names'],
         answer: 1,
       },
+      {
+        q: 'Custom hooks must:',
+        options: ['Avoid calling other hooks', 'Follow the same top-level hook rules', 'Be class methods', 'Use Redux only'],
+        answer: 1,
+      },
+      {
+        q: 'Placing useState after if (loading) return is wrong because:',
+        options: ['useState is slow', 'Some renders skip the hook — order/count changes', 'Loading needs Redux', 'Effects run first'],
+        answer: 1,
+      },
     ],
     recap: [
       <>Call hooks only at the <strong>top level</strong> of components or custom hooks.</>,
-      <>Never call hooks inside loops, conditions, or nested functions — order must stay consistent.</>,
+      <>React maps state by <strong>call order</strong> — never conditionally call hooks.</>,
+      <>Extract shared logic into <strong>custom hooks</strong>; enable eslint-plugin-react-hooks in real projects.</>,
     ],
   }),
 
   'react-hood-stack': createChapterLesson({
     id: 'react-hood-stack',
-    modelTitle: 'Beyond the view layer',
+    modelTitle: 'React ecosystem & full stack',
     intro: (
       <p className="prose">
-        React handles rendering and component state, but production apps add routing, data
-        fetching, forms, types, and build tooling around the core library.
+        React is the <strong>view layer</strong> — components, state, and reconciliation. Production
+        apps add routing, server-state caching, forms, types, tests, and a build pipeline, often talking
+        to a JSON API backend like <strong>FastAPI</strong>.
       </p>
     ),
     model: (
-      <p className="prose">
-        Think of React as the view layer in a larger stack. You will typically pair it with
-        a router, an API client, and a bundler — often with a Python backend like FastAPI
-        serving JSON.
-      </p>
+      <>
+        <p className="prose"><strong>Typical modern React SPA stack:</strong></p>
+        <ul className="prose-list">
+          <li><strong>Vite</strong> — dev server, HMR, production bundle (this course app uses Vite).</li>
+          <li><strong>React Router</strong> — maps URLs to page components client-side.</li>
+          <li><strong>TanStack Query</strong> — fetch, cache, invalidate, refetch server/API data.</li>
+          <li><strong>TypeScript</strong> — typed props, hooks, and API responses.</li>
+          <li><strong>Zustand / Redux</strong> — client UI state (cart, modals) — not duplicate of API cache.</li>
+          <li><strong>FastAPI</strong> — Python backend serving JSON; React calls it from the browser.</li>
+        </ul>
+        <CodePreview
+          language="javascript"
+          code={`// Browser → React → Query → FastAPI → DB
+const { data } = useQuery({
+  queryKey: ['products'],
+  queryFn: () => fetch('/api/products').then(r => r.json()),
+})
+
+// FastAPI (Python)
+// @app.get("/api/products")
+// def list_products(): return db.query(...)`}
+        />
+        <Callout kind="note" title="SPA vs SSR">
+          Single-page apps (Vite + client router) download JS then fetch data. Frameworks like{' '}
+          <strong>Next.js</strong> add server-side rendering for SEO and faster first paint — still
+          React components, different deployment shape.
+        </Callout>
+      </>
     ),
     hood: (
-      <UnderTheHood title="Ecosystem">
-        <p className="prose">
-          React is the view layer. Real apps add a router (React Router), data fetching
-          (TanStack Query), forms, and often TypeScript. Build tools like Vite compile
-          JSX and bundle modules for the browser. Pair with a FastAPI backend for JSON APIs.
-        </p>
-      </UnderTheHood>
+      <>
+        <UnderTheHood title="Where each layer stops">
+          <p className="prose">
+            React does not route URLs, persist to databases, or authenticate users by itself.
+            TanStack Query does not replace your backend — it manages <em>client-side cache</em> of
+            server responses. Keep boundaries clear to avoid putting API lists in Redux.
+          </p>
+        </UnderTheHood>
+        <UnderTheHood title="This course stack">
+          <p className="prose">
+            These lessons run as a Vite SPA. The FastAPI and database modules show what a React
+            frontend would call in a full-stack product — JSON in, JSX out.
+          </p>
+        </UnderTheHood>
+      </>
     ),
     playground: (
       <>
         <EcosystemMap />
+        <EcosystemExpandedDemo />
+        <StackFlowDemo />
+        <StackCompareDemo />
         <TryThis>
-          Click each chip — see how routers, data-fetching libraries, and bundlers fit
-          around React in a typical full-stack app.
+          Click through every tool in the expanded map. Run the <strong>request flow</strong> animation,
+          then compare SPA vs SSR diagrams.
         </TryThis>
       </>
     ),
     terms: [
-      { term: 'React Router', def: 'Library for client-side routing between pages in a React app.' },
-      { term: 'Vite', def: 'Fast dev server and bundler commonly used to compile JSX for the browser.' },
+      { term: 'React Router', def: 'Client-side routing library mapping URLs to page components.' },
+      { term: 'TanStack Query', def: 'Async state library for fetching, caching, and syncing server data.' },
+      { term: 'Vite', def: 'Fast dev server and bundler that compiles JSX/TS for the browser.' },
+      { term: 'SPA', def: 'Single-page app — one HTML shell, JS handles navigation and data fetching.' },
+      { term: 'SSR', def: 'Server-side rendering — React runs on the server to produce initial HTML.' },
     ],
     quiz: [
       {
@@ -1425,10 +1576,21 @@ dispatch(cartSlice.actions.addItem({ name: 'Keyboard' }))`}
         options: ['Styling components', 'Fetching and caching server/API data', 'Replacing JSX', 'Git hooks'],
         answer: 1,
       },
+      {
+        q: 'In a React + FastAPI app, durable product data lives in:',
+        options: ['React Context only', 'The database behind FastAPI', 'Vite config', 'JSX comments'],
+        answer: 1,
+      },
+      {
+        q: 'Vite\'s main job in development is:',
+        options: ['Run SQL migrations', 'Serve modules with HMR and bundle for production', 'Replace React Router', 'Host PostgreSQL'],
+        answer: 1,
+      },
     ],
     recap: [
-      <>React is the <strong>view layer</strong> — add routing, data fetching, and tooling around it.</>,
-      <>Typical stack: <strong>Vite</strong> + <strong>React Router</strong> + <strong>TanStack Query</strong> + a JSON API backend.</>,
+      <>React is the <strong>view layer</strong> — surround it with router, query, types, and build tools.</>,
+      <>Use <strong>TanStack Query</strong> for server/API state; <strong>Zustand/Redux</strong> for client UI state.</>,
+      <>Typical full stack: <strong>Vite + React + Router + Query</strong> calling a <strong>FastAPI</strong> JSON API.</>,
     ],
   }),
 }
