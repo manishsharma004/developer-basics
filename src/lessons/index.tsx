@@ -17,6 +17,7 @@ import DataStructuresLesson from './datastructures/DataStructuresLesson.tsx'
 import AlgorithmsLesson from './algorithms/AlgorithmsLesson.tsx'
 import RecursionLesson from './recursion/RecursionLesson.tsx'
 import SqlLesson from './sql/SqlLesson.tsx'
+import MongodbLesson from './mongodb/MongodbLesson.tsx'
 import RegexLesson from './regex/RegexLesson.tsx'
 import ErrorsLesson from './errors/ErrorsLesson.tsx'
 import CachingLesson from './caching/CachingLesson.tsx'
@@ -60,6 +61,7 @@ const COMPONENTS: Record<string, ComponentType> = {
   search: SearchLesson,
   recursion: RecursionLesson,
   sql: SqlLesson,
+  mongodb: MongodbLesson,
   regex: RegexLesson,
   errors: ErrorsLesson,
   caching: CachingLesson,

@@ -2308,6 +2308,17 @@ a {
   overflow-x: auto;
 }
 
+/* MongoDB ----------------------------------------------------------------- */
+.mongo-result {
+  margin-top: 14px;
+}
+
+.mongo-result .term-output {
+  margin-top: 8px;
+  max-height: 320px;
+  overflow: auto;
+}
+
 /* Regex ------------------------------------------------------------------- */
 .rx-row {
   display: flex;
