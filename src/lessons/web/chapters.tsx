@@ -4,6 +4,9 @@ import { Callout, UnderTheHood, TryThis } from '../components/blocks.tsx'
 import { SnippetRunner } from '../components/SnippetRunner.tsx'
 import { RouteSim } from './RouteSim.tsx'
 import { RateLimitSim } from './RateLimitSim.tsx'
+import { ReverseProxySim } from './ReverseProxySim.tsx'
+import { ApiGatewaySim } from './ApiGatewaySim.tsx'
+import { EdgeStackSim } from './EdgeStackSim.tsx'
 import { snippets } from './snippets.ts'
 
 const webReverseProxy = createChapterLesson({
@@ -43,6 +46,16 @@ const webReverseProxy = createChapterLesson({
       <pre className="term-output">{`Client  --HTTPS-->  nginx (443)  --HTTP-->  api:8000
                               |
                               +--HTTP-->  frontend:3000`}</pre>
+    </>
+  ),
+  playground: (
+    <>
+      <ReverseProxySim />
+      <SnippetRunner snippets={snippets('Reverse proxy')} />
+      <TryThis>
+        Send <code>GET /api/users</code> vs <code>GET /</code> — watch TLS terminate at nginx
+        and the diagram highlight the upstream that answers.
+      </TryThis>
     </>
   ),
   terms: [
@@ -183,6 +196,16 @@ const webApiGateway = createChapterLesson({
         these as product features with dashboards and developer portals. Many teams use
         nginx/Envoy at L7 plus a gateway layer for API products.
       </Callout>
+    </>
+  ),
+  playground: (
+    <>
+      <ApiGatewaySim />
+      <SnippetRunner snippets={snippets('Gateway auth')} />
+      <TryThis>
+        Switch to an <strong>invalid API key</strong> — the gateway returns 401 before any
+        microservice runs. Click nodes in the diagram to see each responsibility.
+      </TryThis>
     </>
   ),
   terms: [
@@ -329,6 +352,15 @@ const webEdgeStack = createChapterLesson({
         Small projects may collapse layers (nginx alone). Growth adds gateways, WAFs,
         and CDN caching for static assets — add complexity only when needed.
       </Callout>
+    </>
+  ),
+  playground: (
+    <>
+      <EdgeStackSim />
+      <TryThis>
+        Click <strong>Walk full request</strong> to animate every hop, or use <strong>Next hop</strong>{' '}
+        one layer at a time. Click any node for a plain-language explanation.
+      </TryThis>
     </>
   ),
   hood: (

@@ -60,4 +60,41 @@ for prefix, upstream in routes.items():
         print("proxy_pass", upstream)
         break`,
   },
+  {
+    label: 'Reverse proxy',
+    code: `# Client sees one host; nginx picks the upstream
+UPSTREAMS = {
+    "/api/": "http://api:8000",
+    "/": "http://frontend:3000",
+}
+
+def handle(path):
+    print("Client → nginx:443 HTTPS", path)
+    print("nginx terminates TLS")
+    for prefix, upstream in UPSTREAMS.items():
+        if path.startswith(prefix):
+            print("proxy_pass", upstream, "(plain HTTP internally)")
+            return 200
+    return 404
+
+for p in ["/api/users", "/"]:
+    print(handle(p), "\\n")`,
+  },
+  {
+    label: 'Gateway auth',
+    code: `VALID_KEYS = {"sk_live_demo_key": "tenant_a"}
+
+def gateway(path, api_key):
+    tenant = VALID_KEYS.get(api_key)
+    if not tenant:
+        return 401, "Invalid API key"
+    if path.startswith("/users"):
+        return 200, "users-service"
+    if path.startswith("/orders"):
+        return 200, "orders-service"
+    return 404, "Unknown route"
+
+print(gateway("/users", "sk_live_demo_key"))
+print(gateway("/users", "bad_key"))`,
+  },
 ]

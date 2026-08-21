@@ -317,11 +317,11 @@ export const cssChapterGuides: Record<string, TeacherGuide> = {
 }
 
 export const webChapterGuides: Record<string, TeacherGuide> = {
-  'web-reverse-proxy': chapterGuide('Reverse proxy', 'Contrast forward vs reverse proxies; nginx at the edge.', ['Reverse vs forward', 'TLS termination', 'upstream'], 'Draw client → nginx → two backends.', ['Where does nginx sit?', 'Why terminate TLS at edge?']),
-  'web-nginx-routing': chapterGuide('nginx routing', 'Teach location blocks and proxy_pass.', ['Longest prefix', 'upstream pools', 'path routing'], 'Use RouteSim with /api and /admin paths.', ['What wins: / or /api/?', 'What does proxy_pass do?']),
-  'web-api-gateway': chapterGuide('API gateway', 'Compare gateway vs plain reverse proxy.', ['API keys', 'central auth', 'quotas'], 'List microservices behind one public host.', ['Gateway vs nginx?', 'Why centralize auth?']),
-  'web-rate-limiting': chapterGuide('Rate limiting', 'Token bucket and 429 responses.', ['429 Too Many Requests', 'per-key limits', 'Redis counters'], 'Burst the RateLimitSim; discuss Retry-After.', ['When return 429?', 'Per-IP vs per-key?']),
-  'web-edge-stack': chapterGuide('Edge stack', 'Walk full production request path.', ['LB → nginx → gateway → app', 'when to add layers', 'health checks'], 'Whiteboard DNS through database.', ['First hop after DNS?', 'When add a gateway?']),
+  'web-reverse-proxy': chapterGuide('Reverse proxy', 'Contrast forward vs reverse proxies; nginx at the edge.', ['Reverse vs forward', 'TLS termination', 'upstream'], 'Run ReverseProxySim — animate HTTPS → nginx → upstream; click diagram nodes.', ['Where does nginx sit?', 'Why terminate TLS at edge?']),
+  'web-nginx-routing': chapterGuide('nginx routing', 'Teach location blocks and proxy_pass.', ['Longest prefix', 'upstream pools', 'path routing'], 'Use RouteSim with /api and /admin paths; highlight nodes in the Mermaid diagram.', ['What wins: / or /api/?', 'What does proxy_pass do?']),
+  'web-api-gateway': chapterGuide('API gateway', 'Compare gateway vs plain reverse proxy.', ['API keys', 'central auth', 'quotas'], 'ApiGatewaySim with valid vs invalid keys; discuss 401 before backend.', ['Gateway vs nginx?', 'Why centralize auth?']),
+  'web-rate-limiting': chapterGuide('Rate limiting', 'Token bucket and 429 responses.', ['429 Too Many Requests', 'per-key limits', 'Redis counters'], 'Burst the RateLimitSim; watch diagram route to 429 vs 200.', ['When return 429?', 'Per-IP vs per-key?']),
+  'web-edge-stack': chapterGuide('Edge stack', 'Walk full production request path.', ['LB → nginx → gateway → app', 'when to add layers', 'health checks'], 'EdgeStackSim walkthrough — Next hop through DNS to database.', ['First hop after DNS?', 'When add a gateway?']),
 }
 
 export const sqlChapterGuides: Record<string, TeacherGuide> = {

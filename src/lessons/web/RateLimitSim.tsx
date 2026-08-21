@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { MermaidDiagram } from '../../components/MermaidDiagram.tsx'
+import { RATE_LIMIT_DIAGRAM, WEB_NODE_META } from './diagrams.ts'
 
 export function RateLimitSim() {
   const [limit, setLimit] = useState(5)
@@ -8,6 +10,8 @@ export function RateLimitSim() {
   const [accepted, setAccepted] = useState(0)
   const [rejected, setRejected] = useState(0)
   const [log, setLog] = useState<string[]>([])
+  const [activeNodes, setActiveNodes] = useState<string[]>([])
+  const [selected, setSelected] = useState<string | null>(null)
 
   const refill = () => {
     const now = Date.now()
@@ -22,12 +26,14 @@ export function RateLimitSim() {
     const available = refill()
     if (available <= 0) {
       setRejected((n) => n + 1)
+      setActiveNodes(['client', 'edge', 'bucket', 'r429'])
       setLog((entries) => [...entries.slice(-7), '✗ 429 Too Many Requests'])
       return
     }
     const next = available - 1
     setTokens(next)
     setAccepted((n) => n + 1)
+    setActiveNodes(['client', 'edge', 'bucket', 'app'])
     setLog((entries) => [...entries.slice(-7), `✓ 200 OK (${next} tokens left)`])
   }
 
@@ -41,15 +47,25 @@ export function RateLimitSim() {
     setAccepted(0)
     setRejected(0)
     setLog([])
+    setActiveNodes([])
   }
 
   return (
-    <div className="panel">
+    <div className="panel web-lab">
       <div className="panel-title">Token bucket (fixed window)</div>
       <p className="panel-hint">
         Each window allows <strong>{limit}</strong> requests; extras get{' '}
         <strong>429</strong>.
       </p>
+
+      <MermaidDiagram
+        code={RATE_LIMIT_DIAGRAM}
+        title="Rate limit flow"
+        activeNodes={activeNodes}
+        selectedNode={selected}
+        nodeMeta={WEB_NODE_META}
+        onNodeClick={setSelected}
+      />
       <div className="race-controls">
         <label className="conv-field">
           <span>Limit</span>
