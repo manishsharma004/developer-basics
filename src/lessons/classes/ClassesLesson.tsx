@@ -16,7 +16,7 @@ const SNIPPETS: Snippet[] = [
         return self.balance
 
     def __repr__(self):
-        return f"BankAccount({self.owner!r}, \\${self.balance})"
+        return f"BankAccount({self.owner!r}, {self.balance})"
 
 acct = BankAccount("Ada", 100)
 acct.deposit(50)
