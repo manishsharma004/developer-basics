@@ -7,7 +7,7 @@ import TeacherHome from './pages/TeacherHome.tsx'
 import { useExperience } from './experience/ExperienceContext.tsx'
 import { LessonPlan } from './experience/LessonPlan.tsx'
 import { useTheme } from './theme/ThemeContext.tsx'
-import { THEMES } from './theme/themes.ts'
+import { THEMES, type ThemeId } from './theme/themes.ts'
 import { FeedbackDialog } from './components/FeedbackDialog.tsx'
 
 const LEVELS: Level[] = ['Beginner', 'Intermediate', 'Advanced']
@@ -195,19 +195,38 @@ function App() {
         </nav>
 
         <div className="theme-picker">
-          <span className="theme-picker-label nav-label">Theme</span>
-          <div className="theme-swatches">
-            {THEMES.map((t) => (
-              <button
-                key={t.id}
-                className={`theme-swatch${theme === t.id ? ' theme-swatch--active' : ''}`}
-                style={{ background: t.swatch }}
-                onClick={() => setTheme(t.id)}
-                aria-label={`${t.label} theme`}
-                aria-pressed={theme === t.id}
-                title={t.label}
-              />
-            ))}
+          <label className="theme-picker-label nav-label" htmlFor="theme-select">
+            Theme
+          </label>
+          <div className="theme-select-wrap">
+            <span
+              className="theme-select-swatch"
+              style={{ background: THEMES.find((t) => t.id === theme)?.swatch }}
+              aria-hidden
+            />
+            <select
+              id="theme-select"
+              className="theme-select"
+              value={theme}
+              onChange={(e) => setTheme(e.target.value as ThemeId)}
+              aria-label="Color theme"
+              title={THEMES.find((t) => t.id === theme)?.label}
+            >
+              <optgroup label="Dark">
+                {THEMES.filter((t) => t.mode === 'dark').map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.label}
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup label="Light">
+                {THEMES.filter((t) => t.mode === 'light').map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.label}
+                  </option>
+                ))}
+              </optgroup>
+            </select>
           </div>
         </div>
 

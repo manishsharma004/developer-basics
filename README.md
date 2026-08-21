@@ -4,14 +4,22 @@ An interactive React playground for learning **developer basics**. Each topic
 runs a real simulation in your browser (Python via WebAssembly), so you can
 experiment and watch the model respond — no server required.
 
-Current demos:
+Current demos include interactive labs across **8 modules and 31 chapters** —
+filesystem shells, CPU scheduling, memory models, SQL, networking, security,
+algorithms, searching, serialization, debugging, and more. Each topic runs a
+real simulation in your browser (often Python via WebAssembly), so you can
+experiment and watch the model respond — no server required.
 
-- **🗂️ Filesystem** — a genuine Unix-like shell (`ls`, `cd`, `cat`, `mkdir`,
-  `tree`, `stat`, redirection…) and a Python REPL, both operating on a real
+Highlights:
+
+- **🗂️ Filesystem** — a genuine Unix-like shell and Python REPL on a real
   in-browser filesystem, with a live-updating directory tree.
 - **⚙️ Process Architecture** — an editable process table feeding a real CPU
-  scheduling simulation (FCFS, SJF, Round Robin) with an animated Gantt chart
-  and waiting/turnaround metrics.
+  scheduling simulation (FCFS, SJF, Round Robin) with an animated Gantt chart.
+- **🔍 Searching & Binary Search**, **📦 JSON & Serialization**, and
+  **🐛 Debugging & Logging** — runnable Python labs via the shared snippet runner.
+
+See [`docs/sitemap.md`](docs/sitemap.md) for the full chapter index.
 
 ## Tech stack
 
@@ -45,19 +53,17 @@ to GitHub Pages. Enable Pages in the repo settings with **Source: GitHub Actions
 
 ```
 src/
-  App.tsx                    # layout + routing
+  App.tsx                    # layout + routing + theme dropdown
   main.tsx                   # entry point (HashRouter)
-  pages/Home.tsx             # landing page
-  lib/
-    pyodide.ts               # shared, lazily-loaded Pyodide runtime
-    usePyodide.ts            # React hook exposing load state
-  components/RuntimeBanner.tsx
-  demos/
-    index.ts                 # demo registry (nav + routes)
-    FilesystemDemo.tsx       # shell + Python REPL + live tree
-    filesystemProgram.ts     # Python shell implementation
-    ProcessDemo.tsx          # scheduling UI + animated Gantt chart
-    processProgram.ts        # Python CPU-scheduling simulation
+  pages/Home.tsx             # landing page (modules × chapters)
+  lessons/
+    meta.ts                  # chapter registry (31 lessons, 8 modules)
+    index.tsx                # id → component wiring
+    <topic>/                 # one folder per chapter
+  theme/                     # color themes (persisted)
+docs/sitemap.md              # full knowledge index
 ```
 
-Add a new demo by creating a component and registering it in `src/demos/index.ts`.
+Add a new lesson by creating a component, registering it in `src/lessons/meta.ts`
+and `src/lessons/index.tsx`, and adding a teacher guide in
+`src/experience/teacherGuides.ts`.
