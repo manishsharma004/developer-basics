@@ -1,6 +1,7 @@
 import { Lesson } from '../components/Lesson.tsx'
 import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { ReactPlayground } from './ReactPlayground.tsx'
+import { ReactStorePlayground } from './ReactStorePlayground.tsx'
 
 export default function ReactLesson() {
   return (
@@ -100,6 +101,67 @@ useEffect(() => {
         </Callout>
       </Section>
 
+      <Section id="stores" title="Global state & stores">
+        <p className="prose">
+          <code>useState</code> works for local UI state, but what when many distant
+          components need the same data — logged-in user, theme, shopping cart? Passing
+          props through every layer is <strong>prop drilling</strong>. React offers
+          several patterns to share state globally.
+        </p>
+        <ul className="prose-list">
+          <li>
+            <strong>Lift state up</strong> — move shared state to the nearest common
+            ancestor and pass props down. Simple, but gets awkward deep in the tree.
+          </li>
+          <li>
+            <strong>Context</strong> — <code>createContext</code> + <code>Provider</code>{' '}
+            lets descendants read/write shared values without intermediate props.
+          </li>
+          <li>
+            <strong>External stores</strong> — Zustand, Redux, Jotai keep state outside
+            the component tree; components <em>subscribe</em> to slices they need.
+          </li>
+        </ul>
+        <pre className="term-output">{`// Context: good for theme, locale, auth user
+const ThemeContext = createContext('light')
+
+function App() {
+  const [theme, setTheme] = useState('light')
+  return (
+    <ThemeContext.Provider value={theme}>
+      <Toolbar />
+    </ThemeContext.Provider>
+  )
+}
+
+// Zustand-style store (simplified)
+const useCartStore = create((set) => ({
+  items: [],
+  add: (item) => set((s) => ({ items: [...s.items, item] })),
+}))`}</pre>
+        <ReactStorePlayground />
+        <Callout kind="tip" title="When to use what">
+          Keep state local until you need to share it. Context fits infrequently-changing
+          global data (user, theme). Stores fit frequently-updated shared state (cart,
+          notifications) or complex update logic. Server state often belongs in TanStack
+          Query, not a client store.
+        </Callout>
+        <UnderTheHood title="Redux in one sentence">
+          <p className="prose">
+            Redux keeps one immutable state tree, dispatches <strong>actions</strong> to
+            describe what happened, and <strong>reducers</strong> compute the next state.
+            Redux Toolkit is the modern standard — less boilerplate, same predictable
+            data flow. Zustand is lighter when you don't need middleware or time-travel
+            debugging.
+          </p>
+        </UnderTheHood>
+        <TryThis>
+          Change the profile name and role — watch Header and Sidebar update together.
+          Add items to the cart from Cart store and see Cart badge update without passing
+          props between them.
+        </TryThis>
+      </Section>
+
       <Section id="playground" title="Build UI live">
         <p className="prose">
           Try the counter, edit props on the greeting card, and manage a todo list — each
@@ -148,6 +210,9 @@ useEffect(() => {
             { term: 'hook', def: 'A function like useState or useEffect that taps into React features.' },
             { term: 'reconciliation', def: "React's process of diffing trees and updating the real DOM." },
             { term: 'virtual DOM', def: 'An in-memory representation of the UI used for efficient updates.' },
+            { term: 'prop drilling', def: 'Passing props through many layers just to reach a deep child.' },
+            { term: 'Context', def: 'A way to provide values to descendants without intermediate props.' },
+            { term: 'store', def: 'External state container components subscribe to (Redux, Zustand).' },
           ]}
         />
       </Section>
@@ -185,6 +250,16 @@ useEffect(() => {
               options: ['State is stored in the DOM', 'The UI is derived from current state', 'Functions cannot have state', 'CSS controls all state'],
               answer: 1,
             },
+            {
+              q: 'Context is best for:',
+              options: ['Replacing all useState calls', 'Sharing values like user/theme without prop drilling', 'Database connections', 'CSS modules'],
+              answer: 1,
+            },
+            {
+              q: 'A global store (Redux/Zustand) helps when:',
+              options: ['Only one component needs the data', 'Many components need the same frequently-updated state', 'You never re-render', 'You want to avoid JavaScript'],
+              answer: 1,
+            },
           ]}
         />
       </Section>
@@ -195,6 +270,7 @@ useEffect(() => {
             <>Components are functions that return <strong>JSX</strong>; compose them like HTML.</>,
             <><strong>Props</strong> flow down (read-only); <strong>state</strong> is local and triggers re-renders.</>,
             <><code>useState</code> for memory; <code>useEffect</code> for side effects after render.</>,
+            <><strong>Context</strong> and <strong>stores</strong> share state without prop drilling.</>,
             <>React diffs a <strong>virtual DOM</strong> to update the real page efficiently.</>,
           ]}
         />

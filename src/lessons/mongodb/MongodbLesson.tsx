@@ -64,6 +64,69 @@ for o in orders:
 for city, stats in sorted(totals.items(), key=lambda x: -x[1]["revenue"]):
     print(city, stats)`,
   },
+  {
+    label: 'PyMongo-style client',
+    code: `# pymongo — synchronous Python driver
+# mongodb://user:pass@host:27017/mydb
+
+class FakeCollection:
+    def __init__(self, name, docs):
+        self.name = name
+        self.docs = docs
+    def find_one(self, filt):
+        for d in self.docs:
+            if all(d.get(k) == v for k, v in filt.items()):
+                return d
+        return None
+    def insert_one(self, doc):
+        doc = dict(doc)
+        doc.setdefault("_id", len(self.docs) + 1)
+        self.docs.append(doc)
+        return doc["_id"]
+
+db = {"orders": FakeCollection("orders", [
+    {"_id": 1, "city": "London", "amount": 80},
+])}
+oid = db["orders"].insert_one({"city": "Paris", "amount": 120})
+print("inserted id:", oid)
+print("find:", db["orders"].find_one({"city": "Paris"}))`,
+  },
+  {
+    label: 'Connection URI & options',
+    code: `def parse_mongo_uri(uri):
+    # mongodb+srv://user:pass@cluster.example.mongodb.net/app?retryWrites=true
+    scheme, rest = uri.split("://", 1)
+    creds_host, db_part = rest.split("/", 1)
+    user, host = creds_host.split("@")
+    user, password = user.split(":")
+    db, _, opts = db_part.partition("?")
+    options = dict(p.split("=") for p in opts.split("&") if p)
+    return {
+        "scheme": scheme, "user": user, "host": host,
+        "database": db, "options": options,
+    }
+
+uri = "mongodb+srv://app:secret@cluster0.abc.mongodb.net/shop?retryWrites=true&w=majority"
+print(parse_mongo_uri(uri))`,
+  },
+  {
+    label: 'Motor async pattern',
+    code: `# Motor wraps PyMongo for asyncio — same API, non-blocking I/O
+import asyncio
+
+class AsyncCollection:
+    async def find_one(self, filt):
+        await asyncio.sleep(0.05)   # simulate network wait
+        return {"_id": 1, "name": "Ada"}
+
+async def handler():
+    coll = AsyncCollection()
+    doc = await coll.find_one({"_id": 1})
+    print("fetched:", doc)
+
+asyncio.run(handler())
+print("async driver frees the event loop during I/O")`,
+  },
 ]
 
 export default function MongodbLesson() {
@@ -147,6 +210,60 @@ export default function MongodbLesson() {
         </Callout>
       </Section>
 
+      <Section id="connectors" title="Connectors & drivers">
+        <p className="prose">
+          MongoDB runs as a server (or Atlas cluster in the cloud). Your Python or
+          Node app connects through a <strong>driver</strong> — a library that speaks
+          the MongoDB wire protocol, manages connections, and returns documents as
+          native dicts/objects.
+        </p>
+        <ul className="prose-list">
+          <li>
+            <strong>PyMongo</strong> — the standard synchronous Python driver;{' '}
+            <code>MongoClient(uri)</code> returns a database handle.
+          </li>
+          <li>
+            <strong>Motor</strong> — async wrapper around PyMongo for asyncio/FastAPI
+            handlers that <code>await</code> database calls.
+          </li>
+          <li>
+            <strong>Connection URI</strong> —{' '}
+            <code>mongodb+srv://user:pass@cluster.mongodb.net/db?retryWrites=true</code>{' '}
+            encodes host, credentials, database, and options.
+          </li>
+          <li>
+            <strong>ODM libraries</strong> — Beanie, MongoEngine map Python classes to
+            documents (like SQLAlchemy for SQL).
+          </li>
+        </ul>
+        <pre className="term-output">{`from pymongo import MongoClient
+
+client = MongoClient("mongodb://localhost:27017")
+db = client["shop"]
+orders = db.orders.find({"status": "shipped"}).limit(10)
+
+# FastAPI + Motor (async)
+from motor.motor_asyncio import AsyncIOMotorClient
+client = AsyncIOMotorClient(uri)
+doc = await client.shop.orders.find_one({"_id": order_id})`}</pre>
+        <SnippetRunner
+          snippets={SNIPPETS.filter((s) =>
+            ['PyMongo-style client', 'Connection URI & options', 'Motor async pattern'].includes(s.label),
+          )}
+        />
+        <Callout kind="note" title="Atlas vs self-hosted">
+          <strong>MongoDB Atlas</strong> is managed hosting — connection string uses{' '}
+          <code>mongodb+srv://</code> with TLS built in. Self-hosted MongoDB uses{' '}
+          <code>mongodb://host:27017</code>. The driver API is the same; only the URI
+          changes.
+        </Callout>
+        <TryThis>
+          Run <strong>Connection URI &amp; options</strong> and identify the database name
+          and <code>retryWrites</code> option. In <strong>PyMongo-style client</strong>,
+          insert a document and find it back.
+        </TryThis>
+      </Section>
+
       <Section id="playground" title="Run MongoDB commands">
         <p className="prose">
           This playground runs a MongoDB-style shell against an in-memory document store
@@ -210,6 +327,9 @@ export default function MongodbLesson() {
             { term: 'aggregation pipeline', def: 'A sequence of stages ($match, $group, …) transforming documents.' },
             { term: 'operator', def: 'A query keyword like $gt, $in, or $set.' },
             { term: 'shard', def: 'A horizontal partition of data across cluster nodes.' },
+            { term: 'driver', def: 'Library connecting your app to MongoDB (PyMongo, Motor).' },
+            { term: 'connection URI', def: 'String encoding hosts, credentials, database, and options.' },
+            { term: 'ODM', def: 'Object-document mapper — Python classes mapped to collections.' },
           ]}
         />
       </Section>
@@ -259,6 +379,16 @@ export default function MongodbLesson() {
               answer: 1,
               explain: 'Sharding splits collections across machines when one node is not enough.',
             },
+            {
+              q: 'Motor is used when you need:',
+              options: ['Synchronous blocking I/O only', 'Async/await database calls in asyncio', 'SQL queries', 'React components'],
+              answer: 1,
+            },
+            {
+              q: 'A MongoDB connection URI typically includes:',
+              options: ['Only the database name', 'Host, credentials, database, and options', 'React props', 'CSS classes'],
+              answer: 1,
+            },
           ]}
         />
       </Section>
@@ -271,6 +401,7 @@ export default function MongodbLesson() {
             <>Use <strong>aggregation pipelines</strong> for grouping and analytics.</>,
             <>Choose <strong>embed vs reference</strong> based on read patterns and update independence.</>,
             <>Indexes, replication, and sharding matter at production scale — same ideas as SQL, different tooling.</>,
+            <><strong>PyMongo</strong> / <strong>Motor</strong> connect your app; parse the <strong>URI</strong> for host, auth, and options.</>,
           ]}
         />
       </Section>

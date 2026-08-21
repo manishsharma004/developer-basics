@@ -50,6 +50,71 @@ ORDER BY total DESC
 for row in conn.execute(sql):
     print(row)`,
   },
+  {
+    label: 'Postgres-style connector',
+    code: `# psycopg2 / asyncpg — same SQL, different server
+# Connection string: postgresql://user:pass@host:5432/dbname
+
+class FakeConnection:
+    def __init__(self, dsn):
+        self.dsn = dsn
+        self._open = True
+    def execute(self, sql, params=()):
+        print(f"EXEC on {self.dsn.split('@')[-1]}")
+        print("  sql:", sql.strip().split("\\n")[0])
+        print("  params:", params)
+        return [("Ada",)]
+    def close(self):
+        self._open = False
+
+dsn = "postgresql://app:secret@db.example.com:5432/shop"
+conn = FakeConnection(dsn)
+rows = conn.execute("SELECT name FROM users WHERE id = %s", (1,))
+print("result:", rows)
+conn.close()`,
+  },
+  {
+    label: 'Connection pool pattern',
+    code: `# Pools reuse connections — expensive to open TCP+auth every request
+class Pool:
+    def __init__(self, size=3):
+        self.available = [f"conn-{i}" for i in range(size)]
+        self.in_use = set()
+    def acquire(self):
+        if not self.available:
+            raise RuntimeError("pool exhausted")
+        c = self.available.pop()
+        self.in_use.add(c)
+        return c
+    def release(self, conn):
+        self.in_use.discard(conn)
+        self.available.append(conn)
+
+pool = Pool(2)
+a = pool.acquire()
+b = pool.acquire()
+print("in use:", pool.in_use)
+pool.release(a)
+print("available:", len(pool.available))`,
+  },
+  {
+    label: 'ORM-style query (SQLAlchemy idea)',
+    code: `# ORMs map Python classes to tables — still generate SQL underneath
+class User:
+    table = "users"
+    def __init__(self, id, name):
+        self.id, self.name = id, name
+
+def select_where(model, **filters):
+    cols = " AND ".join(f"{k} = ?" for k in filters)
+    sql = f"SELECT * FROM {model.table} WHERE {cols}"
+    return sql, tuple(filters.values())
+
+sql, params = select_where(User, name="Ada")
+print("generated:", sql)
+print("params:", params)
+print("tip: ORMs help migrations + type safety; raw SQL for hot paths")`,
+  },
 ]
 
 export default function SqlLesson() {
@@ -138,6 +203,55 @@ export default function SqlLesson() {
         </ul>
       </Section>
 
+      <Section id="connectors" title="Connectors & drivers">
+        <p className="prose">
+          SQL runs on a <strong>database server</strong> (or embedded engine like SQLite).
+          Your application talks to it through a <strong>connector</strong> or{' '}
+          <strong>driver</strong> — a library that opens connections, sends queries, and
+          returns rows. The SQL you write is mostly portable; the connection setup is not.
+        </p>
+        <ul className="prose-list">
+          <li>
+            <strong>sqlite3</strong> (stdlib) — file or <code>:memory:</code> database, zero
+            server setup, great for dev and tests.
+          </li>
+          <li>
+            <strong>psycopg2</strong> / <strong>asyncpg</strong> — PostgreSQL drivers; use
+            a DSN like <code>postgresql://user:pass@host:5432/db</code>.
+          </li>
+          <li>
+            <strong>SQLAlchemy</strong> — ORM + Core; generates SQL from Python objects and
+            manages connections/pools.
+          </li>
+          <li>
+            <strong>Connection pools</strong> — reuse open connections across requests
+            instead of paying TCP + auth cost every time.
+          </li>
+        </ul>
+        <pre className="term-output">{`# FastAPI + SQLAlchemy (typical stack)
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+
+engine = create_engine("postgresql://user:pass@localhost/app")
+with Session(engine) as session:
+    users = session.execute(text("SELECT * FROM users")).all()`}</pre>
+        <SnippetRunner
+          snippets={SNIPPETS.filter((s) =>
+            ['Connect & query', 'Postgres-style connector', 'Connection pool pattern', 'ORM-style query (SQLAlchemy idea)'].includes(s.label),
+          )}
+        />
+        <Callout kind="warning" title="Always close or pool">
+          Leaked connections exhaust the database's limit and stall your app. Use{' '}
+          <code>with</code> blocks, context managers, or a pool that recycles connections
+          automatically.
+        </Callout>
+        <TryThis>
+          Run <strong>Connection pool pattern</strong> and acquire more connections than
+          the pool size — see the exhaustion error. Compare parameterized queries in{' '}
+          <strong>Connect & query</strong> vs string building.
+        </TryThis>
+      </Section>
+
       <Section id="playground" title="Run SQL live">
         <p className="prose">
           This is a real SQLite database running in your browser via Pyodide. Use the
@@ -204,6 +318,10 @@ export default function SqlLesson() {
             { term: 'HAVING', def: 'A filter applied after GROUP BY.' },
             { term: 'transaction', def: 'A group of writes that commit or roll back together.' },
             { term: 'index', def: 'A structure that speeds up lookups on a column.' },
+            { term: 'connector / driver', def: 'Library that connects your app to a database server.' },
+            { term: 'DSN', def: 'Connection string encoding host, port, database, and credentials.' },
+            { term: 'connection pool', def: 'A cache of reusable database connections.' },
+            { term: 'ORM', def: 'Maps Python classes to tables; generates SQL under the hood.' },
           ]}
         />
       </Section>
@@ -253,6 +371,16 @@ export default function SqlLesson() {
               answer: 1,
               explain: 'Primary keys uniquely identify rows in a table.',
             },
+            {
+              q: 'A connection pool helps because:',
+              options: ['It encrypts SQL', 'Opening connections is expensive; pools reuse them', 'It replaces indexes', 'It prevents JOINs'],
+              answer: 1,
+            },
+            {
+              q: 'psycopg2 is a driver for:',
+              options: ['MongoDB', 'PostgreSQL', 'Redis', 'React'],
+              answer: 1,
+            },
           ]}
         />
       </Section>
@@ -265,6 +393,7 @@ export default function SqlLesson() {
             <><strong>LEFT JOIN</strong> keeps unmatched left rows; <strong>HAVING</strong> filters groups.</>,
             <>Wrap related writes in <strong>transactions</strong>; use <strong>indexes</strong> for fast lookups.</>,
             <>Always use <strong>parameterized queries</strong> to avoid SQL injection.</>,
+            <><strong>Connectors</strong> (sqlite3, psycopg2, SQLAlchemy) bridge your app to the database; use <strong>pools</strong> in production.</>,
           ]}
         />
       </Section>
