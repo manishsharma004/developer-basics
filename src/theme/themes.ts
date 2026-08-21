@@ -23,6 +23,16 @@ export type ThemeId =
   | 'synthwave'
   | 'cobalt'
   | 'palenight'
+  | 'everforest-dark'
+  | 'everforest-light'
+  | 'kanagawa'
+  | 'poimandres'
+  | 'material-darker'
+  | 'flexoki-dark'
+  | 'flexoki-light'
+  | 'horizon'
+  | 'vesper'
+  | 'shades-of-purple'
 
 export type ThemeMode = 'dark' | 'light'
 
@@ -60,4 +70,14 @@ export const THEMES: ThemeOption[] = [
   { id: 'synthwave', label: "Synthwave '84", swatch: '#ff7edb', mode: 'dark' },
   { id: 'cobalt', label: 'Cobalt2', swatch: '#ffc600', mode: 'dark' },
   { id: 'palenight', label: 'Palenight', swatch: '#c792ea', mode: 'dark' },
+  { id: 'everforest-dark', label: 'Everforest Dark', swatch: '#a7c080', mode: 'dark' },
+  { id: 'everforest-light', label: 'Everforest Light', swatch: '#8da101', mode: 'light' },
+  { id: 'kanagawa', label: 'Kanagawa', swatch: '#7e9cd8', mode: 'dark' },
+  { id: 'poimandres', label: 'Poimandres', swatch: '#d0679d', mode: 'dark' },
+  { id: 'material-darker', label: 'Material Darker', swatch: '#82aaff', mode: 'dark' },
+  { id: 'flexoki-dark', label: 'Flexoki Dark', swatch: '#4385be', mode: 'dark' },
+  { id: 'flexoki-light', label: 'Flexoki Light', swatch: '#205ea6', mode: 'light' },
+  { id: 'horizon', label: 'Horizon', swatch: '#e95678', mode: 'dark' },
+  { id: 'vesper', label: 'Vesper', swatch: '#ffc799', mode: 'dark' },
+  { id: 'shades-of-purple', label: 'Shades of Purple', swatch: '#fad000', mode: 'dark' },
 ]
