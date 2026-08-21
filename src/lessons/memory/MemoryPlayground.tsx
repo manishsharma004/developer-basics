@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { usePyodide } from '../../lib/usePyodide.ts'
+import { MonacoEditor } from '../../components/MonacoEditor.tsx'
 import { RuntimeBanner } from '../../components/RuntimeBanner.tsx'
-import { handleEditorTab } from '../../lib/editorKeys.ts'
+import { usePyodide } from '../../lib/usePyodide.ts'
 import { MEMORY_PROGRAM } from './program.ts'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -86,15 +86,7 @@ export function ReferencePlayground() {
             </button>
           ))}
         </div>
-        <textarea
-          className="code-editor"
-          value={code}
-          spellCheck={false}
-          onChange={(e) => setCode(e.target.value)}
-          onKeyDown={(e) => handleEditorTab(e, code, setCode)}
-          rows={code.split('\n').length + 1}
-          aria-label="Python code"
-        />
+        <MonacoEditor value={code} onChange={setCode} language="python" minLines={4} ariaLabel="Python code" />
         <div className="ref-run-row">
           <button className="btn" disabled={!ready} onClick={run}>
             {ready ? '▶ Run' : 'starting Python…'}

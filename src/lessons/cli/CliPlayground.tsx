@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { usePyodide } from '../../lib/usePyodide.ts'
+import { MonacoEditor } from '../../components/MonacoEditor.tsx'
 import { RuntimeBanner } from '../../components/RuntimeBanner.tsx'
-import { handleEditorTab } from '../../lib/editorKeys.ts'
+import { usePyodide } from '../../lib/usePyodide.ts'
 import { CLI_PROGRAM } from './program.ts'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -59,7 +59,7 @@ export function CliPlayground() {
       <RuntimeBanner phase={phase} message={message} error={error} />
       <div className="panel">
         <div className="panel-title">Input (stdin)</div>
-        <textarea className="code-editor" rows={7} value={text} spellCheck={false} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => handleEditorTab(e, text, setText)} aria-label="input text" />
+        <MonacoEditor value={text} onChange={setText} language="plaintext" minLines={7} ariaLabel="input text" />
         <div className="panel-title" style={{ marginTop: 14 }}>Pipeline</div>
         <div className="cli-row">
           <span className="term-prompt">$</span>
