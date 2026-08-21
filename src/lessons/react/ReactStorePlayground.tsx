@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 
 interface User {
   name: string
@@ -18,15 +18,28 @@ function useUser() {
   return ctx
 }
 
+function useRenderCount() {
+  const count = useRef(0)
+  count.current += 1
+  return count.current
+}
+
+function RenderBadge() {
+  const n = useRenderCount()
+  return <span className="store-render-badge">renders: {n}</span>
+}
+
 function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User>({ name: 'Ada', role: 'admin' })
-  return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>
+  const value = useMemo(() => ({ user, setUser }), [user])
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>
 }
 
 function Header() {
   const { user } = useUser()
   return (
     <div className="store-panel">
+      <RenderBadge />
       <span className="store-label">Header</span>
       <span>Logged in as <b>{user.name}</b> ({user.role})</span>
     </div>
@@ -37,6 +50,7 @@ function Sidebar() {
   const { user } = useUser()
   return (
     <div className="store-panel">
+      <RenderBadge />
       <span className="store-label">Sidebar</span>
       <span>Welcome back, <b>{user.name}</b></span>
     </div>
@@ -47,7 +61,8 @@ function ProfileEditor() {
   const { user, setUser } = useUser()
   return (
     <div className="store-panel store-panel--editor">
-      <span className="store-label">Profile (updates store)</span>
+      <RenderBadge />
+      <span className="store-label">Profile (updates Context)</span>
       <div className="class-create">
         <label className="conv-field">
           <span>name</span>
@@ -72,40 +87,49 @@ function ProfileEditor() {
   )
 }
 
-// Minimal "store" pattern — subscribe + setState outside React tree
+// External store with selector subscriptions
 type CartItem = { id: number; name: string; qty: number }
-let cartState: CartItem[] = [{ id: 1, name: 'Keyboard', qty: 1 }]
-const cartListeners = new Set<() => void>()
-
-function getCart() {
-  return cartState
+type CartStore = {
+  items: CartItem[]
+  addItem: (name: string) => void
+  removeItem: (id: number) => void
 }
 
-function setCart(next: CartItem[]) {
-  cartState = next
+let cartStore: CartStore = {
+  items: [{ id: 1, name: 'Keyboard', qty: 1 }],
+  addItem: (name) => {
+    cartStore = {
+      ...cartStore,
+      items: [...cartStore.items, { id: Date.now(), name, qty: 1 }],
+    }
+    notifyCart()
+  },
+  removeItem: (id) => {
+    cartStore = { ...cartStore, items: cartStore.items.filter((i) => i.id !== id) }
+    notifyCart()
+  },
+}
+const cartListeners = new Set<() => void>()
+
+function notifyCart() {
   cartListeners.forEach((l) => l())
 }
 
-function useCart() {
+function useStoreSelector<T>(selector: (s: CartStore) => T): T {
   const [, bump] = useState(0)
   useEffect(() => {
     const listener = () => bump((n) => n + 1)
     cartListeners.add(listener)
     return () => { cartListeners.delete(listener) }
   }, [])
-  return {
-    items: getCart(),
-    addItem: (name: string) =>
-      setCart([...getCart(), { id: Date.now(), name, qty: 1 }]),
-    removeItem: (id: number) => setCart(getCart().filter((i) => i.id !== id)),
-  }
+  return selector(cartStore)
 }
 
 function CartBadge() {
-  const { items } = useCart()
-  const total = items.reduce((s, i) => s + i.qty, 0)
+  const total = useStoreSelector((s) => s.items.reduce((n, i) => n + i.qty, 0))
   return (
     <div className="store-panel">
+      <RenderBadge />
       <span className="store-label">Cart badge</span>
       <span>🛒 <b>{total}</b> item{total !== 1 ? 's' : ''}</span>
     </div>
@@ -113,10 +137,13 @@ function CartBadge() {
 }
 
 function CartPanel() {
-  const { items, addItem, removeItem } = useCart()
+  const items = useStoreSelector((s) => s.items)
+  const addItem = useStoreSelector((s) => s.addItem)
+  const removeItem = useStoreSelector((s) => s.removeItem)
   const [name, setName] = useState('')
   return (
     <div className="store-panel store-panel--editor">
+      <RenderBadge />
       <span className="store-label">Cart store</span>
       <ul className="store-cart-list">
         {items.map((i) => (

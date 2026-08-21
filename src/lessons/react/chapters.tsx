@@ -12,6 +12,15 @@ import {
   EcosystemMap,
 } from './ReactConceptDemos.tsx'
 import { ContextStoreDemo, ExternalStoreDemo } from './ReactStorePlayground.tsx'
+import {
+  PropDrillingViz,
+  ThemeContextDemo,
+  ContextReducerDemo,
+  ContextRerenderDemo,
+  StateChooserSim,
+  ReduxFlowDemo,
+  ZustandSelectorDemo,
+} from './ReactStoreDemos.tsx'
 
 export const REACT_CHAPTERS: Record<string, ComponentType> = {
   'react-intro': createChapterLesson({
@@ -581,7 +590,8 @@ useEffect(() => {
       <p className="prose">
         Local <code>useState</code> works until distant components need the same data.
         Passing props through every intermediate layer — even components that do not use them —
-        is called <strong>prop drilling</strong>.
+        is called <strong>prop drilling</strong>. Before reaching for Context or a global store,
+        learn when <strong>lifting state up</strong> is enough — and when it is not.
       </p>
     ),
     model: (
@@ -594,35 +604,73 @@ useEffect(() => {
         <ul className="prose-list">
           <li>
             <strong>Lift state up</strong> — move shared state to the nearest common
-            ancestor and pass props down. Simple for shallow trees.
+            ancestor and pass props down. Perfect when only a few levels separate siblings.
           </li>
           <li>
             As the tree deepens, you pass the same props through components that
-            don&apos;t use them — just to reach one grandchild.
+            don&apos;t use them — just to reach one grandchild. Those intermediates still
+            re-render when the prop changes.
           </li>
           <li>
-            The fix: share state via <strong>Context</strong> or an external{' '}
-            <strong>store</strong> instead of threading props.
+            <strong>Callback props</strong> — lifting also means passing event handlers down
+            many layers (<code>onUserChange</code>, <code>onThemeChange</code>), which gets
+            noisy fast.
+          </li>
+          <li>
+            The fix when depth or update frequency grows: share state via{' '}
+            <strong>Context</strong> or an external <strong>store</strong> instead of threading props.
           </li>
         </ul>
+        <CodePreview
+          language="javascript"
+          code={`// Lifted state — parent owns value, children receive props
+function App() {
+  const [count, setCount] = useState(0)
+  return (
+    <>
+      <Controls count={count} onChange={setCount} />
+      <Display count={count} />
+    </>
+  )
+}
+
+// Prop drilling — middle layers pass user down unused
+function App() {
+  const [user, setUser] = useState({ name: 'Ada' })
+  return <Layout user={user} setUser={setUser} />  // Layout → Page → Profile
+}`}
+        />
         <Callout kind="note" title="Start local">
           Keep state in the component that owns it until a second branch genuinely
-          needs the same value — then lift or introduce shared state.
+          needs the same value — then lift. Add Context only when drilling hurts;
+          add a store when updates are frequent and widespread.
         </Callout>
       </>
     ),
     playground: (
       <>
         <LiftStateDemo />
+        <PropDrillingViz />
         <TryThis>
-          Click + and − in Controls — Display updates too because both siblings share
-          state lifted to their parent.
+          In <strong>Lift state</strong>, click +/− — both siblings update from one parent.
+          Switch to <strong>Prop drilling vs Context</strong>, edit the user name, and watch
+          render badges on each layer.
         </TryThis>
       </>
+    ),
+    hood: (
+      <UnderTheHood title="Colocation first">
+        <p className="prose">
+          React docs emphasize <strong>colocation</strong>: keep state as close as possible to
+          where it is used. Lifting is a deliberate step when two branches need the same source
+          of truth — not something you do on day one for every field.
+        </p>
+      </UnderTheHood>
     ),
     terms: [
       { term: 'prop drilling', def: 'Passing props through many layers just to reach a deep child.' },
       { term: 'lifting state', def: 'Moving shared state to the nearest common ancestor component.' },
+      { term: 'colocation', def: 'Keeping state near the components that use it until sharing is required.' },
     ],
     quiz: [
       {
@@ -640,11 +688,16 @@ useEffect(() => {
         options: ['Always use Redux first', 'Keep state local until sharing is genuinely needed', 'Never use useState', 'Put everything in the DOM'],
         answer: 1,
       },
+      {
+        q: 'Intermediate components in prop drilling:',
+        options: ['Never re-render', 'May re-render when passed props change even if they do not use those props', 'Always use Context internally', 'Cannot receive callbacks'],
+        answer: 1,
+      },
     ],
     recap: [
-      <><strong>Lift state up</strong> to the nearest common ancestor when siblings need the same data.</>,
-      <>Deep trees suffer <strong>prop drilling</strong> — threading props through unused intermediates.</>,
-      <>When lifting is not enough, reach for <strong>Context</strong> or an external <strong>store</strong>.</>,
+      <><strong>Colocate</strong> state first; <strong>lift</strong> when siblings or nearby branches need the same data.</>,
+      <>Deep trees suffer <strong>prop drilling</strong> — threading props and callbacks through unused intermediates.</>,
+      <>When lifting is not enough, reach for <strong>Context</strong> (slow-changing) or an external <strong>store</strong> (frequent updates).</>,
     ],
   }),
 
@@ -655,47 +708,99 @@ useEffect(() => {
       <p className="prose">
         When many components need the same value — current user, theme, locale —{' '}
         <strong>Context</strong> lets you provide it once at the top and read it anywhere below
-        without passing props through every layer.
+        without passing props through every layer. Context is built into React; no extra library required.
       </p>
     ),
     model: (
       <>
         <p className="prose">
-          <strong>Context</strong> lets you provide a value at the top of a subtree
-          and read it anywhere below — no intermediate props required.
+          Three steps: <code>createContext</code> → wrap with <code>Provider</code> → read with{' '}
+          <code>useContext</code> (often wrapped in a custom hook like <code>useUser()</code>).
         </p>
         <CodePreview
           language="javascript"
           code={`const UserContext = createContext(null)
 
-function App() {
+function UserProvider({ children }) {
   const [user, setUser] = useState({ name: 'Ada', role: 'admin' })
+  const value = useMemo(() => ({ user, setUser }), [user])
   return (
-    <UserContext.Provider value={{ user, setUser }}>
-      <Header />    {/* reads user via useContext */}
-      <Sidebar />   {/* same — no props passed down */}
+    <UserContext.Provider value={value}>
+      {children}
     </UserContext.Provider>
   )
-}`}
+}
+
+function useUser() {
+  const ctx = useContext(UserContext)
+  if (!ctx) throw new Error('useUser outside provider')
+  return ctx
+}
+
+// Header, Sidebar, Settings — all call useUser(), no props`}
         />
+        <ul className="prose-list">
+          <li>
+            <strong>Default value</strong> — <code>createContext(default)</code> is used only when
+            no Provider exists above (useful for tests, risky in production).
+          </li>
+          <li>
+            <strong>Multiple providers</strong> — nest Providers (theme inside auth inside router).
+            Closest Provider wins for that subtree.
+          </li>
+          <li>
+            <strong>Custom hooks</strong> — hide Context details behind <code>useTheme()</code>,{' '}
+            <code>useAuth()</code> so components do not import raw Context objects.
+          </li>
+          <li>
+            <strong>Performance</strong> — when Provider <code>value</code> changes,{' '}
+            <em>all</em> consumers re-render. Split contexts or use a store for hot paths.
+          </li>
+        </ul>
         <Callout kind="tip" title="Good for">
-          Infrequently-changing global data: current user, theme, locale, feature flags.
-          Avoid putting fast-updating values in Context — every consumer re-renders.
+          Infrequently-changing data: current user, theme, locale, feature flags, router config.
+        </Callout>
+        <Callout kind="warning" title="Avoid">
+          Shopping cart counters, live chat message lists, or animation state — use local state,
+          split contexts, or an external store instead.
         </Callout>
       </>
     ),
     playground: (
       <>
         <ContextStoreDemo />
+        <ThemeContextDemo />
+        <ContextRerenderDemo />
         <TryThis>
-          Edit the profile name and role — Header and Sidebar update together without
-          any props between them.
+          Edit profile name/role — watch Header and Sidebar sync and render badges increment.
+          Toggle theme in the theme demo. In the re-render trap, click count++ and notice component B
+          re-renders even though only count changed.
         </TryThis>
+      </>
+    ),
+    hood: (
+      <>
+        <UnderTheHood title="Why Provider value must be stable-ish">
+          <p className="prose">
+            A new object every render (<code>{'value={{ user, setUser }}'}</code> inline) forces
+            all consumers to re-render even when <code>user</code> did not change. Wrap in{' '}
+            <code>useMemo</code> or split state and dispatch into separate contexts.
+          </p>
+        </UnderTheHood>
+        <UnderTheHood title="Context is not a state manager">
+          <p className="prose">
+            Context is dependency injection for the tree — it does not give you selectors,
+            middleware, devtools, or granular subscriptions. That is why cart-scale client state
+            often moves to Zustand/Redux while user/theme stays in Context.
+          </p>
+        </UnderTheHood>
       </>
     ),
     terms: [
       { term: 'Context', def: 'A way to provide values to descendants without intermediate props.' },
       { term: 'Provider', def: 'A component that supplies a Context value to its subtree.' },
+      { term: 'useContext', def: 'Hook that reads the nearest Provider value above in the tree.' },
+      { term: 'custom hook', def: 'A function like useUser() that wraps useContext with validation and ergonomics.' },
     ],
     quiz: [
       {
@@ -713,11 +818,122 @@ function App() {
         options: ['Faster renders', 'Every consumer re-rendering on each change', 'Automatic memoization', 'Smaller bundle size'],
         answer: 1,
       },
+      {
+        q: 'A custom hook like useUser() typically:',
+        options: ['Replaces JSX', 'Wraps useContext and throws if used outside Provider', 'Only works in class components', 'Stores data in the DOM'],
+        answer: 1,
+      },
     ],
     recap: [
       <><strong>Context</strong> shares values with any descendant — no prop drilling required.</>,
-      <>Wrap subtrees in a <strong>Provider</strong>; consumers read with <code>useContext</code>.</>,
-      <>Best for slow-changing data like user, theme, and locale — not high-frequency updates.</>,
+      <>Wrap subtrees in a <strong>Provider</strong>; consumers read via <code>useContext</code> or custom hooks.</>,
+      <>Memoize Provider values; split hot state out of Context to avoid unnecessary re-renders.</>,
+    ],
+  }),
+
+  'react-store-patterns': createChapterLesson({
+    id: 'react-store-patterns',
+    modelTitle: 'Context patterns',
+    intro: (
+      <p className="prose">
+        Real apps combine Context with <code>useReducer</code>, split providers, and custom hooks.
+        These patterns scale Context beyond a single <code>useState</code> blob — and clarify when
+        you have outgrown Context entirely.
+      </p>
+    ),
+    model: (
+      <>
+        <p className="prose"><strong>Pattern 1: Context + useReducer</strong> — treat updates like a mini Redux slice.</p>
+        <CodePreview
+          language="javascript"
+          code={`const TodosContext = createContext(null)
+
+function todosReducer(state, action) {
+  switch (action.type) {
+    case 'add': return [...state, action.item]
+    case 'toggle': return state.map(t =>
+      t.id === action.id ? { ...t, done: !t.done } : t)
+    default: return state
+  }
+}
+
+function TodosProvider({ children }) {
+  const [todos, dispatch] = useReducer(todosReducer, [])
+  return (
+    <TodosContext.Provider value={{ todos, dispatch }}>
+      {children}
+    </TodosContext.Provider>
+  )
+}`}
+        />
+        <p className="prose"><strong>Pattern 2: Split state and dispatch contexts</strong></p>
+        <CodePreview
+          language="javascript"
+          code={`// Consumers that only dispatch don't need to re-render when state changes
+const StateContext = createContext([])
+const DispatchContext = createContext(null)
+
+function Provider({ children }) {
+  const [state, dispatch] = useReducer(reducer, initial)
+  return (
+    <DispatchContext.Provider value={dispatch}>
+      <StateContext.Provider value={state}>{children}</StateContext.Provider>
+    </DispatchContext.Provider>
+  )
+}`}
+        />
+        <ul className="prose-list">
+          <li><strong>Compound providers</strong> — export <code>{'<AuthProvider><ThemeProvider>'}</code> from one module.</li>
+          <li><strong>Selector libraries</strong> — <code>use-context-selector</code> re-renders only when a selected slice changes.</li>
+          <li><strong>When to stop</strong> — many actions, middleware, time-travel debugging → consider Redux Toolkit.</li>
+        </ul>
+      </>
+    ),
+    playground: (
+      <>
+        <ContextReducerDemo />
+        <TryThis>
+          Add todos and toggle checkboxes — badge and list stay in sync via reducer dispatch.
+          Compare render badges on the add form vs the list when toggling items.
+        </TryThis>
+      </>
+    ),
+    hood: (
+      <UnderTheHood title="Dispatch context stability">
+        <p className="prose">
+          <code>dispatch</code> from <code>useReducer</code> is stable across renders, so a{' '}
+          <code>DispatchContext</code> Provider value rarely changes. Components that only call{' '}
+          <code>dispatch</code> can avoid re-rendering when state updates — a common optimization
+          before adopting an external store.
+        </p>
+      </UnderTheHood>
+    ),
+    terms: [
+      { term: 'useReducer', def: 'Hook for complex state transitions via a reducer function and actions.' },
+      { term: 'split context', def: 'Separate Context objects for state vs dispatch to limit re-renders.' },
+      { term: 'compound provider', def: 'A component that nests multiple Providers for related concerns.' },
+    ],
+    quiz: [
+      {
+        q: 'Context + useReducer is useful when:',
+        options: ['You never update state', 'Updates follow action/reducer patterns with multiple event types', 'You only render static HTML', 'You avoid hooks'],
+        answer: 1,
+      },
+      {
+        q: 'Splitting dispatch into its own Context helps because:',
+        options: ['Dispatch changes every render', 'Dispatch reference is stable; dispatch-only components skip state-driven re-renders', 'It removes the need for keys', 'It replaces useEffect'],
+        answer: 1,
+      },
+      {
+        q: 'use-context-selector exists to:',
+        options: ['Replace React entirely', 'Subscribe to part of Context value like a store selector', 'Compile JSX', 'Fetch from APIs'],
+        answer: 1,
+      },
+    ],
+    recap: [
+      <>Combine <strong>Context + useReducer</strong> for structured updates without Redux.</>,
+      <>Split <strong>state</strong> and <strong>dispatch</strong> contexts to reduce re-renders.</>,
+      <>If logic keeps growing, graduate to an external store with devtools and middleware.</>,
     ],
   }),
 
@@ -726,56 +942,85 @@ function App() {
     modelTitle: 'External stores (Zustand / Redux)',
     intro: (
       <p className="prose">
-        When many components need the same frequently-updated state, external{' '}
-        <strong>stores</strong> keep data outside the React tree. Components subscribe to
-        the slices they need — Zustand and Redux are the most common libraries.
+        When many components need the same <em>frequently updated</em> client state — carts,
+        editors, multiplayer cursors — external <strong>stores</strong> live outside the React tree.
+        Components subscribe to the slices they need. <strong>Zustand</strong> and{' '}
+        <strong>Redux Toolkit</strong> are the two most common choices in 2026.
       </p>
     ),
     model: (
       <>
         <p className="prose">
-          <strong>External stores</strong> keep state outside the React tree. Components{' '}
-          <em>subscribe</em> to the slices they need — Zustand and Redux are the most
-          common libraries.
+          External stores implement the same idea as our cart demo: state + listeners outside
+          React, hooks that subscribe and re-render when selected data changes.
         </p>
         <CodePreview
           language="javascript"
-          code={`// Zustand (minimal API)
+          code={`// Zustand — minimal hook per store
+import { create } from 'zustand'
+
 const useCartStore = create((set) => ({
   items: [],
   add: (item) => set((s) => ({ items: [...s.items, item] })),
 }))
 
-// Redux Toolkit: actions + reducers + one store
-dispatch(addItem({ id: 1, name: 'Keyboard' }))`}
+function Badge() {
+  const count = useCartStore((s) => s.items.length) // selector
+  return <span>{count}</span>
+}
+
+// Redux Toolkit — one global tree, actions + reducers
+import { configureStore, createSlice } from '@reduxjs/toolkit'
+const cartSlice = createSlice({ name: 'cart', initialState: { items: [] }, reducers: { ... } })
+dispatch(cartSlice.actions.addItem({ name: 'Keyboard' }))`}
         />
-        <ExternalStoreDemo />
+        <ul className="prose-list">
+          <li><strong>Zustand</strong> — tiny API, multiple stores, selectors built in, great default for new apps.</li>
+          <li><strong>Redux Toolkit</strong> — single store, predictable flow, excellent devtools, RTK Query for server cache.</li>
+          <li><strong>Selectors</strong> — pick <code>state.items.length</code> so unrelated updates do not re-render.</li>
+          <li><strong>Immer</strong> — Redux Toolkit uses Immer so reducers can look mutable but stay immutable.</li>
+        </ul>
         <Callout kind="tip" title="Server state">
-          Data from APIs (users list, product catalog) often belongs in{' '}
-          <strong>TanStack Query</strong>, not a client store — it handles caching,
-          refetching, and stale data for you.
+          Data from APIs (users list, product catalog) belongs in{' '}
+          <strong>TanStack Query</strong> or RTK Query — not duplicated in a client cart store.
         </Callout>
       </>
     ),
     playground: (
-      <TryThis>
-        Add cart items and watch the badge count update. The cart lives outside any
-        single component — both Cart badge and Cart panel subscribe to the same store.
-      </TryThis>
+      <>
+        <ExternalStoreDemo />
+        <ZustandSelectorDemo />
+        <ReduxFlowDemo />
+        <TryThis>
+          Add cart items — badge and panel stay in sync via the external store. In the selector
+          demo, add items and compare render badges. Step through the Redux flow animation.
+        </TryThis>
+      </>
     ),
     hood: (
-      <UnderTheHood title="Redux vs Zustand">
-        <p className="prose">
-          <strong>Redux</strong> keeps one immutable state tree; actions describe
-          events, reducers compute the next state. Great for large apps with complex
-          update logic and devtools. <strong>Zustand</strong> is lighter — a hook per
-          store, less boilerplate, fine for most medium apps.
-        </p>
-      </UnderTheHood>
+      <>
+        <UnderTheHood title="Redux vs Zustand — when to pick which">
+          <p className="prose">
+            <strong>Redux</strong> shines with large teams, strict unidirectional data flow,
+            time-travel debugging, and middleware (logging, analytics, sagas).{' '}
+            <strong>Zustand</strong> wins when you want minimal boilerplate, multiple small stores,
+            and selectors without configuring a global reducer tree.
+          </p>
+        </UnderTheHood>
+        <UnderTheHood title="useSyncExternalStore">
+          <p className="prose">
+            React 18&apos;s <code>useSyncExternalStore</code> is how libraries subscribe safely
+            to external stores during concurrent rendering. Zustand and Redux both build on this
+            primitive under the hood.
+          </p>
+        </UnderTheHood>
+      </>
     ),
     terms: [
       { term: 'store', def: 'External state container components subscribe to (Redux, Zustand).' },
-      { term: 'subscription', def: 'A component listening for store changes and re-rendering when its slice updates.' },
+      { term: 'selector', def: 'A function picking a slice of store state so components re-render minimally.' },
+      { term: 'action', def: 'A plain object (Redux) or event describing what happened — fed to reducers.' },
+      { term: 'middleware', def: 'Code between dispatch and reducer — logging, async, analytics.' },
     ],
     quiz: [
       {
@@ -789,15 +1034,95 @@ dispatch(addItem({ id: 1, name: 'Keyboard' }))`}
         answer: 1,
       },
       {
+        q: 'A selector like (s) => s.items.length helps because:',
+        options: ['It mutates the store', 'Components re-render only when that derived value changes', 'It replaces useEffect', 'It removes the need for keys'],
+        answer: 1,
+      },
+      {
         q: 'Zustand compared to Redux is generally:',
         options: ['Heavier with more boilerplate', 'Lighter with less boilerplate', 'Only for class components', 'Not usable with hooks'],
         answer: 1,
       },
     ],
     recap: [
-      <><strong>External stores</strong> live outside the tree; components subscribe to slices they need.</>,
-      <>Use <strong>Redux</strong> for large apps with complex update flows; <strong>Zustand</strong> for lighter needs.</>,
-      <>Keep API/server data in tools like <strong>TanStack Query</strong>, not a client store.</>,
+      <><strong>External stores</strong> live outside the tree; components subscribe via selectors.</>,
+      <>Use <strong>Redux</strong> for large apps with complex flows; <strong>Zustand</strong> for lighter client state.</>,
+      <>Keep API/server data in <strong>TanStack Query</strong> — stores are for client UI state.</>,
+    ],
+  }),
+
+  'react-store-choosing': createChapterLesson({
+    id: 'react-store-choosing',
+    modelTitle: 'Choosing state placement',
+    intro: (
+      <p className="prose">
+        Not every piece of state belongs in Redux — and not everything fits in Context.
+        A practical React developer picks the <strong>simplest tool that works</strong>, then
+        upgrades when pain appears (drilling, re-renders, scattered logic).
+      </p>
+    ),
+    model: (
+      <>
+        <ul className="prose-list">
+          <li><strong>Local useState</strong> — modal open, input text, hover state in one component.</li>
+          <li><strong>Lifted state</strong> — siblings share a tab, selection, or filter via parent props.</li>
+          <li><strong>Context</strong> — auth user, theme, i18n — slow-changing, tree-wide, few updates per minute.</li>
+          <li><strong>External store</strong> — cart, undo stack, canvas tools — many writers/readers, frequent updates.</li>
+          <li><strong>Server cache (TanStack Query)</strong> — anything fetched from an API with stale/revalidate semantics.</li>
+          <li><strong>URL state</strong> — filters, pagination, shareable views — often via React Router search params.</li>
+        </ul>
+        <Callout kind="warning" title="Smell tests">
+          If Context causes everything to re-render, split or move hot state. If props pass through
+          five layers, lift is failing — use Context or a store. If data comes from GET /api, use a
+          server cache library.
+        </Callout>
+        <CodePreview
+          language="javascript"
+          code={`// Decision cheat sheet (simplified)
+// 1 owner component?        → useState
+// 2 sibling branches?       → lift to parent
+// Many depths, slow data?   → Context + custom hook
+// Many depths, hot data?    → Zustand / Redux selectors
+// From HTTP API?            → TanStack Query
+// Shareable in URL?         → router searchParams`}
+        />
+      </>
+    ),
+    playground: (
+      <>
+        <StateChooserSim />
+        <TryThis>
+          Work through each scenario — pick local, lift, Context, store, or TanStack Query before
+          revealing the answer. Discuss trade-offs with a partner.
+        </TryThis>
+      </>
+    ),
+    terms: [
+      { term: 'client state', def: 'UI state owned by the browser — tabs, cart, theme toggles.' },
+      { term: 'server state', def: 'Data fetched from APIs — cached, stale, refetched by query libraries.' },
+      { term: 'URL state', def: 'Values encoded in the route or query string — shareable and bookmarkable.' },
+    ],
+    quiz: [
+      {
+        q: 'Theme (light/dark) used app-wide, toggled rarely, is best in:',
+        options: ['TanStack Query', 'Context or small Zustand store', 'URL only', 'Every component\'s local state'],
+        answer: 1,
+      },
+      {
+        q: 'Product list from GET /api/products belongs in:',
+        options: ['Redux cart slice', 'TanStack Query cache', 'React Context default value', 'CSS variables'],
+        answer: 1,
+      },
+      {
+        q: 'You should reach for Redux/Zustand when:',
+        options: ['One checkbox in a form', 'Many distant components update shared client state often', 'You never share state', 'You only use server data'],
+        answer: 1,
+      },
+    ],
+    recap: [
+      <>Start <strong>local</strong>, then <strong>lift</strong>, then <strong>Context</strong>, then <strong>store</strong> — only as complexity demands.</>,
+      <>Separate <strong>client state</strong> from <strong>server state</strong> (TanStack Query).</>,
+      <>Re-render and drilling pain are signals to upgrade your state strategy.</>,
     ],
   }),
 
