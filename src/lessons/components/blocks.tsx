@@ -1,6 +1,14 @@
 import { useEffect, useState, type ReactNode } from 'react'
+import { CodePreview } from '../../components/CodePreview.tsx'
 import { useCurrentLessonId } from '../../progress/CurrentLessonContext.tsx'
 import { useLessonProgress, useProgress } from '../../progress/ProgressContext.tsx'
+
+export { CodePreview }
+
+/** Monospace ASCII flow diagram (not syntax-highlighted). */
+export function FlowDiagram({ code }: { code: string }) {
+  return <pre className="flow-diagram">{code.trimEnd()}</pre>
+}
 
 // A titled, anchor-able chunk of a lesson. The `id` matches the entry in the
 // lesson's `sections` metadata so the sticky table of contents can link to it.

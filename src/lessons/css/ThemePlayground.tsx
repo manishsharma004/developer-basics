@@ -1,4 +1,5 @@
 import { useState, type CSSProperties } from 'react'
+import { CodePreview } from '../../components/CodePreview.tsx'
 
 const PRESETS = {
   light: {
@@ -51,11 +52,15 @@ export function ThemePlayground() {
           Accent button
         </button>
       </div>
-      <pre className="term-output">{`:root, [data-theme="${preset}"] {
+      <CodePreview
+        language="css"
+        code={`:root, [data-theme="${preset}"] {
   --demo-bg: ${vars['--demo-bg']};
   --demo-text: ${vars['--demo-text']};
   --demo-accent: ${vars['--demo-accent']};
-}`}</pre>
+}`}
+        minLines={5}
+      />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react'
 import { createChapterLesson } from '../components/ChapterLesson.tsx'
-import { Callout, UnderTheHood, TryThis } from '../components/blocks.tsx'
+import { Callout, CodePreview, FlowDiagram, UnderTheHood, TryThis } from '../components/blocks.tsx'
 import { SnippetRunner } from '../components/SnippetRunner.tsx'
 import { RouteSim } from './RouteSim.tsx'
 import { RateLimitSim } from './RateLimitSim.tsx'
@@ -43,9 +43,9 @@ const webReverseProxy = createChapterLesson({
           on a trusted internal network.
         </li>
       </ul>
-      <pre className="term-output">{`Client  --HTTPS-->  nginx (443)  --HTTP-->  api:8000
+      <FlowDiagram code={`Client  --HTTPS-->  nginx (443)  --HTTP-->  api:8000
                               |
-                              +--HTTP-->  frontend:3000`}</pre>
+                              +--HTTP-->  frontend:3000`} />
     </>
   ),
   playground: (
@@ -104,7 +104,9 @@ const webNginxRouting = createChapterLesson({
         nginx uses <code>location</code> blocks and <code>proxy_pass</code> to route
         requests. Longest prefix match wins — order matters when paths overlap.
       </p>
-      <pre className="term-output">{`upstream api { server api:8000; }
+      <CodePreview
+        language="plaintext"
+        code={`upstream api { server api:8000; }
 upstream web { server frontend:80; }
 
 server {
@@ -114,7 +116,8 @@ server {
   location / {
     proxy_pass http://web;
   }
-}`}</pre>
+}`}
+      />
       <Callout kind="note">
         This complements the <strong>Load Balancing</strong> chapter: an upstream block
         can list multiple servers; nginx balances between them while routing by path.
@@ -340,14 +343,14 @@ const webEdgeStack = createChapterLesson({
   ),
   model: (
     <>
-      <pre className="term-output">{`Client
+      <FlowDiagram code={`Client
   → DNS
   → Global / regional load balancer
   → Reverse proxy (nginx) — TLS, path routing
   → API gateway — keys, auth, quotas (optional)
   → Rate limiter — 429 before overload
   → App servers (FastAPI, etc.)
-  → Database / cache`}</pre>
+  → Database / cache`} />
       <Callout kind="note">
         Small projects may collapse layers (nginx alone). Growth adds gateways, WAFs,
         and CDN caching for static assets — add complexity only when needed.

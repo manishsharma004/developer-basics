@@ -153,6 +153,9 @@ async function initialize(): Promise<typeof Monaco> {
       import('monaco-editor/esm/vs/basic-languages/python/python.contribution.js'),
       import('monaco-editor/esm/vs/basic-languages/sql/sql.contribution.js'),
       import('monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution.js'),
+      import('monaco-editor/esm/vs/basic-languages/css/css.contribution.js'),
+      import('monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution.js'),
+      import('monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution.js'),
     ])
     ensureWorkerEnvironment()
     if (!initialized) {

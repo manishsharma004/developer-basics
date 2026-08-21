@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react'
 import { createChapterLesson } from '../components/ChapterLesson.tsx'
-import { Callout, UnderTheHood, TryThis } from '../components/blocks.tsx'
+import { Callout, CodePreview, UnderTheHood, TryThis } from '../components/blocks.tsx'
 import { BoxModelPlayground } from './BoxModelPlayground.tsx'
 import { FlexPlayground } from './FlexPlayground.tsx'
 import { PositionPlayground } from './PositionPlayground.tsx'
@@ -260,7 +260,9 @@ const cssThemes = createChapterLesson({
   ),
   model: (
     <>
-      <pre className="term-output">{`:root {
+      <CodePreview
+        language="css"
+        code={`:root {
   --bg: #0b1120;
   --text: #e6edf7;
   --accent: #38bdf8;
@@ -275,7 +277,8 @@ const cssThemes = createChapterLesson({
 .card {
   background: var(--bg);
   color: var(--text);
-}`}</pre>
+}`}
+      />
       <Callout kind="why">
         React components should consume <strong>semantic tokens</strong> (<code>--panel</code>,{' '}
         <code>--border</code>), not raw hex — then themes work without touching component code.
