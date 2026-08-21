@@ -1,5 +1,10 @@
 import type { ComponentType } from 'react'
 import { lessonsMeta, type LessonMeta } from './meta.ts'
+import VariablesLesson from './variables/VariablesLesson.tsx'
+import ControlFlowLesson from './controlflow/ControlFlowLesson.tsx'
+import FloatingPointLesson from './floatingpoint/FloatingPointLesson.tsx'
+import CicdLesson from './cicd/CicdLesson.tsx'
+import LoadBalancingLesson from './loadbalancing/LoadBalancingLesson.tsx'
 import FilesystemLesson from './filesystem/FilesystemLesson.tsx'
 import ProcessLesson from './process/ProcessLesson.tsx'
 import MemoryLesson from './memory/MemoryLesson.tsx'
@@ -36,6 +41,11 @@ import DebuggingLesson from './debugging/DebuggingLesson.tsx'
 // entry in meta.ts and a component here; nav, routes, and the home page update
 // automatically.
 const COMPONENTS: Record<string, ComponentType> = {
+  variables: VariablesLesson,
+  controlflow: ControlFlowLesson,
+  floatingpoint: FloatingPointLesson,
+  cicd: CicdLesson,
+  loadbalancing: LoadBalancingLesson,
   filesystem: FilesystemLesson,
   process: ProcessLesson,
   memory: MemoryLesson,

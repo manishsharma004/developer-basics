@@ -44,16 +44,16 @@ Chapters are organized into **8 thematic modules** (`groups` in
 and the student home page renders one section per module; teacher mode still
 groups by level. Module order defines chapter order (and "next chapter" flow).
 
-1. **🧱 Foundations** — data, json, memory, time, errors
+1. **🧱 Foundations** — variables, controlflow, data, json, floatingpoint, memory, time, errors
 2. **🖥️ Systems & the OS** — filesystem, process, concurrency, compute
 3. **🧮 Data Structures & Algorithms** — datastructures, algorithms, search, recursion, trees
 4. **🗄️ Data & Persistence** — sql, caching, queues
-5. **🌐 Networking & the Web** — network, apis, auth
+5. **🌐 Networking & the Web** — network, loadbalancing, apis, auth
 6. **🔐 Security & Cryptography** — crypto, security
-7. **🛠️ Tooling & Workflow** — cli, git, regex, testing, debugging
+7. **🛠️ Tooling & Workflow** — cli, git, regex, testing, cicd, debugging
 8. **🎨 Programming & Design** — classes, oop, patterns, functional
 
-## Chapters (31)
+## Chapters (36)
 
 Legend for lab tech: **Py** = Python via Pyodide (WebAssembly), **React** = pure
 client-side React, **WebCrypto** = SubtleCrypto, **Intl** = Intl/Date. Snippet-
@@ -62,8 +62,11 @@ driven chapters share `SnippetRunner`
 
 | Module | Topic | Path | Level | Min | Interactive lab | Tech |
 | --- | --- | --- | --- | --- | --- | --- |
+| Foundations | Variables & Types | `/lessons/variables` | Beginner | 12 | Types, rebinding, truthiness | Py |
+| Foundations | Control Flow & Logic | `/lessons/controlflow` | Beginner | 14 | if/for/while + boolean logic | Py |
 | Foundations | Data & Encoding | `/lessons/data` | Beginner | 13 | Number-base + UTF-8 converter | React |
 | Foundations | JSON & Serialization | `/lessons/json` | Beginner | 13 | dump/load + types + pretty/compact | Py |
+| Foundations | Floating Point & Precision | `/lessons/floatingpoint` | Beginner | 13 | 0.1+0.2, isclose, money patterns | Py |
 | Foundations | Memory: Stack & Heap | `/lessons/memory` | Intermediate | 16 | References REPL + stack/heap visualizer | Py + React |
 | Foundations | Time, Dates & Timezones | `/lessons/time` | Beginner | 15 | Epoch / timezone converter | Intl |
 | Foundations | Errors & Exceptions | `/lessons/errors` | Beginner | 13 | try/except/finally playground | Py |
@@ -80,6 +83,7 @@ driven chapters share `SnippetRunner`
 | Persistence | Caching & LRU | `/lessons/caching` | Intermediate | 14 | LRU cache simulator | React |
 | Persistence | Queue Architecture | `/lessons/queues` | Intermediate | 15 | Producer/consumer queue sim | React |
 | Web | How the Web Talks | `/lessons/network` | Intermediate | 15 | Request lifecycle tracer + URL anatomy | React |
+| Web | Load Balancing | `/lessons/loadbalancing` | Intermediate | 14 | RR / least-conn / random simulator | React |
 | Web | APIs & REST | `/lessons/apis` | Beginner | 14 | JSON + REST router + status codes | Py |
 | Web | Auth, Sessions & Tokens | `/lessons/auth` | Intermediate | 15 | Salted hash + JWT decoder | Py |
 | Security | Hashing & Cryptography | `/lessons/crypto` | Intermediate | 14 | SHA-256 hasher (avalanche) | WebCrypto |
@@ -88,6 +92,7 @@ driven chapters share `SnippetRunner`
 | Tooling | Version Control with Git | `/lessons/git` | Beginner | 14 | Commit-graph builder | React |
 | Tooling | Regular Expressions | `/lessons/regex` | Beginner | 14 | Live regex tester | React |
 | Tooling | Testing & TDD | `/lessons/testing` | Beginner | 14 | Red/green asserts + tiny test runner | Py |
+| Tooling | CI/CD Pipelines | `/lessons/cicd` | Intermediate | 14 | Four-stage pipeline simulator | React |
 | Tooling | Debugging & Logging | `/lessons/debugging` | Beginner | 14 | Prints, log levels, asserts | Py |
 | Design | Classes & Objects | `/lessons/classes` | Beginner | 13 | Class → instances visualizer | React |
 | Design | Object-Oriented Programming | `/lessons/oop` | Intermediate | 18 | Four-pillars Python playground | Py |
@@ -258,8 +263,8 @@ src/
 
 ## Interactive labs by technology
 
-- **Python / Pyodide:** Filesystem, Processes, Memory (references), Concurrency, Command Line, SQL (sqlite3), Errors, OOP, Design Patterns, Trees & Graphs, APIs & REST, Auth, Security Basics, Testing & TDD, Functional Programming, JSON & Serialization, Searching & Binary Search, Debugging & Logging.
-- **Pure React:** Data & Encoding, Network, Git, Data Structures, Algorithms, Recursion, Regex, Caching, Time, Compute Instances, Queue Architecture, Classes & Objects.
+- **Python / Pyodide:** Variables, Control Flow, Floating Point, Filesystem, Processes, Memory (references), Concurrency, Command Line, SQL (sqlite3), Errors, OOP, Design Patterns, Trees & Graphs, APIs & REST, Auth, Security Basics, Testing & TDD, Functional Programming, JSON & Serialization, Searching & Binary Search, Debugging & Logging.
+- **Pure React:** Data & Encoding, Network, Load Balancing, Git, Data Structures, Algorithms, Recursion, Regex, Caching, Time, Compute Instances, Queue Architecture, Classes & Objects, CI/CD Pipelines.
 - **Web Crypto:** Hashing & Cryptography.
 
 ## Deployment
