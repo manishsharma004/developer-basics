@@ -9,6 +9,7 @@ import { LessonPlan } from './experience/LessonPlan.tsx'
 import { useTheme } from './theme/ThemeContext.tsx'
 import { THEMES, type ThemeId } from './theme/themes.ts'
 import { FeedbackDialog } from './components/FeedbackDialog.tsx'
+import { GlobalSearch, searchShortcutLabel, useGlobalSearchShortcut } from './components/GlobalSearch.tsx'
 
 const LEVELS: Level[] = ['Beginner', 'Intermediate', 'Advanced']
 const COLLAPSE_KEY = 'devbasics.sidebarCollapsed'
@@ -28,6 +29,7 @@ function App() {
   })
   const [mobileOpen, setMobileOpen] = useState(false)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const [closedGroups, setClosedGroups] = useState<Record<string, boolean>>({})
 
   const activeLesson = lessons.find((l) => l.path === location.pathname)
@@ -52,7 +54,10 @@ function App() {
     setMobileOpen(false)
   }, [location.pathname])
 
+  useGlobalSearchShortcut(() => setSearchOpen(true))
+
   const closeMobile = () => setMobileOpen(false)
+  const shortcut = searchShortcutLabel()
 
   const renderLink = (to: string, icon: string, label: string, end = false) => (
     <NavLink to={to} end={end} className="nav-link" title={label} onClick={closeMobile}>
@@ -77,6 +82,14 @@ function App() {
           <span className="hamburger" aria-hidden />
         </button>
         <span className="topbar-title">Developer Basics</span>
+        <button
+          className="topbar-search"
+          onClick={() => setSearchOpen(true)}
+          aria-label="Search topics"
+          title={`Search topics (${shortcut})`}
+        >
+          🔍
+        </button>
         <button className="topbar-feedback" onClick={() => setFeedbackOpen(true)} aria-label="Request or report an issue" title="Request / report">
           💬
         </button>
@@ -128,6 +141,20 @@ function App() {
             <span className="exp-label">Teacher</span>
           </button>
         </div>
+
+        <button
+          type="button"
+          className="global-search-trigger"
+          onClick={() => setSearchOpen(true)}
+          title={`Search topics (${shortcut})`}
+          aria-label="Search topics"
+        >
+          <span className="nav-icon" aria-hidden>
+            🔍
+          </span>
+          <span className="nav-label global-search-trigger-label">Search topics…</span>
+          <kbd className="global-search-trigger-kbd nav-label">{shortcut}</kbd>
+        </button>
 
         <nav className="nav">
           {renderLink('/', teacher ? '📋' : '🏠', teacher ? 'Curriculum' : 'All lessons', true)}
@@ -257,6 +284,7 @@ function App() {
       </main>
 
       {feedbackOpen && <FeedbackDialog onClose={() => setFeedbackOpen(false)} />}
+      <GlobalSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
   )
 }
