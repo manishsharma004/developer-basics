@@ -29,6 +29,50 @@ test_add()
 print("all assertions passed ✅")`,
   },
   {
+    label: 'Arrange–Act–Assert',
+    code: `def apply_discount(price, percent):
+    return price * (1 - percent / 100)
+
+def test_apply_discount():
+    # Arrange
+    price = 100
+    percent = 20
+    # Act
+    result = apply_discount(price, percent)
+    # Assert
+    assert result == 80
+
+test_apply_discount()
+print("AAA test passed")`,
+  },
+  {
+    label: 'Fake dependency (inject clock)',
+    code: `class FakeClock:
+    def __init__(self):
+        self.now = 0
+    def tick(self):
+        self.now += 1
+        return self.now
+
+def expires_at(clock, ttl):
+    return clock.tick() + ttl
+
+clock = FakeClock()
+assert expires_at(clock, 5) == 6
+print("deterministic time test passed")`,
+  },
+  {
+    label: 'Table-driven edge cases',
+    code: `def clamp(n, lo, hi):
+    return max(lo, min(n, hi))
+
+cases = [(5, 0, 10, 5), (-1, 0, 10, 0), (99, 0, 10, 10), (0, 0, 10, 0)]
+for n, lo, hi, want in cases:
+    got = clamp(n, lo, hi)
+    assert got == want, (n, lo, hi, got)
+print("all boundary cases passed")`,
+  },
+  {
     label: 'A tiny test runner',
     code: `def slugify(text):
     return "-".join(text.lower().split())
@@ -46,18 +90,6 @@ for name, (got, want) in tests.items():
     print(f"{'PASS' if ok else 'FAIL'}  {name}: {got!r}")
 print(f"\\n{passed}/{len(tests)} passed")`,
   },
-  {
-    label: 'Table-driven tests',
-    code: `    def clamp(n, lo, hi):
-        return max(lo, min(n, hi))
-    
-    cases = [(5, 0, 10, 5), (-1, 0, 10, 0), (99, 0, 10, 10)]
-    for n, lo, hi, want in cases:
-        got = clamp(n, lo, hi)
-        assert got == want, (n, lo, hi, got)
-    print("all cases passed")`,
-  },
-
 ]
 
 export default function TestingLesson() {
@@ -91,46 +123,163 @@ export default function TestingLesson() {
             <strong>End-to-end tests</strong> (the narrow top): drive the whole system
             like a user. Realistic but slow and brittle, so keep them few.
           </li>
+        </ul>
+        <UnderTheHood title="Why the pyramid shape">
+          <p className="prose">
+            E2E tests need browsers, networks, and real services — minutes per run and
+            flaky selectors. Unit tests run in milliseconds. Budget most effort at the
+            bottom; reserve E2E for critical paths (login, checkout, publish).
+          </p>
+        </UnderTheHood>
+      </Section>
+
+      <Section id="tdd" title="Test-Driven Development">
+        <p className="prose">
+          <strong>TDD</strong> is a rhythm, not a coverage mandate:
+        </p>
+        <ol className="prose-list">
           <li>
-            <strong>TDD</strong> is a rhythm: write a failing test (<strong>red</strong>),
-            write just enough code to pass (<strong>green</strong>), then{' '}
-            <strong>refactor</strong> with the test guarding you.
+            <strong>Red</strong> — write a failing test that describes desired behavior.
+          </li>
+          <li>
+            <strong>Green</strong> — write the smallest code that passes.
+          </li>
+          <li>
+            <strong>Refactor</strong> — clean up with tests guarding you.
+          </li>
+        </ol>
+        <p className="prose">
+          The test is the first consumer of your API — awkward interfaces show up before
+          you've invested in implementation.
+        </p>
+        <Callout kind="warning" title="TDD is not dogma">
+          Use it when behavior is unclear or regressions are costly. You do not need a
+          test for every private helper — test behavior callers depend on.
+        </Callout>
+      </Section>
+
+      <Section id="unit" title="What to test in a unit">
+        <p className="prose">Strong unit tests usually cover:</p>
+        <ul className="prose-list">
+          <li>Happy path — normal inputs produce expected outputs.</li>
+          <li>Edge cases — empty, zero, boundaries, off-by-one.</li>
+          <li>Error paths — invalid input raises or returns a defined error.</li>
+        </ul>
+        <SnippetRunner snippets={SNIPPETS.filter((s) => s.label === 'Table-driven edge cases')} />
+        <TryThis>
+          Add a case for <code>n == hi</code> and <code>n == lo</code> to the table and
+          confirm <code>clamp</code> still passes.
+        </TryThis>
+      </Section>
+
+      <Section id="aaa" title="Arrange–Act–Assert">
+        <p className="prose">
+          Structure keeps tests readable. <strong>Arrange</strong> sets up inputs,{' '}
+          <strong>Act</strong> calls the code under test, <strong>Assert</strong> checks
+          the outcome. One logical behavior per test when possible.
+        </p>
+        <SnippetRunner snippets={SNIPPETS.filter((s) => s.label === 'Arrange–Act–Assert')} />
+      </Section>
+
+      <Section id="mocking" title="Mocks, stubs, and fakes">
+        <p className="prose">
+          Code that talks to the network, clock, or randomness is hard to test
+          deterministically. Pass dependencies in so tests can substitute{' '}
+          <strong>fakes</strong> (simple working implementations) or{' '}
+          <strong>mocks</strong> (record calls and return canned values).
+        </p>
+        <SnippetRunner snippets={SNIPPETS.filter((s) => s.label === 'Fake dependency (inject clock)')} />
+        <Callout kind="tip" title="Prefer fakes over mocks">
+          Test outputs when you can. Over-mocking couples tests to internal call order
+          and breaks on harmless refactors.
+        </Callout>
+      </Section>
+
+      <Section id="pytest" title="pytest-style tests (Python)">
+        <p className="prose">
+          <code>pytest</code> discovers <code>test_*</code> functions and rewrites{' '}
+          <code>assert</code> failures with readable diffs. <strong>Fixtures</strong>{' '}
+          (<code>@pytest.fixture</code>) build shared setup; <strong>parametrize</strong>{' '}
+          runs the same test over many input rows.
+        </p>
+        <pre className="term-output">{`# test_math.py
+def add(a, b):
+    return a + b
+
+def test_add():
+    assert add(1, 2) == 3
+
+# Run: pytest test_math.py -v`}</pre>
+      </Section>
+
+      <Section id="frontend" title="Frontend testing">
+        <p className="prose">
+          Browser UIs add DOM, events, and async rendering. Common layers:
+        </p>
+        <ul className="prose-list">
+          <li>
+            <strong>Unit</strong> — pure functions (formatters, reducers) with Vitest/Jest.
+          </li>
+          <li>
+            <strong>Component</strong> — React Testing Library renders and simulates
+            clicks; query by role and accessible label, not CSS classes.
+          </li>
+          <li>
+            <strong>E2E</strong> — Playwright or Cypress against staging.
           </li>
         </ul>
+        <pre className="term-output">{`// Vitest + React Testing Library (conceptual)
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Counter } from './Counter'
+
+test('increments count', async () => {
+  render(<Counter />)
+  await userEvent.click(screen.getByRole('button', { name: /increment/i }))
+  expect(screen.getByText('Count: 1')).toBeInTheDocument()
+})`}</pre>
       </Section>
 
       <Section id="playground" title="Red, green, refactor">
         <p className="prose">
           Run <strong>Red</strong> to watch a test fail on buggy code, then{' '}
-          <strong>Green</strong> to see it pass once fixed. The third snippet is a
-          minimal test runner that reports pass/fail per case.
+          <strong>Green</strong> to see it pass once fixed. The tiny test runner shows
+          pass/fail per case without pytest installed.
         </p>
-        <SnippetRunner snippets={SNIPPETS} />
+        <SnippetRunner
+          snippets={SNIPPETS.filter((s) =>
+            ['Red: a failing test', 'Green: make it pass', 'A tiny test runner'].includes(s.label),
+          )}
+        />
         <TryThis>
           In <strong>A tiny test runner</strong>, add a new case like{' '}
           <code>"punct": (slugify("Hi, there!"), "hi,-there!")</code> and run it —
-          then decide whether the <em>test</em> or the <em>code</em> should change to
-          make it pass.
+          then decide whether the <em>test</em> or the <em>code</em> should change.
         </TryThis>
+      </Section>
+
+      <Section id="ci" title="Tests in CI">
+        <p className="prose">
+          Run tests on every pull request before merge. Fast unit tests first;
+          integration and E2E in parallel or on a schedule if they are slow. A flaky
+          test that passes sometimes erodes trust — fix timing races and shared state,
+          or delete tests that only assert mocks called mocks.
+        </p>
       </Section>
 
       <Section id="hood" title="Under the hood">
         <UnderTheHood title="What makes a good test">
           <p className="prose">
-            Good tests are <strong>fast</strong> (run them constantly),{' '}
-            <strong>isolated</strong> (no shared state or ordering dependencies),{' '}
-            <strong>deterministic</strong> (no flaky time/network/randomness), and{' '}
-            <strong>focused</strong> (one behavior, a clear name). Test behavior and
-            edge cases — empty, zero, negative, boundaries — not the private internals,
-            so you can refactor freely.
+            Good tests are <strong>fast</strong>, <strong>isolated</strong>,{' '}
+            <strong>deterministic</strong>, and <strong>focused</strong>. Test behavior
+            and edge cases — not private internals — so you can refactor freely.
           </p>
         </UnderTheHood>
         <UnderTheHood title="Coverage is a floor, not a goal">
           <p className="prose">
-            Coverage tells you which lines <em>ran</em> during tests, not whether you
-            asserted the right things. 100% coverage with weak assertions still ships
-            bugs; thoughtful tests of the tricky paths beat chasing a number. Use
-            coverage to find <em>untested</em> code, then write meaningful checks.
+            Coverage tells you which lines <em>ran</em>, not whether you asserted the
+            right things. Every production bug should ideally become a regression test
+            that would have caught it.
           </p>
         </UnderTheHood>
       </Section>
@@ -139,11 +288,13 @@ export default function TestingLesson() {
         <KeyTerms
           terms={[
             { term: 'unit test', def: 'A test of one small piece in isolation.' },
+            { term: 'integration test', def: 'A test combining real dependencies (DB, HTTP).' },
             { term: 'assertion', def: 'A statement that must be true, or the test fails.' },
             { term: 'TDD', def: 'Test-driven development: red → green → refactor.' },
-            { term: 'regression', def: 'A previously working behavior that a change breaks.' },
             { term: 'fixture / mock', def: 'Controlled setup or a stand-in for a real dependency.' },
-            { term: 'coverage', def: 'The share of code executed by the test suite.' },
+            { term: 'AAA', def: 'Arrange–Act–Assert test structure.' },
+            { term: 'flaky test', def: 'Passes sometimes without code changes — fix or delete.' },
+            { term: 'regression', def: 'A previously working behavior that a change breaks.' },
           ]}
         />
       </Section>
@@ -174,38 +325,55 @@ export default function TestingLesson() {
               explain: 'The pyramid favors many fast unit tests over few slow end-to-end ones.',
             },
             {
+              q: 'What does Arrange–Act–Assert help with?',
+              options: [
+                'Faster CPUs',
+                'Readable, structured tests',
+                'Database migrations',
+                'CSS layout',
+              ],
+              answer: 1,
+            },
+            {
+              q: 'Why inject a fake clock in tests?',
+              options: [
+                'To make code slower',
+                'To control time deterministically',
+                'To avoid writing assertions',
+                'To replace all unit tests',
+              ],
+              answer: 1,
+            },
+            {
+              q: 'React Testing Library encourages querying by:',
+              options: [
+                'CSS class only',
+                'Internal component state',
+                'Roles and accessible labels',
+                'Random element IDs',
+              ],
+              answer: 2,
+            },
+            {
               q: '100% code coverage guarantees:',
               options: [
                 'No bugs at all',
-                'That every line ran during tests — not that assertions are meaningful',
+                'That every line ran — not that assertions are meaningful',
                 'The code is fast',
                 'The code is secure',
               ],
               answer: 1,
               explain: 'Coverage measures execution, not the quality of your assertions.',
             },
-
             {
-              q: 'A flaky test:',
+              q: 'A flaky test is dangerous because:',
               options: [
-                'Always passes',
-              'Sometimes passes, sometimes fails without code changes',
-              'Runs only once',
-              'Cannot be automated',
+                'It runs too fast',
+                'People ignore red CI when failures are random',
+                'It uses too much memory',
+                'pytest forbids it',
               ],
               answer: 1,
-              explain: 'Flakiness often comes from timing, order, or external dependencies.',
-            },
-            {
-              q: 'TDD order is:',
-              options: [
-                'Refactor, red, green',
-              'Red, green, refactor',
-              'Green, deploy, red',
-              'Skip tests',
-              ],
-              answer: 1,
-              explain: 'Write failing test, make it pass, then improve design.',
             },
           ]}
         />
@@ -214,10 +382,11 @@ export default function TestingLesson() {
       <Section id="recap" title="Recap">
         <Recap
           items={[
-            <>Tests turn "I hope it works" into "I know it works" and enable fearless change.</>,
             <>Favor many fast <strong>unit tests</strong>; keep slow end-to-end tests few.</>,
-            <><strong>TDD</strong>: red (failing) → green (pass) → refactor.</>,
-            <>Good tests are fast, isolated, deterministic, and focused; coverage is a floor.</>,
+            <><strong>TDD</strong>: red → green → refactor when behavior is unclear.</>,
+            <>Test happy paths, edges, and errors; use AAA structure.</>,
+            <>Replace time/network with fakes; frontend tests query visible behavior.</>,
+            <>Run everything in CI; fix flaky tests before they train you to ignore red builds.</>,
           ]}
         />
       </Section>

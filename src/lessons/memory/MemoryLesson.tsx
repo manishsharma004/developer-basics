@@ -25,13 +25,74 @@ export default function MemoryLesson() {
           The classic gotcha: assigning one variable to another usually copies the{' '}
           <em>reference</em>, not the object. Run these snippets and read the
           output carefully — <code>is</code> asks "the same object?", while{' '}
-          <code>==</code> asks "the same contents?".
+          <code>==</code> asks "the same contents?". For mutable types (lists,
+          dicts), aliasing means two names can mutate the same object. For
+          immutable types (ints, strings), <code>+=</code> on one name typically
+          rebinds it to a new object without changing the other.
         </p>
         <ReferencePlayground />
         <TryThis>
           Run <strong>Aliasing</strong> and note <code>a</code> changed too. Then
           run <strong>Copy</strong> and see how <code>.copy()</code> breaks the
-          link. Edit the code and experiment.
+          link. Edit the code and experiment. Finally run <strong>Numbers are
+          immutable</strong> and compare: <code>y += 5</code> rebinds <code>y</code>{' '}
+          without changing <code>x</code> — integers do not alias the way lists do.
+        </TryThis>
+      </Section>
+
+      <Section id="immutability" title="Immutable vs mutable">
+        <p className="prose">
+          Some values cannot change after creation — integers, strings, tuples of
+          immutables. <strong>Mutable</strong> objects (lists, dicts, sets) can be
+          changed in place. That distinction drives aliasing bugs: two names on a
+          mutable object share one identity; rebinding one name to a new object does
+          not affect the other.
+        </p>
+        <ul className="prose-list">
+          <li>
+            <code>x += 5</code> on an int rebinds <code>x</code> — the old object is
+            unchanged.
+          </li>
+          <li>
+            <code>lst.append(9)</code> mutates the list object both names may share.
+          </li>
+          <li>
+            Tuples hold references too — a tuple of lists is immutable as a container,
+            but the inner lists can still be mutated.
+          </li>
+        </ul>
+        <Callout kind="tip" title="Rule of thumb">
+          Prefer immutable data where you can (new objects instead of in-place mutation)
+          to reduce spooky action at a distance — especially across threads or async
+          tasks.
+        </Callout>
+      </Section>
+
+      <Section id="copying" title="Shallow vs deep copy">
+        <p className="prose">
+          <code>.copy()</code> on a list makes a <strong>shallow copy</strong>: the
+          outer container is new, but nested mutable objects are still shared. A{' '}
+          <strong>deep copy</strong> recursively duplicates nested structures so
+          nothing is aliased.
+        </p>
+        <ul className="prose-list">
+          <li>
+            <code>b = a.copy()</code> — safe for flat lists of numbers or strings.
+          </li>
+          <li>
+            <code>copy.deepcopy(a)</code> — needed when lists contain other lists or
+            dicts you want fully independent.
+          </li>
+          <li>
+            Default arguments like <code>def f(items=[])</code> create one shared list
+            for all calls — a classic leak of mutable state.
+          </li>
+        </ul>
+        <TryThis>
+          In the references playground, run <strong>Shallow vs deep</strong> and
+          compare what happens when you mutate an inner list. Then try{' '}
+          <strong>Mutable default trap</strong> and fix it with <code>None</code> plus
+          a fresh list inside the function.
         </TryThis>
       </Section>
 
@@ -105,6 +166,8 @@ export default function MemoryLesson() {
             { term: 'garbage collection', def: 'Automatic reclamation of objects nothing references anymore.' },
             { term: 'memory leak', def: 'Holding references you no longer need, so memory grows unbounded.' },
             { term: 'virtual memory', def: "Each process's private address space, mapped to physical RAM in pages." },
+            { term: 'aliasing', def: 'Two names referring to the same object; mutations through one are visible via the other.' },
+            { term: 'shallow copy', def: 'A new container that still shares inner mutable objects with the original (.copy() on a list).' },
           ]}
         />
       </Section>
@@ -140,28 +203,39 @@ export default function MemoryLesson() {
               answer: 1,
               explain: "The GC only frees unreachable objects; reachable-but-unneeded objects still accumulate.",
             },
-
             {
-              q: 'Two variables pointing at the same list means:',
-              options: [
-                'Two copies',
-              'Aliasing — changes via one name affect the other',
-              'Stack overflow',
-              'GC cannot run',
-              ],
-              answer: 1,
-              explain: 'They share one object; assignment copies references, not objects.',
+              q: 'a = [1, 2]; b = a.copy(); b.append(3). What is len(a)?',
+              options: ['2', '3', 'Error', 'Depends on GC'],
+              answer: 0,
+              explain: 'copy() makes a new list; appending to b does not mutate a.',
             },
             {
-              q: 'Garbage collection frees objects that are:',
+              q: 'x = 10; y = x; y += 5. Why is x still 10?',
               options: [
-                'On the stack',
-              'Unreachable from live references',
-              'Older than 1 second',
-              'Larger than 1 MB',
+                '+= never changes integers',
+                'Integers are immutable — y += 5 rebinds y to a new int object',
+                'y and x share one int that cannot change',
+                'Python copies on every assignment',
               ],
               answer: 1,
-              explain: 'GC reclaims memory when no references point to an object.',
+              explain: 'Immutable values cannot be mutated; += creates a new object and rebinds the name.',
+            },
+            {
+              q: 'a = [[1]]; b = a.copy(); b[0].append(2). What is a?',
+              options: ['[[1]]', '[[1, 2]]', '[[2]]', 'Error'],
+              answer: 1,
+              explain: 'Shallow copy shares inner lists; mutating b[0] also mutates a[0].',
+            },
+            {
+              q: 'Why is def f(items=[]) dangerous?',
+              options: [
+                'Lists cannot be default arguments',
+                'The same list object is reused across every call',
+                'It causes a stack overflow',
+                'GC cannot free default arguments',
+              ],
+              answer: 1,
+              explain: 'Default values are evaluated once at definition time and shared by all calls.',
             },
           ]}
         />
@@ -174,6 +248,8 @@ export default function MemoryLesson() {
             <><code>is</code> compares identity; <code>==</code> compares value.</>,
             <>The <strong>stack</strong> holds call frames; the <strong>heap</strong> holds longer-lived objects.</>,
             <>GC frees unreachable objects, but keeping unneeded references still leaks.</>,
+            <>Immutable values rebind on <code>+=</code>; mutable objects alias until you copy.</>,
+            <>Use <code>.copy()</code> for flat data; <code>deepcopy</code> when nesting matters.</>,
           ]}
         />
       </Section>
