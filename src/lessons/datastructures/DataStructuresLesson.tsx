@@ -1,6 +1,67 @@
 import { Lesson } from '../components/Lesson.tsx'
 import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
+import { SnippetRunner, type Snippet } from '../components/SnippetRunner.tsx'
 import { HashMapViz } from './HashMapViz.tsx'
+
+const SNIPPETS: Snippet[] = [
+  {
+    label: 'List vs dict lookup',
+    code: `import time
+
+names = [f"user_{i}" for i in range(10_000)]
+lookup_list = "user_9999"
+lookup_miss = "user_missing"
+
+# list scan — O(n)
+start = time.perf_counter()
+found = lookup_list in names
+list_time = time.perf_counter() - start
+
+# dict lookup — O(1) average
+name_set = {n: True for n in names}
+start = time.perf_counter()
+found = lookup_list in name_set
+dict_time = time.perf_counter() - start
+
+print("list scan:", round(list_time * 1000, 3), "ms")
+print("dict lookup:", round(dict_time * 1000, 3), "ms")`,
+  },
+  {
+    label: 'Stack with a list',
+    code: `stack = []
+
+def push(item):
+    stack.append(item)
+
+def pop():
+    return stack.pop()
+
+push("first")
+push("second")
+push("third")
+print("pop:", pop())
+print("pop:", pop())
+print("remaining:", stack)`,
+  },
+  {
+    label: 'Queue with deque',
+    code: `from collections import deque
+
+queue = deque()
+
+def enqueue(item):
+    queue.append(item)
+
+def dequeue():
+    return queue.popleft()
+
+for task in ["email", "backup", "report"]:
+    enqueue(task)
+
+while queue:
+    print("processing:", dequeue())`,
+  },
+]
 
 export default function DataStructuresLesson() {
   return (
@@ -36,6 +97,11 @@ export default function DataStructuresLesson() {
             average <strong>O(1)</strong> lookup, insert, and delete.
           </li>
         </ul>
+        <Callout kind="tip" title="Stacks and queues">
+          A <strong>stack</strong> (last-in, first-out) and a <strong>queue</strong>{' '}
+          (first-in, first-out) are patterns built on top of arrays or linked lists —
+          not separate structures, but rules for how you add and remove.
+        </Callout>
       </Section>
 
       <Section id="playground" title="A hash map, live">
@@ -50,6 +116,19 @@ export default function DataStructuresLesson() {
           Insert a few keys and note the bucket each lands in. Keep adding until two
           share a bucket — you'll see them <em>chained</em> together and highlighted
           as a collision. Then look one up: the map jumps straight to its bucket.
+        </TryThis>
+      </Section>
+
+      <Section id="labs" title="Code lab">
+        <p className="prose">
+          Feel the lookup-speed difference between scanning a list and jumping into a
+          dict. Then build a stack and queue — two patterns you'll use constantly
+          (undo history, task scheduling, BFS).
+        </p>
+        <SnippetRunner snippets={SNIPPETS} />
+        <TryThis>
+          Run <strong>List vs dict lookup</strong> and compare timings. Increase the
+          list size in the code to 100,000 and re-run — the gap widens dramatically.
         </TryThis>
       </Section>
 
@@ -71,6 +150,15 @@ export default function DataStructuresLesson() {
             can be slower in practice than an array. Big-O isn't the whole story.
           </p>
         </UnderTheHood>
+        <UnderTheHood title="Python's list is a dynamic array">
+          <p className="prose">
+            Python lists are implemented as dynamic arrays — contiguous storage that
+            grows by over-allocating when full. <code>append</code> is amortized O(1);
+            inserting at the front is O(n) because everything shifts.{' '}
+            <code>collections.deque</code> uses a doubly-linked block structure for
+            O(1) operations at both ends.
+          </p>
+        </UnderTheHood>
       </Section>
 
       <Section id="terms" title="Key terms">
@@ -82,6 +170,7 @@ export default function DataStructuresLesson() {
             { term: 'hash function', def: 'Maps a key to a bucket index.' },
             { term: 'collision', def: 'Two keys hashing to the same bucket; resolved by chaining.' },
             { term: 'load factor', def: 'Entries ÷ buckets; high values trigger a resize.' },
+            { term: 'stack / queue', def: 'LIFO and FIFO access patterns built on lists or deques.' },
           ]}
         />
       </Section>
@@ -107,28 +196,23 @@ export default function DataStructuresLesson() {
               answer: 1,
               explain: 'Sequential memory access benefits from CPU caching; scattered list nodes do not.',
             },
-
             {
               q: 'Hash map average lookup time:',
-              options: [
-                'O(n)',
-              'O(log n)',
-              'O(1)',
-              'O(n²)',
-              ],
+              options: ['O(n)', 'O(log n)', 'O(1)', 'O(n²)'],
               answer: 2,
               explain: 'With a good hash and load factor, lookups are constant average time.',
             },
             {
               q: 'Linked list vs array for front insertions:',
-              options: [
-                'Array is always faster',
-              'Linked list avoids shifting elements',
-              'Both are O(1)',
-              'Neither supports insert',
-              ],
+              options: ['Array is always faster', 'Linked list avoids shifting elements', 'Both are O(1)', 'Neither supports insert'],
               answer: 1,
               explain: 'Arrays must shift elements; linked lists update pointers.',
+            },
+            {
+              q: 'A queue processes items in:',
+              options: ['Random order', 'Last-in, first-out', 'First-in, first-out', 'Sorted order'],
+              answer: 2,
+              explain: 'Queues dequeue from the front — FIFO order.',
             },
           ]}
         />
@@ -141,6 +225,7 @@ export default function DataStructuresLesson() {
             <>Linked lists: cheap local insert/remove, O(n) to find by position.</>,
             <>Hash maps: average O(1) by key via a hash function; collisions chain.</>,
             <>High load factor triggers a resize to keep buckets short.</>,
+            <>Stacks (LIFO) and queues (FIFO) are access patterns on top of lists.</>,
           ]}
         />
       </Section>

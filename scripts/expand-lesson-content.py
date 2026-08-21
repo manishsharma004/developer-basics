@@ -676,6 +676,86 @@ nums = [2, 5, 8, 12, 16, 23]
 print(binary_search(nums, 12))
 print(binary_search(nums, 7))""",
     },
+    "algorithms": {
+        "label": "Count nested-loop work",
+        "code": """def count_pairs(items):
+    steps = 0
+    for i in items:
+        for j in items:
+            steps += 1
+    return steps
+
+for n in [10, 20, 40]:
+    print(f"n={n} → {count_pairs(range(n))} steps")""",
+    },
+    "recursion": {
+        "label": "Factorial",
+        "code": """def fact(n):
+    if n <= 1:
+        return 1
+    return n * fact(n - 1)
+
+for i in range(1, 7):
+    print(f"fact({i}) = {fact(i)}")""",
+    },
+    "classes": {
+        "label": "Define a class",
+        "code": """class BankAccount:
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self.balance = balance
+
+    def deposit(self, amount):
+        self.balance += amount
+        return self.balance
+
+acct = BankAccount("Ada", 100)
+acct.deposit(50)
+print(acct.owner, acct.balance)""",
+    },
+    "datastructures": {
+        "label": "Stack with a list",
+        "code": """stack = []
+
+def push(item):
+    stack.append(item)
+
+def pop():
+    return stack.pop()
+
+push("first")
+push("second")
+print("pop:", pop())
+print("remaining:", stack)""",
+    },
+    "caching": {
+        "label": "Simple dict cache",
+        "code": """cache = {}
+
+def fetch_user(user_id):
+    if user_id in cache:
+        print(f"  HIT  user_{user_id}")
+        return cache[user_id]
+    print(f"  MISS user_{user_id}")
+    data = {"id": user_id}
+    cache[user_id] = data
+    return data
+
+for uid in [1, 2, 1, 3]:
+    fetch_user(uid)""",
+    },
+    "crypto": {
+        "label": "Hash a password with salt",
+        "code": """import hashlib, secrets
+
+def hash_password(password):
+    salt = secrets.token_hex(8)
+    digest = hashlib.sha256((salt + password).encode()).hexdigest()
+    return salt, digest
+
+salt, digest = hash_password("hunter2")
+print("stored:", salt, digest[:16] + "...")""",
+    },
 }
 
 

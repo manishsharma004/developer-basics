@@ -1,6 +1,61 @@
 import { Lesson } from '../components/Lesson.tsx'
 import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
+import { SnippetRunner, type Snippet } from '../components/SnippetRunner.tsx'
 import { ClassBuilder } from './ClassBuilder.tsx'
+
+const SNIPPETS: Snippet[] = [
+  {
+    label: 'Define a class',
+    code: `class BankAccount:
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self.balance = balance
+
+    def deposit(self, amount):
+        self.balance += amount
+        return self.balance
+
+    def __repr__(self):
+        return f"BankAccount({self.owner!r}, \\${self.balance})"
+
+acct = BankAccount("Ada", 100)
+acct.deposit(50)
+print(acct)`,
+  },
+  {
+    label: 'Instance vs class attrs',
+    code: `class Counter:
+    total = 0  # class variable — shared
+
+    def __init__(self):
+        Counter.total += 1
+        self.id = Counter.total  # instance variable — unique
+
+a = Counter()
+b = Counter()
+print("instances:", a.id, b.id)
+print("shared total:", Counter.total, a.total, b.total)`,
+  },
+  {
+    label: 'Methods & self',
+    code: `class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def distance_from_origin(self):
+        return (self.x ** 2 + self.y ** 2) ** 0.5
+
+    def move(self, dx, dy):
+        self.x += dx
+        self.y += dy
+
+p = Point(3, 4)
+print("distance:", p.distance_from_origin())
+p.move(1, 1)
+print("after move:", p.x, p.y)`,
+  },
+]
 
 export default function ClassesLesson() {
   return (
@@ -43,6 +98,20 @@ export default function ClassesLesson() {
         </TryThis>
       </Section>
 
+      <Section id="labs" title="Code lab">
+        <p className="prose">
+          Define a real class with a constructor and methods, then see how instance
+          attributes differ from class attributes. The <code>self</code> parameter
+          is how Python passes the current object into each method.
+        </p>
+        <SnippetRunner snippets={SNIPPETS} />
+        <TryThis>
+          Run <strong>Instance vs class attrs</strong> and note how <code>total</code>{' '}
+          is shared but <code>id</code> is unique per object. Then modify{' '}
+          <strong>Define a class</strong> to add a <code>withdraw</code> method.
+        </TryThis>
+      </Section>
+
       <Section id="hood" title="Under the hood">
         <UnderTheHood title="State lives per-object; methods live once">
           <p className="prose">
@@ -61,6 +130,14 @@ export default function ClassesLesson() {
             class by accident — is a classic bug.
           </p>
         </UnderTheHood>
+        <UnderTheHood title="__repr__ and __str__">
+          <p className="prose">
+            Python calls <code>__repr__</code> when you print an object in the REPL
+            or debugger — return a string that would recreate the object.{' '}
+            <code>__str__</code> is for end-user display. Defining these makes
+            debugging far less painful.
+          </p>
+        </UnderTheHood>
       </Section>
 
       <Section id="terms" title="Key terms">
@@ -72,6 +149,7 @@ export default function ClassesLesson() {
             { term: 'method', def: 'A function defined on a class that acts on an object.' },
             { term: 'constructor', def: 'The method that initializes a new object (Python: __init__).' },
             { term: 'self / this', def: 'The reference to the current object inside a method.' },
+            { term: '__repr__', def: 'Method returning a developer-friendly string for the object.' },
           ]}
         />
       </Section>
@@ -97,28 +175,23 @@ export default function ClassesLesson() {
               answer: 1,
               explain: 'The constructor sets up the initial state of a newly created instance.',
             },
-
             {
               q: 'An instance attribute lives on:',
-              options: [
-                'The class only',
-              'Each object separately',
-              'The module',
-              'DNS cache',
-              ],
+              options: ['The class only', 'Each object separately', 'The module', 'DNS cache'],
               answer: 1,
               explain: 'Instance attrs are per-object; class attrs are shared.',
             },
             {
               q: '`self` in Python methods refers to:',
-              options: [
-                'The parent class',
-              'The current instance',
-              'Global scope',
-              'A keyword only in Java',
-              ],
+              options: ['The parent class', 'The current instance', 'Global scope', 'A keyword only in Java'],
               answer: 1,
               explain: 'self is the instance receiving the method call.',
+            },
+            {
+              q: 'A class variable shared across all instances can cause bugs when:',
+              options: ['It is read-only', 'It is mutable and you meant per-object state', 'It is a string', 'It is private'],
+              answer: 1,
+              explain: 'Mutable class attrs are shared — changes via one object affect all.',
             },
           ]}
         />
@@ -131,6 +204,7 @@ export default function ClassesLesson() {
             <>Fields are <strong>per-object</strong> state; methods are <strong>shared</strong> behavior.</>,
             <>The constructor initializes a new object's fields.</>,
             <>Keep shared mutable state off the class unless you mean it.</>,
+            <><code>self</code> is how methods access the current object's state.</>,
           ]}
         />
       </Section>
