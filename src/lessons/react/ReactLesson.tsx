@@ -1,6 +1,6 @@
 import { Lesson } from '../components/Lesson.tsx'
 import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
-import { ReactPlayground } from './ReactPlayground.tsx'
+import { CounterDemo, PropsDemo, ListsDemo } from './ReactPlayground.tsx'
 import { ContextStoreDemo, ExternalStoreDemo } from './ReactStorePlayground.tsx'
 
 export default function ReactLesson() {
@@ -19,7 +19,7 @@ export default function ReactLesson() {
         </Callout>
       </Section>
 
-      <Section id="components" title="Components & JSX">
+      <Section id="jsx-basics" title="Components & JSX">
         <p className="prose">
           A React component is a function that returns <strong>JSX</strong> — HTML-like
           syntax that compiles to JavaScript function calls. Components nest like HTML tags:
@@ -34,10 +34,27 @@ export default function ReactLesson() {
 }`}</pre>
         <ul className="prose-list">
           <li>One component per file is common; name components with PascalCase.</li>
+          <li>Compose small components into pages — each owns a slice of the UI.</li>
+          <li>Export the root component; import it where you mount the app.</li>
+        </ul>
+      </Section>
+
+      <Section id="jsx-rules" title="JSX syntax rules">
+        <p className="prose">
+          JSX looks like HTML but follows JavaScript rules. These differences trip up
+          beginners — memorize them early.
+        </p>
+        <ul className="prose-list">
           <li>JSX must have one root element (or a <code>&lt;&gt;fragment&lt;/&gt;</code>).</li>
           <li>Use <code>{'{'}</code> curly braces <code>{'}'}</code> to embed JavaScript expressions.</li>
           <li><code>className</code> instead of <code>class</code>; <code>htmlFor</code> instead of <code>for</code>.</li>
+          <li>Self-close empty tags: <code>&lt;img /&gt;</code>, <code>&lt;input /&gt;</code>.</li>
+          <li>Boolean props can be shorthand: <code>&lt;input disabled /&gt;</code>.</li>
         </ul>
+        <Callout kind="tip" title="Expressions only">
+          Curly braces accept expressions, not statements — use a ternary or move logic
+          above the return instead of an <code>if</code> block inline.
+        </Callout>
       </Section>
 
       <Section id="props" title="Props: data flows down">
@@ -68,9 +85,9 @@ export default function ReactLesson() {
 function Counter() {
   const [count, setCount] = useState(0)
   return (
-  <button onClick={() => setCount(count + 1)}>
-    Count: {count}
-  </button>
+    <button onClick={() => setCount(count + 1)}>
+      Count: {count}
+    </button>
   )
 }`}</pre>
         <ul className="prose-list">
@@ -79,6 +96,49 @@ function Counter() {
           <li>For objects/arrays, create a new copy: <code>setUser({'{'} ...user, name: 'Ada' {'}'})</code>.</li>
           <li>Functional updates <code>setCount(c =&gt; c + 1)</code> are safe when the new value depends on the old.</li>
         </ul>
+      </Section>
+
+      <Section id="events" title="Event handlers">
+        <p className="prose">
+          User interactions — clicks, typing, form submit — attach with camelCase props like{' '}
+          <code>onClick</code> and <code>onChange</code>. Pass a function reference or
+          arrow function; React calls it with a synthetic event.
+        </p>
+        <pre className="term-output">{`<button onClick={() => setCount(c => c + 1)}>+</button>
+
+<input
+  value={name}
+  onChange={(e) => setName(e.target.value)}
+/>`}</pre>
+        <ul className="prose-list">
+          <li>Handlers run in JavaScript — call <code>setState</code> to trigger a re-render.</li>
+          <li>Prevent default form submit with <code>e.preventDefault()</code> when needed.</li>
+          <li>Don't call the handler during render: <code>onClick={'{handleClick}'}</code>, not <code>onClick={'{handleClick()}'}</code>.</li>
+        </ul>
+      </Section>
+
+      <Section id="lists" title="Lists & keys">
+        <p className="prose">
+          Render collections with <code>.map()</code>. Each child needs a stable{' '}
+          <code>key</code> so React can match items across re-renders when order changes.
+        </p>
+        <pre className="term-output">{`{todos.map(todo => (
+  <TodoItem
+    key={todo.id}
+    text={todo.text}
+    done={todo.done}
+    onToggle={() => toggle(todo.id)}
+  />
+))}`}</pre>
+        <ul className="prose-list">
+          <li>Use a unique id from your data — not array index if items can reorder or delete.</li>
+          <li>Toggle or edit by mapping to a new array: <code>setTodos(t =&gt; t.map(...))</code>.</li>
+          <li>Adding items: spread into a new array <code>[...todos, newItem]</code>.</li>
+        </ul>
+        <Callout kind="warning" title="Never mutate in place">
+          <code>todos[0].done = true</code> won't trigger a re-render. Always return new
+          objects/arrays from your setter.
+        </Callout>
       </Section>
 
       <Section id="effects" title="Side effects with useEffect">
@@ -188,20 +248,43 @@ dispatch(addItem({ id: 1, name: 'Keyboard' }))`}</pre>
         </Callout>
       </Section>
 
-      <Section id="playground" title="Build UI live">
+      <Section id="lab-counter" title="Lab: counter & state">
         <p className="prose">
-          Try the counter, edit props on the greeting card, and manage a todo list — each
-          demo maps directly to the concepts above.
+          Click the buttons and watch count update — each click calls{' '}
+          <code>setCount</code>, which schedules a re-render with the new value.
         </p>
-        <ReactPlayground />
+        <CounterDemo />
         <TryThis>
-          Increment the counter, then change the <code>name</code> prop — notice the counter
-          state persists while props update independently. Add a todo and toggle checkboxes;
-          each toggle creates a new array (immutable update).
+          Use the functional form <code>setCount(c =&gt; c + 1)</code> — it always reads
+          the latest count, even when several updates batch together.
         </TryThis>
       </Section>
 
-      <Section id="hood" title="Under the hood">
+      <Section id="lab-props" title="Lab: props playground">
+        <p className="prose">
+          Edit the inputs below — the Greeting card receives new props from its parent
+          but keeps no state of its own.
+        </p>
+        <PropsDemo />
+        <TryThis>
+          Change <code>name</code> and <code>role</code> — the child re-renders with
+          new props while sibling state (if any) stays independent.
+        </TryThis>
+      </Section>
+
+      <Section id="lab-lists" title="Lab: todo list">
+        <p className="prose">
+          Add todos and toggle checkboxes — each toggle maps to a new array so React
+          detects the change and re-renders the list.
+        </p>
+        <ListsDemo />
+        <TryThis>
+          Add a todo, toggle it done, then add another — notice each row keeps a stable{' '}
+          <code>key</code> from <code>todo.id</code>.
+        </TryThis>
+      </Section>
+
+      <Section id="hood-vdom" title="Virtual DOM & reconciliation">
         <UnderTheHood title="Virtual DOM & reconciliation">
           <p className="prose">
             React keeps a lightweight copy of the UI tree in memory. When state changes, it
@@ -210,6 +293,9 @@ dispatch(addItem({ id: 1, name: 'Keyboard' }))`}</pre>
             subtrees without rewriting manual DOM code.
           </p>
         </UnderTheHood>
+      </Section>
+
+      <Section id="hood-hooks" title="Rules of hooks">
         <UnderTheHood title="Hooks rules">
           <p className="prose">
             Hooks (useState, useEffect, etc.) must be called at the top level of a component
@@ -217,11 +303,14 @@ dispatch(addItem({ id: 1, name: 'Keyboard' }))`}</pre>
             to associate state with the right component instance.
           </p>
         </UnderTheHood>
+      </Section>
+
+      <Section id="hood-stack" title="React ecosystem">
         <UnderTheHood title="Ecosystem">
           <p className="prose">
             React is the view layer. Real apps add a router (React Router), data fetching
             (TanStack Query), forms, and often TypeScript. Build tools like Vite compile
-            JSX and bundle modules for the browser.
+            JSX and bundle modules for the browser. Pair with a FastAPI backend for JSON APIs.
           </p>
         </UnderTheHood>
       </Section>
@@ -239,6 +328,8 @@ dispatch(addItem({ id: 1, name: 'Keyboard' }))`}</pre>
             { term: 'prop drilling', def: 'Passing props through many layers just to reach a deep child.' },
             { term: 'Context', def: 'A way to provide values to descendants without intermediate props.' },
             { term: 'store', def: 'External state container components subscribe to (Redux, Zustand).' },
+            { term: 'key', def: 'Stable identifier on list items so React matches elements across renders.' },
+            { term: 'synthetic event', def: "React's normalized wrapper around browser events." },
           ]}
         />
       </Section>
@@ -286,6 +377,16 @@ dispatch(addItem({ id: 1, name: 'Keyboard' }))`}</pre>
               options: ['Only one component needs the data', 'Many components need the same frequently-updated state', 'You never re-render', 'You want to avoid JavaScript'],
               answer: 1,
             },
+            {
+              q: 'onClick={handleClick()} is wrong because:',
+              options: ['Events use onPress not onClick', 'It calls the handler during render instead of on click', 'Handlers must be async', 'React has no click events'],
+              answer: 1,
+            },
+            {
+              q: 'Updating an array in state correctly looks like:',
+              options: ['items.push(x); setItems(items)', 'setItems([...items, x])', 'items[0] = x', 'delete items[0]'],
+              answer: 1,
+            },
           ]}
         />
       </Section>
@@ -296,6 +397,7 @@ dispatch(addItem({ id: 1, name: 'Keyboard' }))`}</pre>
             <>Components are functions that return <strong>JSX</strong>; compose them like HTML.</>,
             <><strong>Props</strong> flow down (read-only); <strong>state</strong> is local and triggers re-renders.</>,
             <><code>useState</code> for memory; <code>useEffect</code> for side effects after render.</>,
+            <><strong>Events</strong> call setters; <strong>lists</strong> need stable <code>key</code>s and immutable updates.</>,
             <><strong>Context</strong> and <strong>stores</strong> share state without prop drilling.</>,
             <>React diffs a <strong>virtual DOM</strong> to update the real page efficiently.</>,
           ]}
