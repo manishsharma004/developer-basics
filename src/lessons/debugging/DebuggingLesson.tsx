@@ -46,17 +46,33 @@ except AssertionError as e:
     print("caught:", e)`,
   },
   {
-    label: 'Narrow the bug',
-    code: `    def divide_all(nums, divisor):
-        out = []
-        for i, n in enumerate(nums):
-            print(f"step {i}: {n}/{divisor}")
-            out.append(n / divisor)
-        return out
-    
-    print(divide_all([10, 20, 0, 40], 10))`,
-  },
+    label: 'Read the traceback',
+    code: `def divide(a, b):
+    return a / b
 
+def average_pair(nums):
+    return divide(sum(nums), len(nums))   # bug when nums is empty
+
+try:
+    print(average_pair([]))
+except ZeroDivisionError:
+    import traceback
+    print("--- traceback (read bottom-up for the real error) ---")
+    traceback.print_exc()
+    print("=> the crash is in divide(), called from average_pair with len=0")`,
+  },
+  {
+    label: 'pdb breakpoint (commented)',
+    code: `def buggy_total(nums):
+    total = 0
+    for n in nums:
+        # import pdb; pdb.set_trace()  # uncomment to pause here in a terminal
+        total += n
+    return total
+
+print(buggy_total([1, 2, 3]))
+print("In pdb: n, total, l — step with n/s, continue with c")`,
+  },
 ]
 
 export default function DebuggingLesson() {
@@ -75,57 +91,147 @@ export default function DebuggingLesson() {
         </Callout>
       </Section>
 
-      <Section id="model" title="Observe, then change">
-        <ul className="prose-list">
+      <Section id="general" title="General practices">
+        <p className="prose">
+          The same loop works in any language or stack. Treat debugging as science,
+          not luck:
+        </p>
+        <ol className="prose-list">
           <li>
-            <strong>Reproduce</strong> with the smallest input that still fails.
+            <strong>Reproduce</strong> — smallest input or steps that still fail.
             Flaky bugs need a reliable trigger before you dig.
           </li>
           <li>
-            <strong>Print / log</strong> key values at decision points. Temporary
-            prints are fine; structured logs stay in production at the right level.
+            <strong>Observe</strong> — prints, logs, breakpoints, metrics. Change one
+            variable at a time.
           </li>
           <li>
-            <strong>Log levels</strong>: DEBUG (noisy detail), INFO (normal events),
-            WARNING (unexpected but handled), ERROR (failed operation).
+            <strong>Hypothesize</strong> — "I think X is null here" — then design one
+            check that proves or disproves it.
           </li>
           <li>
-            <strong>Assertions</strong> document invariants ("this must be true").
-            When they fire, you learn <em>where</em> reality diverged.
+            <strong>Fix &amp; guard</strong> — patch the root cause and add a test or
+            assert so it cannot return silently.
+          </li>
+        </ol>
+        <UnderTheHood title="Rubber duck & bisect">
+          <p className="prose">
+            Explaining the code out loud (even to a rubber duck) often reveals the wrong
+            assumption. For regressions, <strong>git bisect</strong> binary-searches
+            commit history; you can bisect code paths too — disable half the system until
+            the failure vanishes.
+          </p>
+        </UnderTheHood>
+        <Callout kind="tip" title="Change one thing">
+          If you change three things at once and the bug disappears, you learned nothing.
+          Revert, then isolate.
+        </Callout>
+      </Section>
+
+      <Section id="python" title="Debugging Python">
+        <p className="prose">
+          Python failures usually arrive as a <strong>traceback</strong>. Read it{' '}
+          <em>bottom-up</em>: the last line names the exception; lines above show the
+          call chain. Use temporary prints for quick probes; switch to{' '}
+          <code>logging</code> for anything that might ship.
+        </p>
+        <ul className="prose-list">
+          <li>
+            <code>import pdb; pdb.set_trace()</code> or <code>breakpoint()</code> —
+            pause in a terminal REPL: inspect locals, step line by line.
+          </li>
+          <li>
+            <strong>Log levels</strong>: DEBUG (noisy), INFO (normal), WARNING
+            (handled oddity), ERROR (failed operation).
+          </li>
+          <li>
+            <strong>Assertions</strong> document invariants for programmer mistakes —
+            not a substitute for validating user input.
           </li>
         </ul>
+        <SnippetRunner
+          snippets={SNIPPETS.filter((s) =>
+            ['Read the traceback', 'Levels of logging', 'Assert the invariant', 'pdb breakpoint (commented)'].includes(s.label),
+          )}
+        />
+        <TryThis>
+          In <strong>Read the traceback</strong>, follow the stack from{' '}
+          <code>average_pair</code> down to <code>divide</code>. In{' '}
+          <strong>Levels of logging</strong>, change the level to{' '}
+          <code>logging.INFO</code> and watch DEBUG lines disappear.
+        </TryThis>
+      </Section>
+
+      <Section id="frontend" title="Debugging frontend">
+        <p className="prose">
+          Browser apps fail in the DOM, the network, and async state. Your main tools
+          are <strong>DevTools</strong> (built into Chrome, Firefox, Edge) and
+          framework-specific extensions.
+        </p>
+        <ul className="prose-list">
+          <li>
+            <strong>Console</strong> — <code>console.log</code>, <code>console.table</code>,
+            and uncaught errors with file/line links. Filter noise; preserve logs across
+            navigations when debugging SPAs.
+          </li>
+          <li>
+            <strong>Sources / breakpoints</strong> — pause on a line, inspect scope,
+            watch expressions, step in/over/out. Conditional breakpoints fire only when
+            a predicate is true — great for loops that fail on iteration 847.
+          </li>
+          <li>
+            <strong>Network tab</strong> — see every fetch: status codes, payloads,
+            timing. A "buggy UI" is often a 404 or CORS failure disguised as empty data.
+          </li>
+          <li>
+            <strong>React DevTools</strong> — inspect component props/state, highlight
+            what re-rendered, trace why a child updated.
+          </li>
+        </ul>
+        <Callout kind="note" title="React-specific gotchas">
+          Stale closures, missing dependency arrays in <code>useEffect</code>, and
+          mutating state in place are frequent sources of "it works once, then breaks."
+          Log props at render time and compare with what you expect after an event.
+        </Callout>
+        <UnderTheHood title="Source maps">
+          <p className="prose">
+            Production bundles are minified; <strong>source maps</strong> map compiled
+            lines back to your TypeScript/JSX so breakpoints land in the code you wrote.
+            Without them, you debug gibberish names in a single huge file.
+          </p>
+        </UnderTheHood>
       </Section>
 
       <Section id="playground" title="Probe it live">
         <p className="prose">
-          Practice three everyday tools: a print probe inside a loop, leveled
+          Practice three everyday Python tools: a print probe inside a loop, leveled
           logging, and asserts that catch bad inputs early.
         </p>
-        <SnippetRunner snippets={SNIPPETS} />
+        <SnippetRunner
+          snippets={SNIPPETS.filter((s) =>
+            ['Reproduce with a print', 'Levels of logging', 'Assert the invariant'].includes(s.label),
+          )}
+        />
         <TryThis>
-          In <strong>Reproduce with a print</strong>, remove the print once you
-          trust the loop, then break the function (e.g. divide by{' '}
-          <code>len(nums) - 1</code>) and use a print or assert to find it. In{' '}
-          <strong>Levels of logging</strong>, set the level to{' '}
-          <code>logging.INFO</code> and notice DEBUG lines disappear.
+          In <strong>Reproduce with a print</strong>, remove the print once you trust
+          the loop, then break the function (e.g. divide by{' '}
+          <code>len(nums) - 1</code>) and use a print or assert to find it.
         </TryThis>
       </Section>
 
       <Section id="hood" title="Under the hood">
-        <UnderTheHood title="Rubber duck and bisect">
-          <p className="prose">
-            Explaining the code out loud (even to a rubber duck) often reveals the
-            wrong assumption. For regressions, binary-search the history (git
-            bisect) or binary-search the code path: disable half the system until
-            the failure vanishes — same idea as binary search on a sorted list.
-          </p>
-        </UnderTheHood>
         <UnderTheHood title="Debuggers vs. logs">
           <p className="prose">
             A debugger lets you pause, inspect locals, and step. Logs work when you
             can't attach interactively (production, other machines). Use both:
-            debugger for deep local investigation, logs for timelines across
-            services.
+            debugger for deep local investigation, logs for timelines across services.
+          </p>
+        </UnderTheHood>
+        <UnderTheHood title="Observability in production">
+          <p className="prose">
+            Structured logs (JSON fields), traces (request IDs across services), and
+            metrics (latency histograms) replace printf in production. The debugging
+            mindset is the same — correlate evidence — but at fleet scale.
           </p>
         </UnderTheHood>
       </Section>
@@ -137,8 +243,10 @@ export default function DebuggingLesson() {
             { term: 'log level', def: 'How severe/noisy a message is (DEBUG → ERROR).' },
             { term: 'assertion', def: 'A check that must hold; failure means a programming mistake.' },
             { term: 'stack trace', def: 'The chain of calls that led to an exception.' },
+            { term: 'breakpoint', def: 'A pause point where a debugger stops execution for inspection.' },
             { term: 'regression', def: 'A bug introduced by a change that used to work.' },
             { term: 'bisect', def: 'Narrow the cause by repeatedly testing half of the suspects.' },
+            { term: 'source map', def: 'Mapping from bundled JS back to original source files.' },
           ]}
         />
       </Section>
@@ -164,6 +272,50 @@ export default function DebuggingLesson() {
               explain: 'INFO is for normal events; DEBUG is verbose detail; ERROR is failures.',
             },
             {
+              q: 'In a Python traceback, where is the actual error usually found?',
+              options: [
+                'The first line at the top',
+                'The last line at the bottom',
+                'Only in comments',
+                'Nowhere — tracebacks are random',
+              ],
+              answer: 1,
+              explain: 'Read tracebacks bottom-up: the last line names the exception and message.',
+            },
+            {
+              q: 'The Network tab in DevTools is most useful for:',
+              options: [
+                'Editing CSS colors',
+                'Inspecting HTTP requests, status codes, and response bodies',
+                'Compiling TypeScript',
+                'Running unit tests',
+              ],
+              answer: 1,
+              explain: 'Many UI bugs are failed or slow API calls — the Network tab shows them directly.',
+            },
+            {
+              q: 'React DevTools helps you:',
+              options: [
+                'Minify bundles',
+                'Inspect component props, state, and what re-rendered',
+                'Replace eslint',
+                'Deploy to production',
+              ],
+              answer: 1,
+              explain: 'Framework tools expose the component tree and state that plain DevTools hide.',
+            },
+            {
+              q: 'git bisect is useful when:',
+              options: [
+                'You need to format code',
+                'A regression appeared and you need to find which commit introduced it',
+                'You want to delete old branches',
+                'Tests are too fast',
+              ],
+              answer: 1,
+              explain: 'Binary search through history narrows the breaking change quickly.',
+            },
+            {
               q: 'An assertion failing usually means:',
               options: [
                 'The network is down',
@@ -174,29 +326,6 @@ export default function DebuggingLesson() {
               answer: 1,
               explain: 'Asserts guard programmer assumptions, not expected user errors.',
             },
-
-            {
-              q: 'First step in debugging should be:',
-              options: [
-                'Rewrite everything',
-              'Reproduce the bug reliably',
-              'Deploy to prod',
-              'Disable logs',
-              ],
-              answer: 1,
-              explain: 'You need a consistent repro before you can verify a fix.',
-            },
-            {
-              q: 'DEBUG log level is for:',
-              options: [
-                'User-facing errors only',
-              'Detailed diagnostic detail during development',
-              'Production alerts',
-              'TLS handshakes',
-              ],
-              answer: 1,
-              explain: 'DEBUG is verbose; often off in production.',
-            },
           ]}
         />
       </Section>
@@ -205,8 +334,8 @@ export default function DebuggingLesson() {
         <Recap
           items={[
             <>Reproduce first, then gather evidence — don't shotgun-change code.</>,
-            <><strong>Prints and logs</strong> show values over time; levels keep noise down.</>,
-            <><strong>Assertions</strong> catch broken invariants close to the cause.</>,
+            <>Python: read tracebacks bottom-up; use logging, pdb, and asserts.</>,
+            <>Frontend: Console, breakpoints, Network tab, and React DevTools.</>,
             <>Bisect history or code paths when the suspect set is large.</>,
           ]}
         />

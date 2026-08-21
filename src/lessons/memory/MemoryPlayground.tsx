@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { MonacoEditor } from '../../components/MonacoEditor.tsx'
-import { RuntimeBanner } from '../../components/RuntimeBanner.tsx'
 import { usePyodide } from '../../lib/usePyodide.ts'
+import { RuntimeBanner } from '../../components/RuntimeBanner.tsx'
+import { handleEditorTab } from '../../lib/editorKeys.ts'
 import { MEMORY_PROGRAM } from './program.ts'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,6 +39,39 @@ print("x =", x, " y =", y)`,
 b = [1, 2]
 print("equal?    ", a == b)   # same contents
 print("identical?", a is b)   # different objects`,
+  },
+  {
+    label: 'Shallow vs deep',
+    code: `import copy
+a = [[1]]
+b = a.copy()           # shallow: inner list is shared
+b[0].append(2)
+print("after shallow:", a)
+
+a = [[1]]
+c = copy.deepcopy(a)   # deep: fully independent
+c[0].append(99)
+print("after deep:   ", a, c)`,
+  },
+  {
+    label: 'Mutable default trap',
+    code: `def add_item(item, bucket=[]):
+    bucket.append(item)
+    return bucket
+
+print(add_item("a"))
+print(add_item("b"))   # surprise: both calls share one list!`,
+  },
+  {
+    label: 'Break the default trap',
+    code: `def add_item(item, bucket=None):
+    if bucket is None:
+        bucket = []
+    bucket.append(item)
+    return bucket
+
+print(add_item("a"))
+print(add_item("b"))   # each call gets its own list`,
   },
 ]
 
@@ -86,7 +119,15 @@ export function ReferencePlayground() {
             </button>
           ))}
         </div>
-        <MonacoEditor value={code} onChange={setCode} language="python" minLines={4} ariaLabel="Python code" />
+        <textarea
+          className="code-editor"
+          value={code}
+          spellCheck={false}
+          onChange={(e) => setCode(e.target.value)}
+          onKeyDown={(e) => handleEditorTab(e, code, setCode)}
+          rows={code.split('\n').length + 1}
+          aria-label="Python code"
+        />
         <div className="ref-run-row">
           <button className="btn" disabled={!ready} onClick={run}>
             {ready ? '▶ Run' : 'starting Python…'}
