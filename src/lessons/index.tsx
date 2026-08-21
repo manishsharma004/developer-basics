@@ -28,6 +28,9 @@ import AuthLesson from './auth/AuthLesson.tsx'
 import SecurityLesson from './security/SecurityLesson.tsx'
 import TestingLesson from './testing/TestingLesson.tsx'
 import FunctionalLesson from './functional/FunctionalLesson.tsx'
+import JsonLesson from './json/JsonLesson.tsx'
+import SearchLesson from './search/SearchLesson.tsx'
+import DebuggingLesson from './debugging/DebuggingLesson.tsx'
 
 // Wire each metadata entry to its component. Adding a lesson = add a metadata
 // entry in meta.ts and a component here; nav, routes, and the home page update
@@ -38,11 +41,13 @@ const COMPONENTS: Record<string, ComponentType> = {
   memory: MemoryLesson,
   concurrency: ConcurrencyLesson,
   data: DataLesson,
+  json: JsonLesson,
   network: NetworkLesson,
   git: GitLesson,
   cli: CliLesson,
   datastructures: DataStructuresLesson,
   algorithms: AlgorithmsLesson,
+  search: SearchLesson,
   recursion: RecursionLesson,
   sql: SqlLesson,
   regex: RegexLesson,
@@ -60,6 +65,7 @@ const COMPONENTS: Record<string, ComponentType> = {
   auth: AuthLesson,
   security: SecurityLesson,
   testing: TestingLesson,
+  debugging: DebuggingLesson,
   functional: FunctionalLesson,
 }
 

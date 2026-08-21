@@ -51,6 +51,34 @@ export default function TimeLesson() {
         </TryThis>
       </Section>
 
+      <Section id="formats" title="Formats & pitfalls">
+        <ul className="prose-list">
+          <li>
+            Prefer <strong>ISO 8601</strong> strings when you must store text, e.g.{' '}
+            <code>2026-08-21T05:30:00Z</code> (<code>Z</code> means UTC). Avoid
+            ambiguous forms like <code>08/21/26</code>.
+          </li>
+          <li>
+            Milliseconds vs seconds: APIs disagree. JavaScript{' '}
+            <code>Date.now()</code> is ms; classic Unix time is seconds. Mixing them
+            shifts dates by ~500× — always check the unit.
+          </li>
+          <li>
+            <strong>Naive</strong> datetimes (no timezone attached) are a trap: the
+            same digits mean different instants in different places. Attach an
+            offset or store UTC.
+          </li>
+          <li>
+            Scheduling “every day at 9:00 local” is not the same as “every 86,400
+            seconds” — DST nights are 23 or 25 hours long.
+          </li>
+        </ul>
+        <Callout kind="warning" title="Parse, don't guess">
+          Hand-rolled date parsing is a bug farm. Use a library (or the platform's{' '}
+          <code>Intl</code> / timezone database) that knows historical DST rules.
+        </Callout>
+      </Section>
+
       <Section id="hood" title="Under the hood">
         <UnderTheHood title="Why 'store UTC, display local' saves you">
           <p className="prose">
@@ -80,6 +108,7 @@ export default function TimeLesson() {
             { term: 'daylight saving', def: 'Seasonal shifting of local clocks, changing the offset.' },
             { term: 'ISO 8601', def: 'A standard unambiguous date/time string format.' },
             { term: 'wall-clock time', def: 'What a local clock reads for a given instant.' },
+            { term: 'naive datetime', def: 'A date/time value with no timezone — ambiguous across regions.' },
           ]}
         />
       </Section>
@@ -105,6 +134,12 @@ export default function TimeLesson() {
               answer: 1,
               explain: 'One-hour discrepancies typically come from timezone or daylight-saving handling.',
             },
+            {
+              q: 'Which string form is least ambiguous for APIs?',
+              options: ['08/21/26 5:30 PM', '2026-08-21T17:30:00Z', 'tomorrow afternoon', '21-08-26'],
+              answer: 1,
+              explain: 'ISO 8601 with a Z/offset states the instant clearly.',
+            },
           ]}
         />
       </Section>
@@ -115,7 +150,7 @@ export default function TimeLesson() {
             <>A <strong>Unix timestamp</strong> is one absolute instant in UTC.</>,
             <>Timezones are UTC plus an <strong>offset</strong>; the instant is the same everywhere.</>,
             <><strong>Store UTC, display local</strong> to avoid a whole class of bugs.</>,
-            <>Use 64-bit timestamps and ISO 8601 strings; beware 32-bit overflow (2038).</>,
+            <>Prefer <strong>ISO 8601</strong>; watch ms vs s; avoid naive datetimes.</>,
           ]}
         />
       </Section>

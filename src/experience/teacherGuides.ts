@@ -433,26 +433,27 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     objectives: [
       'Explain the epoch, UTC, and offsets.',
       'Convert an instant across timezones.',
-      'Avoid common time-handling bugs.',
+      'Avoid common format and DST pitfalls.',
     ],
     keyConcepts: [
       'A Unix timestamp is one absolute instant.',
       'A timezone is UTC plus an offset.',
       'Store UTC, display local.',
-      'ISO 8601 is the unambiguous string format.',
+      'ISO 8601 is the unambiguous string format; watch ms vs s.',
     ],
     misconceptions: [
       '"Store local time so it\'s easy to read."',
       '"A Unix timestamp includes a timezone."',
+      '"Every day is exactly 86,400 seconds of local wall time."',
     ],
     discussion: [
       'Why store timestamps in UTC?',
       'What breaks around daylight-saving transitions?',
     ],
-    lab: 'Use the converter: view one instant across zones, then add a day and confirm every zone moves by 86,400 seconds.',
+    lab: 'Use the converter across zones; discuss ISO 8601 vs ambiguous slash dates and ms vs second APIs.',
     assess: [
       'State where timestamps should be stored.',
-      'Define the Unix epoch.',
+      'Define the Unix epoch and spot a naive datetime.',
     ],
   },
   compute: {
@@ -739,6 +740,84 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     assess: [
       'Identify whether a function is pure.',
       'Rewrite a loop using map/filter/reduce.',
+    ],
+  },
+  json: {
+    objectives: [
+      'Explain serialization and why APIs need a shared format.',
+      'List the JSON value types and name types that do not survive a round-trip.',
+      'Dump and load JSON in Python and compare compact vs pretty forms.',
+    ],
+    keyConcepts: [
+      'Serialize = object → text; deserialize = text → object.',
+      'JSON types: object, array, string, number, true/false, null.',
+      'Sets, dates, and binary need an explicit encoding strategy.',
+      'Schemas/version fields help producers and consumers evolve safely.',
+    ],
+    misconceptions: [
+      '"Any Python object can be json.dumps\'d as-is."',
+      '"Pretty JSON is different data from compact JSON."',
+    ],
+    discussion: [
+      'When would you pick Protobuf or MessagePack over JSON?',
+      'How do you version a JSON API without breaking old clients?',
+    ],
+    lab: 'Run dump/load, then force a TypeError with a set and fix it via list(); compare byte sizes of compact vs indented output.',
+    assess: [
+      'Name three native JSON types and one that is not.',
+      'Explain what a round-trip preserves.',
+    ],
+  },
+  search: {
+    objectives: [
+      'Contrast linear and binary search and their Big-O costs.',
+      'State the sorted-input precondition for binary search.',
+      'Decide when sorting-then-searching beats a single linear scan.',
+    ],
+    keyConcepts: [
+      'Linear search is O(n) and order-agnostic.',
+      'Binary search is O(log n) on a sorted range.',
+      'Loop invariant: the target, if present, stays inside [lo, hi].',
+      'Indexes and hash maps are alternative lookup tools.',
+    ],
+    misconceptions: [
+      '"Binary search works on any list."',
+      '"Sorting is free, so always binary-search."',
+    ],
+    discussion: [
+      'How many lookups make pre-sorting worth it?',
+      'When is a hash map a better fit than binary search?',
+    ],
+    lab: 'Run linear vs binary snippets, then the million-element step comparison; have students predict step counts first.',
+    assess: [
+      'Estimate binary-search steps for n = 1,000,000.',
+      'Explain one off-by-one pitfall in the binary-search loop.',
+    ],
+  },
+  debugging: {
+    objectives: [
+      'Follow a reproduce → observe → hypothesize loop.',
+      'Choose appropriate log levels for an event.',
+      'Use assertions to catch broken invariants early.',
+    ],
+    keyConcepts: [
+      'Reliable reproduction before deep investigation.',
+      'DEBUG / INFO / WARNING / ERROR as a severity ladder.',
+      'Asserts document programmer assumptions, not user errors.',
+      'Bisect code or git history when the suspect set is large.',
+    ],
+    misconceptions: [
+      '"Randomly changing code is debugging."',
+      '"Assertions replace input validation for users."',
+    ],
+    discussion: [
+      'What belongs in production logs vs. a local debugger session?',
+      'How does flaky reproduction change your strategy?',
+    ],
+    lab: 'Add a print probe, switch logging levels to hide DEBUG, and trigger an AssertionError on empty input.',
+    assess: [
+      'Order the debugging loop.',
+      'Pick the right log level for a handled bad amount vs. a crash.',
     ],
   },
 }

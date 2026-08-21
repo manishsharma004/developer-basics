@@ -2917,27 +2917,50 @@ a {
   color: var(--muted);
   margin-bottom: 8px;
 }
-.theme-swatches {
+.theme-select-wrap {
   display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
 }
-.theme-swatch {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  border: 2px solid transparent;
-  padding: 0;
-  cursor: pointer;
+.theme-select-swatch {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
   box-shadow: 0 0 0 1px var(--border);
-  transition: transform 0.12s ease;
 }
-.theme-swatch:hover {
-  transform: scale(1.12);
+.theme-select {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  appearance: none;
+  background-color: var(--panel);
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 55%,
+    calc(100% - 9px) 55%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 28px 7px 10px;
+  font: inherit;
+  font-size: 0.82rem;
+  line-height: 1.2;
+  cursor: pointer;
 }
-.theme-swatch--active {
-  border-color: var(--bg);
-  box-shadow: 0 0 0 2px var(--accent);
+.theme-select:hover,
+.theme-select:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+.theme-select option,
+.theme-select optgroup {
+  background: var(--panel);
+  color: var(--text);
 }
 .sidebar-footer {
   margin-top: 8px;
@@ -2945,8 +2968,26 @@ a {
 .app--collapsed .theme-picker {
   padding: 12px 4px 6px;
 }
-.app--collapsed .theme-swatches {
-  justify-content: center;
+.app--collapsed .theme-picker-label {
+  display: none;
+}
+.app--collapsed .theme-select-wrap {
+  flex-direction: column;
+  gap: 6px;
+}
+.app--collapsed .theme-select {
+  writing-mode: horizontal-tb;
+  padding: 6px 4px;
+  font-size: 0;
+  background-image: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.app--collapsed .theme-select-swatch {
+  width: 18px;
+  height: 18px;
 }
 
 /* Light-theme contrast tweak for the amber teacher ribbon. */
@@ -3192,13 +3233,6 @@ a {
   --border: #444a6b; --text: #d0d3e0; --muted: #9aa0bd; --accent: #c792ea;
   --accent-2: #82aaff; --code-bg: #222533; --rail-bg: #242737; --bg-glow: #3a3f5c;
   --prose: #c6c9da; color-scheme: dark;
-}
-
-/* Scrollable theme picker for the large catalog. */
-.theme-swatches {
-  max-height: 92px;
-  overflow-y: auto;
-  padding-right: 2px;
 }
 
 /* =========================================================================
