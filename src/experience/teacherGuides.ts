@@ -3,7 +3,7 @@
 // for an instructor: what to achieve, what to emphasize, what students get wrong,
 // how to run the interactive lab, and how to assess understanding.
 
-import { databasesChapterGuides, fastapiChapterGuides, mongodbChapterGuides, reactChapterGuides, sqlChapterGuides, webChapterGuides } from './chapterGuides.ts'
+import { cssChapterGuides, databasesChapterGuides, fastapiChapterGuides, mongodbChapterGuides, reactChapterGuides, sqlChapterGuides, webChapterGuides } from './chapterGuides.ts'
 
 export interface TeacherGuide {
   objectives: string[]
@@ -845,6 +845,7 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     ],
   },
   ...webChapterGuides,
+  ...cssChapterGuides,
   ...fastapiChapterGuides,
   ...reactChapterGuides,
   security: {

@@ -35,6 +35,7 @@ import FunctionalLesson from './functional/FunctionalLesson.tsx'
 import JsonLesson from './json/JsonLesson.tsx'
 import SearchLesson from './search/SearchLesson.tsx'
 import DebuggingLesson from './debugging/DebuggingLesson.tsx'
+import { CSS_CHAPTERS } from './css/chapters.tsx'
 import { WEB_CHAPTERS } from './web/chapters.tsx'
 import { DATABASES_CHAPTERS } from './databases/chapters.tsx'
 import { REACT_CHAPTERS } from './react/chapters.tsx'
@@ -78,6 +79,7 @@ const COMPONENTS: Record<string, ComponentType> = {
   apis: ApisLesson,
   auth: AuthLesson,
   ...WEB_CHAPTERS,
+  ...CSS_CHAPTERS,
   security: SecurityLesson,
   testing: TestingLesson,
   debugging: DebuggingLesson,

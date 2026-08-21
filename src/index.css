@@ -4109,3 +4109,166 @@ a {
 .pattern-code {
   font-size: 0.8rem;
 }
+
+/* CSS lesson labs --------------------------------------------------------- */
+.css-lab {
+  margin: 12px 0;
+}
+
+.css-lab-stage {
+  display: flex;
+  justify-content: center;
+  padding: 20px 12px;
+  background: rgba(148, 163, 184, 0.06);
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  margin: 12px 0;
+}
+
+.css-lab-margin {
+  position: relative;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px dashed rgba(251, 191, 36, 0.45);
+  border-radius: 8px;
+}
+
+.css-lab-border {
+  position: relative;
+  background: rgba(56, 189, 248, 0.08);
+  border-radius: 6px;
+}
+
+.css-lab-padding {
+  position: relative;
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px dashed rgba(52, 211, 153, 0.45);
+  border-radius: 4px;
+}
+
+.css-lab-content {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px 20px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.css-lab-label {
+  position: absolute;
+  top: 4px;
+  left: 6px;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.css-lab-flex {
+  min-height: 140px;
+  padding: 16px;
+  background: rgba(148, 163, 184, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin: 12px 0;
+}
+
+.css-lab-flex-item {
+  min-width: 56px;
+  min-height: 48px;
+  padding: 12px 18px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-weight: 700;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.css-lab-position-parent {
+  position: relative;
+  min-height: 160px;
+  padding: 16px 16px 48px;
+  background: rgba(148, 163, 184, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin: 12px 0;
+}
+
+.css-lab-position-parent > .css-lab-label {
+  position: static;
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.68rem;
+}
+
+.css-lab-placeholder {
+  margin: 8px 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.css-lab-position-child {
+  z-index: 2;
+  padding: 8px 14px;
+  background: var(--accent);
+  color: var(--bg, #0b1120);
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  width: fit-content;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.css-lab-overflow-box {
+  height: 120px;
+  padding: 10px 14px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin: 12px 0;
+}
+
+.css-lab-overflow-line {
+  margin: 0 0 8px;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+.css-lab-theme-card {
+  background: var(--demo-bg, var(--panel));
+  color: var(--demo-text, var(--text));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin: 12px 0;
+}
+
+.css-lab-theme-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+}
+
+.css-lab-theme-body {
+  margin: 0 0 14px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  opacity: 0.92;
+}
+
+.css-lab-theme-btn {
+  background: var(--demo-accent, var(--accent));
+  color: var(--demo-bg, #0b1120);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: default;
+}
