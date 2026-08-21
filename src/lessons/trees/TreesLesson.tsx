@@ -1,6 +1,7 @@
 import { Lesson } from '../components/Lesson.tsx'
 import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { SnippetRunner, type Snippet } from '../components/SnippetRunner.tsx'
+import { TreeTraversalViz } from './TreeTraversalViz.tsx'
 
 const SNIPPETS: Snippet[] = [
   {
@@ -145,6 +146,7 @@ export default function TreesLesson() {
           nodes in a graph.
         </p>
         <SnippetRunner snippets={SNIPPETS} />
+        <TreeTraversalViz />
         <TryThis>
           Run <strong>Depth-first</strong> then <strong>Breadth-first</strong> and
           compare the order the numbers print. Then in{' '}

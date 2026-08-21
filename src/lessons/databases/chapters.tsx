@@ -9,6 +9,7 @@ import {
   RamVsDbSim,
   ReplicationSim,
 } from './DbSims.tsx'
+import { NormalizationSim } from './NormalizationSim.tsx'
 
 const databasesIntro = createChapterLesson({
   id: 'databases-intro',
@@ -287,10 +288,13 @@ const databasesSchemas = createChapterLesson({
     </>
   ),
   playground: (
-    <DataModelSim
-      title="Normalization explorer"
-      hint="Relational tables store each fact once and join on read; embedded documents duplicate nested data for faster reads."
-    />
+    <>
+      <NormalizationSim />
+      <DataModelSim
+        title="Relational vs document shape"
+        hint="Relational tables store each fact once and join on read; embedded documents duplicate nested data for faster reads."
+      />
+    </>
   ),
   terms: [
     { term: 'schema', def: 'The structure of stored data — columns, types, and relationships.' },

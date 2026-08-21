@@ -55,6 +55,20 @@ describe("hello")`,
     print("==", a == b, a == c)   # same contents
     print("is", a is b, a is c)   # same object in memory`,
   },
+  {
+    label: 'Type conversion',
+    code: `age_str = "36"
+age = int(age_str)
+print(type(age_str), age_str)
+print(type(age), age)
+
+# "3" + 1 fails — parse first
+try:
+    print("3" + 1)
+except TypeError as e:
+    print("TypeError:", e)
+print(int("3") + 1)`,
+  },
 
 ]
 
@@ -120,6 +134,7 @@ export default function VariablesLesson() {
           User input from forms and CLI arguments arrives as strings. Parse before
           doing math.
         </Callout>
+        <SnippetRunner snippets={SNIPPETS.filter((s) => s.label === 'Type conversion')} />
       </Section>
 
       <Section id="hood" title="Under the hood">

@@ -2,6 +2,7 @@ import { Lesson } from '../components/Lesson.tsx'
 import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { SnippetRunner, type Snippet } from '../components/SnippetRunner.tsx'
 import { RacePlayground } from './RacePlayground.tsx'
+import { AsyncParallelSim } from './AsyncParallelSim.tsx'
 
 const SNIPPETS: Snippet[] = [
   {
@@ -147,6 +148,7 @@ export default function ConcurrencyLesson() {
           <li>Async helps I/O-bound work (network, disk); CPU-bound work often needs processes or a thread pool.</li>
           <li>Even async code can race if you mutate shared state without coordination.</li>
         </ul>
+        <AsyncParallelSim />
         <SnippetRunner snippets={SNIPPETS.filter((s) => s.label.startsWith('Async'))} />
         <Callout kind="note" title="JavaScript note">
           JavaScript on the browser is single-threaded for your code; <code>await</code>{' '}

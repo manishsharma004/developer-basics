@@ -1,6 +1,7 @@
 import { Lesson } from '../components/Lesson.tsx'
 import { Section, Callout, CodePreview, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { SnippetRunner, type Snippet } from '../components/SnippetRunner.tsx'
+import { TddCycleSim } from './TddCycleSim.tsx'
 
 const SNIPPETS: Snippet[] = [
   {
@@ -156,6 +157,7 @@ export default function TestingLesson() {
           Use it when behavior is unclear or regressions are costly. You do not need a
           test for every private helper — test behavior callers depend on.
         </Callout>
+        <TddCycleSim />
       </Section>
 
       <Section id="unit" title="What to test in a unit">

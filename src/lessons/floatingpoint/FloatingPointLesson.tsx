@@ -1,6 +1,7 @@
 import { Lesson } from '../components/Lesson.tsx'
 import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { SnippetRunner, type Snippet } from '../components/SnippetRunner.tsx'
+import { IsCloseDemo } from './IsCloseDemo.tsx'
 
 const SNIPPETS: Snippet[] = [
   {
@@ -96,6 +97,7 @@ export default function FloatingPointLesson() {
           Never use float for currency in production ledgers. Integers + fixed scale
           or a decimal library are the standard fixes.
         </Callout>
+        <IsCloseDemo />
       </Section>
 
       <Section id="hood" title="Under the hood">
