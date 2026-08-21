@@ -12,6 +12,9 @@
   --rail-bg: #0b1120;
   --bg-glow: #182544;
   --prose: #cdd7ea;
+  --quiz-correct: #6ee7b7;
+  --quiz-wrong: #fca5a5;
+  --quiz-warn: #fde68a;
   --radius: 14px;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
     sans-serif;
@@ -38,6 +41,9 @@
   --rail-bg: #e9eef7;
   --bg-glow: #dfe8f6;
   --prose: #26364f;
+  --quiz-correct: #047857;
+  --quiz-wrong: #b91c1c;
+  --quiz-warn: #b45309;
   color-scheme: light;
 }
 
@@ -1747,7 +1753,7 @@ a {
   align-items: center;
   gap: 10px;
   text-align: left;
-  background: var(--code-bg);
+  background: var(--panel-2);
   border: 1px solid var(--border);
   color: var(--text);
   border-radius: 9px;
@@ -1770,25 +1776,26 @@ a {
   height: 22px;
   border-radius: 50%;
   border: 1px solid var(--border);
+  color: var(--muted);
   font-size: 0.78rem;
   font-weight: 700;
   flex-shrink: 0;
 }
 .quiz-option--correct {
   border-color: rgba(52, 211, 153, 0.6);
-  background: rgba(52, 211, 153, 0.12);
+  background: color-mix(in srgb, #34d399 14%, var(--panel-2));
 }
 .quiz-option--correct .quiz-marker {
-  border-color: #6ee7b7;
-  color: #6ee7b7;
+  border-color: var(--quiz-correct);
+  color: var(--quiz-correct);
 }
 .quiz-option--wrong {
   border-color: rgba(248, 113, 113, 0.6);
-  background: rgba(248, 113, 113, 0.12);
+  background: color-mix(in srgb, #f87171 14%, var(--panel-2));
 }
 .quiz-option--wrong .quiz-marker {
-  border-color: #fca5a5;
-  color: #fca5a5;
+  border-color: var(--quiz-wrong);
+  color: var(--quiz-wrong);
 }
 .quiz-feedback {
   margin-top: 12px;
@@ -1798,12 +1805,12 @@ a {
   border-radius: 9px;
 }
 .quiz-feedback--ok {
-  background: rgba(52, 211, 153, 0.1);
-  color: #a7f3d0;
+  background: color-mix(in srgb, #34d399 12%, var(--panel-2));
+  color: var(--quiz-correct);
 }
 .quiz-feedback--no {
-  background: rgba(251, 191, 36, 0.1);
-  color: #fde68a;
+  background: color-mix(in srgb, #fbbf24 14%, var(--panel-2));
+  color: var(--quiz-warn);
 }
 
 /* Key terms --------------------------------------------------------------- */
@@ -3233,6 +3240,18 @@ a {
   --border: #444a6b; --text: #d0d3e0; --muted: #9aa0bd; --accent: #c792ea;
   --accent-2: #82aaff; --code-bg: #222533; --rail-bg: #242737; --bg-glow: #3a3f5c;
   --prose: #c6c9da; color-scheme: dark;
+}
+
+/* Quiz feedback uses semantic greens/ambers — darker on light UI themes */
+[data-theme='solarized-light'],
+[data-theme='one-light'],
+[data-theme='gruvbox-light'],
+[data-theme='catppuccin-latte'],
+[data-theme='github-light'],
+[data-theme='ayu-light'] {
+  --quiz-correct: #047857;
+  --quiz-wrong: #b91c1c;
+  --quiz-warn: #b45309;
 }
 
 /* =========================================================================
