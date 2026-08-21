@@ -246,3 +246,43 @@ export const fastapiChapterGuides: Record<string, TeacherGuide> = {
     ['Where does validation happen?', 'What stores authoritative state?'],
   ),
 }
+
+export const databasesChapterGuides: Record<string, TeacherGuide> = {
+  'databases-intro': chapterGuide('Why databases', 'Explain durable storage vs RAM.', ['Persistence', 'Source of truth', 'Beyond plain files'], 'Contrast in-memory dict vs restarted process losing data.', ['Why not keep everything in RAM?', 'What is the source of truth?']),
+  'databases-architecture': chapterGuide('Architecture', 'Map app → driver → engine → disk.', ['Embedded vs client-server', 'Drivers/connectors', 'Connection pools'], 'Draw SQLite in-process vs Postgres server diagram.', ['When use embedded SQLite?', 'What does a driver do?']),
+  'databases-models': chapterGuide('Data models', 'Survey relational, document, key-value, graph.', ['Table vs document vs key', 'Polyglot persistence', 'Access patterns'], 'Give one example query each family handles well.', ['When JOIN-heavy SQL?', 'When documents fit better?']),
+  'databases-acid': chapterGuide('ACID', 'Teach transactions with transfer example.', ['Atomicity', 'Isolation', 'Durability'], 'Walk through debit+credit commit/rollback story.', ['What does atomic mean?', 'When do you need a transaction?']),
+  'databases-schemas': chapterGuide('Schema design', 'Normalization, constraints, migrations.', ['Normalize first', 'Foreign keys', 'Migration scripts'], 'Sketch customers/orders ERD before SQL module.', ['What does normalization reduce?', 'Why migrations?']),
+  'databases-choosing': chapterGuide('SQL vs Mongo', 'Decision framework before deep dives.', ['Joins vs embed', 'Schema stability', 'Redis as cache'], 'Poll class: ecommerce orders — SQL or Mongo? Discuss.', ['Default for structured APIs?', 'When Mongo wins?']),
+  'databases-hood': chapterGuide('Production basics', 'Replication, backups, sharding overview.', ['Replica sets', 'Test restores', 'Index trade-offs'], 'Emphasize untested backups are a risk.', ['What does replication help?', 'When shard?']),
+}
+
+export const sqlChapterGuides: Record<string, TeacherGuide> = {
+  'sql-intro': chapterGuide('Why SQL', 'Explain declarative SQL over relational tables.', ['Tables and rows', 'Declarative queries', 'Portable across engines'], 'Relate to the sample customers/orders schema used later.', ['What is declarative SQL?', 'Where does data live in a relational DB?']),
+  'sql-tables': chapterGuide('Tables & queries', 'Write SELECT, WHERE, ORDER BY, LIMIT.', ['SELECT/FROM/WHERE', 'ORDER BY and LIMIT', 'JOIN and GROUP BY intro'], 'Sketch a query on the board before opening the playground.', ['Which clause filters rows?', 'What does JOIN combine?']),
+  'sql-schema': chapterGuide('Schema & keys', 'Define primary and foreign keys and relationships.', ['Primary key', 'Foreign key', 'Normalization trade-offs'], 'Draw customers ↔ orders ERD.', ['What does a foreign key enforce?', 'When denormalize?']),
+  'sql-writes': chapterGuide('SQL writes', 'Use INSERT, UPDATE, DELETE with WHERE and transactions.', ['INSERT/UPDATE/DELETE', 'WHERE on writes', 'Transactions'], 'Show an unqualified DELETE caution tale.', ['Why use WHERE on UPDATE?', 'Why transactions for transfers?']),
+  'sql-advanced': chapterGuide('Advanced SQL', 'Compare JOIN types, HAVING, and subqueries.', ['INNER vs LEFT JOIN', 'HAVING vs WHERE', 'Subqueries'], 'Run LEFT JOIN sample in playground after theory.', ['What does LEFT JOIN keep?', 'HAVING filters what?']),
+  'sql-conn-sqlite': chapterGuide('SQLite', 'Connect with sqlite3 and ? placeholders.', ['sqlite3 module', ':memory: vs file', 'Parameterized queries'], 'Run Connect & query snippet.', ['Why ? placeholders?', 'When use SQLite?']),
+  'sql-conn-postgres': chapterGuide('Postgres drivers', 'Use psycopg2/asyncpg and DSN strings.', ['DSN format', '%s placeholders', 'Server vs embedded'], 'Run Postgres-style connector snippet.', ['What is a DSN?', 'psycopg2 connects to what?']),
+  'sql-conn-pool': chapterGuide('Connection pools', 'Reuse connections with acquire/release.', ['Pool exhaustion', 'Warm connections', 'Release after use'], 'Exhaust the pool in the snippet.', ['Why pools in web apps?', 'What happens when pool is empty?']),
+  'sql-conn-orm': chapterGuide('SQLAlchemy ORM', 'Map classes to tables; know ORM trade-offs.', ['ORM generates SQL', 'Session API', 'Raw SQL for hot paths'], 'Run ORM-style query snippet; discuss when to drop to SQL.', ['What does an ORM do?', 'When prefer raw SQL?']),
+  'sql-playground': chapterGuide('SQL playground', 'Run live SQLite queries on sample data.', ['Real SQLite in browser', 'Joins and aggregates', 'Writes change data'], 'Students run LEFT JOIN and INSERT samples.', ['How to find customers with zero orders?', 'What does HAVING filter?']),
+  'sql-labs': chapterGuide('Python SQL labs', 'Practice sqlite3 patterns in Python.', ['Parameterization', 'JOIN in Python', 'Injection safety'], 'Run Parameterized query with malicious-looking input.', ['How do parameters stop injection?', 'Name the JOIN snippet output.']),
+  'sql-hood': chapterGuide('SQL internals', 'Explain indexes, planners, and injection.', ['B-tree indexes', 'EXPLAIN plans', 'Never concatenate user input'], 'Contrast string-built query vs parameterized.', ['Why indexes help?', 'What does EXPLAIN show?']),
+}
+
+export const mongodbChapterGuides: Record<string, TeacherGuide> = {
+  'mongodb-intro': chapterGuide('Why MongoDB', 'Contrast documents with relational tables.', ['Document model', 'Flexible schema', 'Embed vs reference'], 'Compare one order document vs normalized SQL tables.', ['What is a document?', 'When pick MongoDB over SQL?']),
+  'mongodb-documents': chapterGuide('Documents', 'Describe collections, _id, and flexible fields.', ['_id primary key', 'Embedded arrays', 'References'], 'Run Documents as dicts snippet.', ['What is a collection?', 'Can documents differ in shape?']),
+  'mongodb-queries': chapterGuide('Queries', 'Write find filters with operators.', ['Equality filters', '$gt and $in', 'JSON query syntax'], 'Filter London orders then amount > 100.', ['What does $gt mean?', 'How is find different from SQL WHERE?']),
+  'mongodb-writes': chapterGuide('Writes', 'Use insertOne, updateMany, deleteMany with $set.', ['insertOne', 'updateMany + $set', 'Schema discipline'], 'Discuss typo fields without validation.', ['What does $set do?', 'Why schema discipline still matters?']),
+  'mongodb-aggregation': chapterGuide('Aggregation', 'Build pipelines with $match, $group, $sort.', ['Pipeline stages', '$group + $sum', 'Like SQL GROUP BY'], 'Run Group & sum snippet; mirror in playground.', ['What is $group for?', 'First stage you usually use?']),
+  'mongodb-conn-pymongo': chapterGuide('PyMongo', 'Use MongoClient and collection methods.', ['MongoClient', 'find/insert_one', 'Sync driver'], 'Insert and find_one in PyMongo snippet.', ['What does insert_one return?', 'How pick database?']),
+  'mongodb-conn-uri': chapterGuide('MongoDB URI', 'Parse mongodb+srv connection strings.', ['Credentials in URI', 'retryWrites', 'Never commit secrets'], 'Parse sample Atlas URI in snippet.', ['What does mongodb+srv imply?', 'Where put credentials?']),
+  'mongodb-conn-motor': chapterGuide('Motor', 'Await async database calls.', ['Motor wraps PyMongo', 'asyncio integration', 'FastAPI pairing'], 'Run Motor async snippet; tie to FastAPI lesson.', ['Why Motor in FastAPI?', 'What happens during await?']),
+  'mongodb-conn-odm': chapterGuide('ODMs', 'Use Beanie/MongoEngine for typed documents.', ['ODM vs raw driver', 'Pydantic validation', 'When ODM helps'], 'Walk through Beanie Order model example.', ['When use ODM?', 'ODM vs PyMongo ad-hoc queries?']),
+  'mongodb-playground': chapterGuide('Mongo playground', 'Run shell commands on in-memory docs.', ['find and aggregate', 'insert/update', 'Compare to SQL JOIN'], 'Aggregate revenue then insert a document.', ['How add $limit stage?', 'Embed vs JOIN mentally?']),
+  'mongodb-labs': chapterGuide('Python labs', 'Filter and aggregate without a server.', ['Dict documents', 'Operator simulation', 'PyMongo patterns'], 'Extend Filter documents for $in.', ['How filter amount > 100?', 'What does aggregation compute?']),
+  'mongodb-hood': chapterGuide('MongoDB scale', 'Choose embed vs reference; indexes and sharding.', ['Embed vs reference', 'Indexes on filter fields', 'Sharding for scale'], 'Whiteboard embed order lines vs customer reference.', ['When embed vs reference?', 'What does sharding do?']),
+}

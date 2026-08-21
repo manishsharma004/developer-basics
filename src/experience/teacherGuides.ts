@@ -3,7 +3,7 @@
 // for an instructor: what to achieve, what to emphasize, what students get wrong,
 // how to run the interactive lab, and how to assess understanding.
 
-import { fastapiChapterGuides, reactChapterGuides } from './chapterGuides.ts'
+import { databasesChapterGuides, fastapiChapterGuides, mongodbChapterGuides, reactChapterGuides, sqlChapterGuides } from './chapterGuides.ts'
 
 export interface TeacherGuide {
   objectives: string[]
@@ -476,78 +476,9 @@ export const teacherGuides: Record<string, TeacherGuide> = {
       'Memoization helps when:',
     ],
   },
-  sql: {
-    objectives: [
-      'Describe tables, primary keys, and foreign keys.',
-      'Write SELECT / WHERE / JOIN / GROUP BY / HAVING queries.',
-      'Perform INSERT, UPDATE, and DELETE safely.',
-      'Explain indexes, transactions, and SQL injection.',
-      'Choose and configure SQL connectors (sqlite3, psycopg2, pools, ORMs).',
-    ],
-    keyConcepts: [
-      'SQL is declarative — say what, not how.',
-      'INNER vs LEFT JOIN; GROUP BY with aggregates.',
-      'HAVING filters groups; subqueries nest SELECTs.',
-      'Parameterized queries prevent injection.',
-      'Drivers connect apps to databases; pools reuse connections.',
-      'DSN strings encode host, credentials, and database name.',
-    ],
-    misconceptions: [
-      '"SQL specifies how the data is fetched."',
-      '"Building queries by string concatenation is fine."',
-      '"LEFT JOIN and INNER JOIN return the same rows."',
-      '"You can open a new connection per request without cost."',
-    ],
-    discussion: [
-      'When does adding an index help — and when does it hurt?',
-      'When would you denormalize a schema for read performance?',
-      'Why must user input be parameterized?',
-      'When would you use raw SQL vs an ORM?',
-    ],
-    lab: 'Run connector snippets (pool, Postgres DSN, ORM query builder); then LEFT JOIN, HAVING, and INSERT in the playground.',
-    assess: [
-      'Write a query totaling shipped revenue per city with HAVING.',
-      'Explain how parameterized queries stop injection.',
-      'What does a connection pool solve?',
-      'Name two Python SQL connectors and when you would use each.',
-    ],
-  },
-  mongodb: {
-    objectives: [
-      'Explain documents, collections, and _id.',
-      'Write find filters with operators like $gt and $in.',
-      'Build aggregation pipelines with $match, $group, and $sort.',
-      'Choose embed vs reference and compare to relational SQL.',
-      'Connect with PyMongo/Motor and parse connection URIs.',
-    ],
-    keyConcepts: [
-      'Documents are flexible JSON-like records.',
-      'Collections group documents; schema can vary per document.',
-      'Aggregation pipelines transform documents in stages.',
-      'Embed for read-together data; reference for shared entities.',
-      'PyMongo is sync; Motor is async for asyncio/FastAPI.',
-      'mongodb+srv URIs target Atlas clusters with TLS.',
-    ],
-    misconceptions: [
-      '"No schema means anything goes in production."',
-      '"MongoDB cannot do relationships."',
-      '"Document databases never need indexes."',
-      '"Motor replaces PyMongo with a different query language."',
-    ],
-    discussion: [
-      'When would you pick MongoDB over Postgres for a new project?',
-      'What breaks if you embed customer names in every order document?',
-      'How does sharding differ from replication?',
-      'When do you choose Motor over PyMongo?',
-    ],
-    lab: 'Run PyMongo client and URI parser snippets; then aggregate revenue, insert an order, and update pending orders in the playground.',
-    assess: [
-      'Write a find query for orders over $100 in London.',
-      'Explain embed vs reference with an example.',
-      'What does a MongoDB connection URI contain?',
-      'When would you use Motor instead of PyMongo?',
-    ],
-  },
+  ...databasesChapterGuides,
+  ...sqlChapterGuides,
+  ...mongodbChapterGuides,
   regex: {
     objectives: [
       'Read the core regex building blocks.',

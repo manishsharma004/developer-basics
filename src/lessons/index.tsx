@@ -16,8 +16,6 @@ import CliLesson from './cli/CliLesson.tsx'
 import DataStructuresLesson from './datastructures/DataStructuresLesson.tsx'
 import AlgorithmsLesson from './algorithms/AlgorithmsLesson.tsx'
 import RecursionLesson from './recursion/RecursionLesson.tsx'
-import SqlLesson from './sql/SqlLesson.tsx'
-import MongodbLesson from './mongodb/MongodbLesson.tsx'
 import RegexLesson from './regex/RegexLesson.tsx'
 import ErrorsLesson from './errors/ErrorsLesson.tsx'
 import CachingLesson from './caching/CachingLesson.tsx'
@@ -37,8 +35,10 @@ import FunctionalLesson from './functional/FunctionalLesson.tsx'
 import JsonLesson from './json/JsonLesson.tsx'
 import SearchLesson from './search/SearchLesson.tsx'
 import DebuggingLesson from './debugging/DebuggingLesson.tsx'
+import { DATABASES_CHAPTERS } from './databases/chapters.tsx'
 import { REACT_CHAPTERS } from './react/chapters.tsx'
 import { FASTAPI_CHAPTERS } from './fastapi/chapters.tsx'
+import { SQL_CHAPTERS } from './sql/chapters.tsx'
 import { MONGODB_CHAPTERS } from './mongodb/chapters.tsx'
 
 // Wire each metadata entry to its component. Adding a lesson = add a metadata
@@ -63,8 +63,6 @@ const COMPONENTS: Record<string, ComponentType> = {
   algorithms: AlgorithmsLesson,
   search: SearchLesson,
   recursion: RecursionLesson,
-  sql: SqlLesson,
-  mongodb: MongodbLesson,
   regex: RegexLesson,
   errors: ErrorsLesson,
   caching: CachingLesson,
@@ -82,9 +80,11 @@ const COMPONENTS: Record<string, ComponentType> = {
   testing: TestingLesson,
   debugging: DebuggingLesson,
   functional: FunctionalLesson,
+  ...DATABASES_CHAPTERS,
+  ...SQL_CHAPTERS,
+  ...MONGODB_CHAPTERS,
   ...REACT_CHAPTERS,
   ...FASTAPI_CHAPTERS,
-  ...MONGODB_CHAPTERS,
 }
 
 export interface RegisteredLesson extends LessonMeta {

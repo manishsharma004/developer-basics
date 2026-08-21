@@ -2,8 +2,11 @@
 // components so lesson components can read it without creating import cycles.
 // Adding a lesson = add an entry here + a component wired up in `index.tsx`.
 
+import { databasesLessonsMeta } from './databases/chapterMeta.ts'
 import { fastapiLessonsMeta } from './fastapi/chapterMeta.ts'
+import { mongodbLessonsMeta } from './mongodb/chapterMeta.ts'
 import { reactLessonsMeta } from './react/chapterMeta.ts'
+import { sqlLessonsMeta } from './sql/chapterMeta.ts'
 
 export type Level = 'Beginner' | 'Intermediate' | 'Advanced'
 
@@ -62,10 +65,28 @@ export const groups: LessonGroup[] = [
     blurb: 'Organize data well, search it efficiently, and reason about whether your code stays fast at scale.',
   },
   {
-    id: 'persistence',
-    title: 'Data & Persistence',
+    id: 'databases',
+    title: 'Databases & Persistence',
+    icon: '🗃️',
+    blurb: 'Why apps store data outside memory — models, ACID, and choosing SQL vs documents.',
+  },
+  {
+    id: 'sql',
+    title: 'SQL & Relational Databases',
     icon: '🗄️',
-    blurb: 'Store, query, cache, and move data reliably — from SQL tables to MongoDB documents.',
+    blurb: 'Tables, queries, joins, connectors, and a live SQLite playground.',
+  },
+  {
+    id: 'mongodb',
+    title: 'MongoDB & Documents',
+    icon: '🍃',
+    blurb: 'Flexible documents, aggregation pipelines, PyMongo, and Motor.',
+  },
+  {
+    id: 'persistence',
+    title: 'Caching & Queues',
+    icon: '💾',
+    blurb: 'Trade memory for speed with caches, and decouple services with message queues.',
   },
   {
     id: 'web',
@@ -451,61 +472,16 @@ export const lessonsMeta: LessonMeta[] = [
     ],
   },
 
-  // ── Data & Persistence ─────────────────────────────────────────────────
-  {
-    id: 'sql',
-    path: '/lessons/sql',
-    title: 'Databases & SQL',
-    tagline: 'Store, relate, and query data — with a real database in your browser.',
-    icon: '🗄️',
-    level: 'Beginner',
-    minutes: 32,
-    summary:
-      'Master tables, keys, JOINs, aggregates, subqueries, writes, and database connectors (sqlite3, psycopg2, pools, ORMs) — with a live SQLite playground and Python labs.',
-    group: 'persistence',
-    sections: [
-      { id: 'intro', title: 'Why it matters' },
-      { id: 'model', title: 'Tables & queries' },
-      { id: 'schema', title: 'Schema, keys & relationships' },
-      { id: 'writes', title: 'Insert, update & delete' },
-      { id: 'advanced', title: 'Joins, aggregates & subqueries' },
-      { id: 'conn-sqlite', title: 'SQLite & sqlite3' },
-      { id: 'conn-postgres', title: 'PostgreSQL drivers' },
-      { id: 'conn-pool', title: 'Connection pools' },
-      { id: 'conn-orm', title: 'ORMs & SQLAlchemy' },
-      { id: 'playground', title: 'Run SQL live' },
-      { id: 'labs', title: 'Code lab' },
-      { id: 'hood', title: 'Under the hood' },
-      ...CLOSING,
-    ],
-  },
-  {
-    id: 'mongodb',
-    path: '/lessons/mongodb',
-    title: 'MongoDB & Document Databases',
-    tagline: 'Flexible JSON documents, queries, and aggregation pipelines.',
-    icon: '🍃',
-    level: 'Intermediate',
-    minutes: 30,
-    summary:
-      'Learn documents, collections, query operators, aggregation pipelines, embed vs reference, and MongoDB connectors (PyMongo, Motor, URIs) — with a live shell playground and Python labs.',
-    group: 'persistence',
-    sections: [
-      { id: 'intro', title: 'Why it matters' },
-      { id: 'model', title: 'Documents & collections' },
-      { id: 'queries', title: 'Finding documents' },
-      { id: 'writes', title: 'Insert, update & delete' },
-      { id: 'aggregation', title: 'Aggregation pipelines' },
-      { id: 'conn-pymongo', title: 'PyMongo driver' },
-      { id: 'conn-uri', title: 'Connection URIs' },
-      { id: 'conn-motor', title: 'Motor (async driver)' },
-      { id: 'conn-odm', title: 'ODMs (Beanie / MongoEngine)' },
-      { id: 'playground', title: 'Run MongoDB commands' },
-      { id: 'labs', title: 'Code lab' },
-      { id: 'hood', title: 'Under the hood' },
-      ...CLOSING,
-    ],
-  },
+  // ── Databases (foundations) ────────────────────────────────────────────
+  ...databasesLessonsMeta,
+
+  // ── SQL ────────────────────────────────────────────────────────────────
+  ...sqlLessonsMeta,
+
+  // ── MongoDB ────────────────────────────────────────────────────────────
+  ...mongodbLessonsMeta,
+
+  // ── Caching & Queues ───────────────────────────────────────────────────
   {
     id: 'caching',
     path: '/lessons/caching',
