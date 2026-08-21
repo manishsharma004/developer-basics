@@ -4034,6 +4034,125 @@ a {
   font-size: 0.95rem;
 }
 
+.store-render-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent-2);
+  font-family: ui-monospace, monospace;
+}
+
+.store-viz {
+  margin-top: 14px;
+}
+
+.store-tree-node {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  margin: 8px 0;
+  background: var(--panel);
+}
+
+.store-tree-node--root {
+  border-color: var(--accent);
+}
+
+.store-tree-node--pass {
+  border-style: dashed;
+}
+
+.store-tree-node--skip {
+  border-style: dotted;
+}
+
+.store-tree-node--leaf {
+  background: var(--code-bg);
+}
+
+.store-tree-pass {
+  font-size: 0.85rem;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.store-themed-panel {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  min-height: 80px;
+}
+
+.store-themed-panel--dark {
+  background: #0b1120;
+  color: #e6edf7;
+}
+
+.store-themed-panel--light {
+  background: #f4f7fb;
+  color: #10203a;
+}
+
+.store-todo-done {
+  text-decoration: line-through;
+  opacity: 0.65;
+}
+
+.store-scenario {
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.store-chooser-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.store-btn-wrong {
+  border-color: var(--quiz-wrong) !important;
+}
+
+.store-hint--ok {
+  color: var(--quiz-correct);
+}
+
+.store-fix-hint {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+
+.store-redux-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.store-redux-step {
+  padding: 10px 12px;
+  border-left: 3px solid var(--border);
+  border-radius: 0 8px 8px 0;
+  background: var(--panel);
+  opacity: 0.55;
+}
+
+.store-redux-step--on {
+  opacity: 1;
+  border-left-color: var(--accent);
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.store-redux-label {
+  display: inline-block;
+  min-width: 64px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-right: 8px;
+}
+
 /* OOP / SOLID ------------------------------------------------------------- */
 .solid-list {
   display: flex;
