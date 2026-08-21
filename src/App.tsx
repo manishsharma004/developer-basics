@@ -10,9 +10,17 @@ import { useTheme } from './theme/ThemeContext.tsx'
 import { THEMES, type ThemeId } from './theme/themes.ts'
 import { FeedbackDialog } from './components/FeedbackDialog.tsx'
 import { GlobalSearch, searchShortcutLabel, useGlobalSearchShortcut } from './components/GlobalSearch.tsx'
+import { useProgress } from './progress/ProgressContext.tsx'
 
 const LEVELS: Level[] = ['Beginner', 'Intermediate', 'Advanced']
 const COLLAPSE_KEY = 'devbasics.sidebarCollapsed'
+
+function navLinkClass(isActive: boolean, read: boolean, base = 'nav-link') {
+  let cls = base
+  if (isActive) cls += ' active'
+  if (read) cls += ' nav-link--read'
+  return cls
+}
 
 function App() {
   const { experience, setExperience } = useExperience()
@@ -31,6 +39,8 @@ function App() {
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [closedGroups, setClosedGroups] = useState<Record<string, boolean>>({})
+
+  const { getProgress } = useProgress()
 
   const activeLesson = lessons.find((l) => l.path === location.pathname)
 
@@ -170,7 +180,9 @@ function App() {
                     <NavLink
                       key={lesson.id}
                       to={lesson.path}
-                      className="nav-link"
+                      className={({ isActive }) =>
+                        navLinkClass(isActive, getProgress(lesson.id)?.read ?? false)
+                      }
                       title={lesson.title}
                       onClick={closeMobile}
                     >
@@ -210,7 +222,9 @@ function App() {
                       <NavLink
                         key={lesson.id}
                         to={lesson.path}
-                        className="nav-link nav-link--child"
+                        className={({ isActive }) =>
+                          navLinkClass(isActive, getProgress(lesson.id)?.read ?? false, 'nav-link nav-link--child')
+                        }
                         title={lesson.title}
                         onClick={closeMobile}
                       >

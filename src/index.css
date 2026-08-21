@@ -209,6 +209,20 @@ a {
   color: var(--text);
 }
 
+.nav-link--read:not(.active) {
+  color: color-mix(in srgb, var(--muted) 88%, var(--text));
+  background: color-mix(in srgb, var(--panel-2) 55%, transparent);
+}
+
+.nav-link--read:not(.active):hover {
+  color: var(--text);
+  background: rgba(148, 164, 195, 0.1);
+}
+
+.nav-link--read:not(.active) .nav-label {
+  opacity: 0.82;
+}
+
 .nav-icon {
   width: 22px;
   text-align: center;
@@ -1158,6 +1172,20 @@ a {
 .badge--muted {
   background: rgba(148, 164, 195, 0.15);
   color: var(--muted);
+}
+.badge--progress {
+  background: rgba(56, 189, 248, 0.14);
+  color: var(--accent);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
+}
+.badge--read {
+  background: rgba(52, 211, 153, 0.14);
+  color: var(--quiz-correct);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
 }
 
 /* Lesson layout ----------------------------------------------------------- */
