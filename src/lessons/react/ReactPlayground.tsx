@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { CodePreview } from '../components/blocks.tsx'
 
 function Greeting({ name, role }: { name: string; role: string }) {
   return (
@@ -30,11 +31,14 @@ export function CounterDemo() {
   const [count, setCount] = useState(0)
   return (
     <div className="panel">
-      <pre className="term-output">{`const [count, setCount] = useState(0)
+      <CodePreview
+        language="javascript"
+        code={`const [count, setCount] = useState(0)
 
 <button onClick={() => setCount(c => c + 1)}>
   Count: {count}
-</button>`}</pre>
+</button>`}
+      />
       <div className="react-counter">
         <button className="btn" onClick={() => setCount((c) => c - 1)}>−</button>
         <span className="react-count-display">Count: <b>{count}</b></span>
@@ -49,7 +53,7 @@ export function PropsDemo() {
   const [role, setRole] = useState('admin')
   return (
     <div className="panel">
-      <pre className="term-output">{`<Greeting name="Ada" role="admin" />`}</pre>
+      <CodePreview language="javascript" code={`<Greeting name="Ada" role="admin" />`} />
       <div className="class-create">
         <label className="conv-field"><span>name</span><input value={name} onChange={(e) => setName(e.target.value)} /></label>
         <label className="conv-field"><span>role</span><input value={role} onChange={(e) => setRole(e.target.value)} /></label>
@@ -75,9 +79,12 @@ export function ListsDemo() {
 
   return (
     <div className="panel">
-      <pre className="term-output">{`{todos.map(todo => (
+      <CodePreview
+        language="javascript"
+        code={`{todos.map(todo => (
   <TodoItem key={todo.id} ... />
-))}`}</pre>
+))}`}
+      />
       <div className="react-todo-list">
         {todos.map((todo) => (
           <TodoItem

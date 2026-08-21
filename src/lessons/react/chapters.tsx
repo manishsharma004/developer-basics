@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react'
 import { createChapterLesson } from '../components/ChapterLesson.tsx'
-import { Callout, UnderTheHood, TryThis } from '../components/blocks.tsx'
+import { Callout, CodePreview, UnderTheHood, TryThis } from '../components/blocks.tsx'
 import { CounterDemo, PropsDemo, ListsDemo } from './ReactPlayground.tsx'
 import { ContextStoreDemo, ExternalStoreDemo } from './ReactStorePlayground.tsx'
 
@@ -81,14 +81,17 @@ export const REACT_CHAPTERS: Record<string, ComponentType> = {
           A React component is a function that returns <strong>JSX</strong> — HTML-like
           syntax that compiles to JavaScript function calls. Components nest like HTML tags:
         </p>
-        <pre className="term-output">{`function App() {
+        <CodePreview
+          language="javascript"
+          code={`function App() {
   return (
     <main>
       <h1>Dashboard</h1>
       <UserCard name="Ada" />
     </main>
   )
-}`}</pre>
+}`}
+        />
         <ul className="prose-list">
           <li>One component per file is common; name components with PascalCase.</li>
           <li>Compose small components into pages — each owns a slice of the UI.</li>
@@ -196,12 +199,15 @@ export const REACT_CHAPTERS: Record<string, ComponentType> = {
           They let you reuse the same component with different data — like function arguments
           for UI.
         </p>
-        <pre className="term-output">{`function Badge({ label, color }) {
+        <CodePreview
+          language="javascript"
+          code={`function Badge({ label, color }) {
   return <span style={{ background: color }}>{label}</span>
 }
 
 // Parent passes props:
-<Badge label="New" color="#34d399" />`}</pre>
+<Badge label="New" color="#34d399" />`}
+        />
         <Callout kind="warning" title="Props are immutable">
           A child must never mutate its props. If something needs to change, lift state up
           to a parent and pass new props down — or use local state in the child.
@@ -251,7 +257,9 @@ export const REACT_CHAPTERS: Record<string, ComponentType> = {
           When a component needs to remember something between renders — a counter, form
           input, open/closed toggle — use the <code>useState</code> hook:
         </p>
-        <pre className="term-output">{`import { useState } from 'react'
+        <CodePreview
+          language="javascript"
+          code={`import { useState } from 'react'
 
 function Counter() {
   const [count, setCount] = useState(0)
@@ -260,7 +268,8 @@ function Counter() {
       Count: {count}
     </button>
   )
-}`}</pre>
+}`}
+        />
         <ul className="prose-list">
           <li><code>useState(initial)</code> returns <code>[value, setter]</code>.</li>
           <li>Always update state with the setter — never mutate the value directly.</li>
@@ -313,12 +322,15 @@ function Counter() {
           <code>onClick</code> and <code>onChange</code>. Pass a function reference or
           arrow function; React calls it with a synthetic event.
         </p>
-        <pre className="term-output">{`<button onClick={() => setCount(c => c + 1)}>+</button>
+        <CodePreview
+          language="javascript"
+          code={`<button onClick={() => setCount(c => c + 1)}>+</button>
 
 <input
   value={name}
   onChange={(e) => setName(e.target.value)}
-/>`}</pre>
+/>`}
+        />
         <ul className="prose-list">
           <li>Handlers run in JavaScript — call <code>setState</code> to trigger a re-render.</li>
           <li>Prevent default form submit with <code>e.preventDefault()</code> when needed.</li>
@@ -369,14 +381,17 @@ function Counter() {
           Render collections with <code>.map()</code>. Each child needs a stable{' '}
           <code>key</code> so React can match items across re-renders when order changes.
         </p>
-        <pre className="term-output">{`{todos.map(todo => (
+        <CodePreview
+          language="javascript"
+          code={`{todos.map(todo => (
   <TodoItem
     key={todo.id}
     text={todo.text}
     done={todo.done}
     onToggle={() => toggle(todo.id)}
   />
-))}`}</pre>
+))}`}
+        />
         <ul className="prose-list">
           <li>Use a unique id from your data — not array index if items can reorder or delete.</li>
           <li>Toggle or edit by mapping to a new array: <code>setTodos(t =&gt; t.map(...))</code>.</li>
@@ -433,14 +448,17 @@ function Counter() {
           <em>do</em> something after render (fetch data, subscribe, sync document title),
           use <code>useEffect</code>:
         </p>
-        <pre className="term-output">{`useEffect(() => {
+        <CodePreview
+          language="javascript"
+          code={`useEffect(() => {
   document.title = \`Count: \${count}\`
 }, [count])   // re-run when count changes
 
 useEffect(() => {
   const id = setInterval(tick, 1000)
   return () => clearInterval(id)   // cleanup on unmount
-}, [])`}</pre>
+}, [])`}
+        />
         <Callout kind="tip" title="Dependency array">
           The second argument lists values the effect depends on. Omit it and the effect
           runs after every render; pass <code>[]</code> to run once on mount.
@@ -556,7 +574,9 @@ useEffect(() => {
           <strong>Context</strong> lets you provide a value at the top of a subtree
           and read it anywhere below — no intermediate props required.
         </p>
-        <pre className="term-output">{`const UserContext = createContext(null)
+        <CodePreview
+          language="javascript"
+          code={`const UserContext = createContext(null)
 
 function App() {
   const [user, setUser] = useState({ name: 'Ada', role: 'admin' })
@@ -566,7 +586,8 @@ function App() {
       <Sidebar />   {/* same — no props passed down */}
     </UserContext.Provider>
   )
-}`}</pre>
+}`}
+        />
         <Callout kind="tip" title="Good for">
           Infrequently-changing global data: current user, theme, locale, feature flags.
           Avoid putting fast-updating values in Context — every consumer re-renders.
@@ -627,14 +648,17 @@ function App() {
           <em>subscribe</em> to the slices they need — Zustand and Redux are the most
           common libraries.
         </p>
-        <pre className="term-output">{`// Zustand (minimal API)
+        <CodePreview
+          language="javascript"
+          code={`// Zustand (minimal API)
 const useCartStore = create((set) => ({
   items: [],
   add: (item) => set((s) => ({ items: [...s.items, item] })),
 }))
 
 // Redux Toolkit: actions + reducers + one store
-dispatch(addItem({ id: 1, name: 'Keyboard' }))`}</pre>
+dispatch(addItem({ id: 1, name: 'Keyboard' }))`}
+        />
         <ExternalStoreDemo />
         <Callout kind="tip" title="Server state">
           Data from APIs (users list, product catalog) often belongs in{' '}

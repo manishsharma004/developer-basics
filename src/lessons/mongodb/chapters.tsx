@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react'
 import { createChapterLesson } from '../components/ChapterLesson.tsx'
-import { Callout, UnderTheHood, TryThis } from '../components/blocks.tsx'
+import { Callout, CodePreview, UnderTheHood, TryThis } from '../components/blocks.tsx'
 import { SnippetRunner } from '../components/SnippetRunner.tsx'
 import { MongoPlayground } from './MongoPlayground.tsx'
 import { MONGODB_SNIPPETS, snippets } from './snippets.ts'
@@ -307,14 +307,17 @@ const mongodbConnPymongo = createChapterLesson({
         collection, then call methods like <code>find</code>, <code>insert_one</code>, and{' '}
         <code>update_many</code>.
       </p>
-      <pre className="term-output">{`from pymongo import MongoClient
+      <CodePreview
+        language="python"
+        code={`from pymongo import MongoClient
 
 client = MongoClient("mongodb://localhost:27017")
 db = client["shop"]
 orders = db.orders.find({"status": "shipped"}).limit(10)
 
 for doc in orders:
-    print(doc["city"], doc["amount"])`}</pre>
+    print(doc["city"], doc["amount"])`}
+      />
     </>
   ),
   playground: (
@@ -372,7 +375,10 @@ const mongodbConnUri = createChapterLesson({
         <code>mongodb://host:27017/dbname</code>. Query parameters set options like{' '}
         <code>retryWrites</code> and <code>w=majority</code>.
       </p>
-      <pre className="term-output">{`mongodb+srv://user:pass@cluster0.abc.mongodb.net/shop?retryWrites=true&w=majority`}</pre>
+      <CodePreview
+        language="python"
+        code={`mongodb+srv://user:pass@cluster0.abc.mongodb.net/shop?retryWrites=true&w=majority`}
+      />
       <Callout kind="note" title="Atlas vs self-hosted">
         The driver API is identical — only the URI and TLS setup differ. Never commit
         credentials; use environment variables in production.
@@ -426,10 +432,13 @@ const mongodbConnMotor = createChapterLesson({
         serve other requests while waiting on the network — the same concurrency idea as
         async HTTP handlers.
       </p>
-      <pre className="term-output">{`from motor.motor_asyncio import AsyncIOMotorClient
+      <CodePreview
+        language="python"
+        code={`from motor.motor_asyncio import AsyncIOMotorClient
 
 client = AsyncIOMotorClient(uri)
-doc = await client.shop.orders.find_one({"_id": order_id})`}</pre>
+doc = await client.shop.orders.find_one({"_id": order_id})`}
+      />
     </>
   ),
   playground: (
@@ -486,13 +495,16 @@ const mongodbConnOdm = createChapterLesson({
         <strong>Beanie</strong> (async, Pydantic-based) and <strong>MongoEngine</strong>{' '}
         (sync) add validation, defaults, and query helpers on top of the driver layer.
       </p>
-      <pre className="term-output">{`# Beanie + Pydantic (conceptual)
+      <CodePreview
+        language="python"
+        code={`# Beanie + Pydantic (conceptual)
 class Order(Document):
     city: str
     amount: float
     status: str = "pending"
 
-# await Order.find(Order.amount > 100).to_list()`}</pre>
+# await Order.find(Order.amount > 100).to_list()`}
+      />
       <Callout kind="tip" title="When to use an ODM">
         ODMs shine when documents map cleanly to typed models and you want validation on
         write. Raw PyMongo is fine for ad-hoc queries, aggregations, and scripts.
