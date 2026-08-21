@@ -1,0 +1,279 @@
+import { Lesson } from '../components/Lesson.tsx'
+import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
+import { SnippetRunner, type Snippet } from '../components/SnippetRunner.tsx'
+import { MongoPlayground } from './MongoPlayground.tsx'
+
+const SNIPPETS: Snippet[] = [
+  {
+    label: 'Documents as dicts',
+    code: `order = {
+    "_id": 1,
+    "customer_id": 1,
+    "product": "Keyboard",
+    "amount": 80.0,
+    "status": "shipped",
+    "tags": ["hardware", "peripherals"],
+}
+
+print(order["product"])
+print("shipped?", order["status"] == "shipped")
+print("tags:", order["tags"])`,
+  },
+  {
+    label: 'Filter documents',
+    code: `orders = [
+    {"_id": 1, "city": "London", "amount": 80, "status": "shipped"},
+    {"_id": 2, "city": "London", "amount": 220, "status": "shipped"},
+    {"_id": 3, "city": "New York", "amount": 50, "status": "pending"},
+]
+
+def find(docs, filt):
+    out = []
+    for doc in docs:
+        ok = True
+        for key, val in filt.items():
+            if isinstance(val, dict):
+                if "$gt" in val and not doc[key] > val["$gt"]:
+                    ok = False
+            elif doc.get(key) != val:
+                ok = False
+        if ok:
+            out.append(doc)
+    return out
+
+print(find(orders, {"city": "London"}))
+print(find(orders, {"amount": {"$gt": 100}}))`,
+  },
+  {
+    label: 'Group & sum (aggregation)',
+    code: `orders = [
+    {"city": "London", "amount": 80, "status": "shipped"},
+    {"city": "London", "amount": 220, "status": "shipped"},
+    {"city": "New York", "amount": 50, "status": "pending"},
+    {"city": "New York", "amount": 1300, "status": "shipped"},
+]
+
+totals = {}
+for o in orders:
+    if o["status"] != "shipped":
+        continue
+    bucket = totals.setdefault(o["city"], {"orders": 0, "revenue": 0})
+    bucket["orders"] += 1
+    bucket["revenue"] += o["amount"]
+
+for city, stats in sorted(totals.items(), key=lambda x: -x[1]["revenue"]):
+    print(city, stats)`,
+  },
+]
+
+export default function MongodbLesson() {
+  return (
+    <Lesson id="mongodb">
+      <Section id="intro" title="Why it matters">
+        <p className="prose">
+          Not every problem fits neatly into rows and columns. <strong>MongoDB</strong>{' '}
+          is a popular <strong>document database</strong> — it stores flexible JSON-like
+          records called <strong>documents</strong> grouped into{' '}
+          <strong>collections</strong>. Startups and large teams use it when schemas
+          evolve quickly or when nested data is the natural shape.
+        </p>
+        <Callout kind="why" title="The one idea">
+          Instead of joining tables, you often embed related data in one document —
+          or reference another document's <code>_id</code> when sharing is needed.
+        </Callout>
+      </Section>
+
+      <Section id="model" title="Documents & collections">
+        <p className="prose">
+          A <strong>document</strong> is a JSON object with fields of mixed types —
+          strings, numbers, arrays, nested objects. A <strong>collection</strong> is
+          like a table, but every document in it need not share the same fields.
+        </p>
+        <ul className="prose-list">
+          <li><code>_id</code> — unique identifier for each document (like a primary key).</li>
+          <li><strong>Flexible schema</strong> — new fields can appear on some documents only.</li>
+          <li><strong>Embedded arrays</strong> — e.g. <code>tags: ["vip", "eu"]</code> inside a customer.</li>
+          <li><strong>References</strong> — e.g. <code>customer_id: 2</code> pointing at another document.</li>
+        </ul>
+        <Callout kind="tip" title="SQL vs MongoDB">
+          SQL normalizes data across tables; MongoDB often denormalizes for read speed.
+          Neither is "better" — pick based on access patterns, team skills, and how
+          often the shape of your data changes.
+        </Callout>
+      </Section>
+
+      <Section id="queries" title="Finding documents">
+        <p className="prose">
+          MongoDB queries are JSON filters, not SQL strings. A plain match means equality;
+          operators like <code>$gt</code>, <code>$in</code>, and <code>$regex</code>{' '}
+          express richer conditions.
+        </p>
+        <ul className="prose-list">
+          <li><code>db.orders.find(&#123; "city": "London" &#125;)</code></li>
+          <li><code>db.orders.find(&#123; "amount": &#123; "$gt": 100 &#125; &#125;)</code></li>
+          <li><code>db.customers.find(&#123; "tags": &#123; "$in": ["vip"] &#125; &#125;)</code></li>
+        </ul>
+      </Section>
+
+      <Section id="writes" title="Insert, update & delete">
+        <p className="prose">
+          Writes target documents, not rows defined by a rigid schema. Updates often use
+          operators like <code>$set</code> to change specific fields without replacing
+          the whole document.
+        </p>
+        <ul className="prose-list">
+          <li><code>insertOne(&#123; … &#125;)</code> — add a document; MongoDB assigns an <code>_id</code> if missing.</li>
+          <li><code>updateMany(filter, &#123; "$set": &#123; … &#125; &#125;)</code> — patch matching docs.</li>
+          <li><code>deleteMany(filter)</code> — remove all matches.</li>
+        </ul>
+        <Callout kind="warning" title="Schema discipline still matters">
+          Flexible schema doesn't mean "no schema." Teams still define expected fields,
+          validate on write, and migrate documents as the product evolves — otherwise
+          typos become permanent inconsistent data.
+        </Callout>
+      </Section>
+
+      <Section id="aggregation" title="Aggregation pipelines">
+        <p className="prose">
+          The <strong>aggregation pipeline</strong> is MongoDB's answer to SQL's{' '}
+          <code>GROUP BY</code>. Documents flow through stages —{' '}
+          <code>$match</code>, <code>$group</code>, <code>$sort</code>,{' '}
+          <code>$limit</code> — each transforming the stream.
+        </p>
+        <Callout kind="note">
+          <code>$group</code> with <code>$sum</code> totals revenue per city;{' '}
+          <code>$avg</code> computes average product price per category. Pipelines
+          are composable — add stages until the output shape is what you need.
+        </Callout>
+      </Section>
+
+      <Section id="playground" title="Run MongoDB commands">
+        <p className="prose">
+          This playground runs a MongoDB-style shell against an in-memory document store
+          in your browser. Try the samples for find filters, aggregation, and writes —
+          then edit the JSON and re-run.
+        </p>
+        <MongoPlayground />
+        <TryThis>
+          Run <strong>Aggregate revenue</strong>, then add a <code>$limit: 2</code>{' '}
+          stage. Run <strong>Insert document</strong> and <strong>Find all orders</strong>{' '}
+          to see it appear. Compare with the SQL lesson's JOIN approach.
+        </TryThis>
+      </Section>
+
+      <Section id="labs" title="Code lab">
+        <p className="prose">
+          MongoDB documents are just JSON-shaped data. These Python snippets show the
+          same ideas — filtering, operators, and grouping — without a server.
+        </p>
+        <SnippetRunner snippets={SNIPPETS} />
+        <TryThis>
+          Extend <strong>Filter documents</strong> to support <code>$in</code> on a
+          list field, then mirror it in the playground with{' '}
+          <code>db.customers.find(&#123; "tags": &#123; "$in": ["eu"] &#125; &#125;)</code>.
+        </TryThis>
+      </Section>
+
+      <Section id="hood" title="Under the hood">
+        <UnderTheHood title="When to embed vs reference">
+          <p className="prose">
+            <strong>Embed</strong> related data when you read it together and it doesn't
+            change often (order line items inside an order). <strong>Reference</strong>{' '}
+            with an <code>_id</code> when the same entity is shared and updated independently
+            (customer profile linked from many orders).
+          </p>
+        </UnderTheHood>
+        <UnderTheHood title="Indexes in MongoDB">
+          <p className="prose">
+            Like SQL, MongoDB uses <strong>indexes</strong> (often B-trees) to avoid
+            scanning every document. Create indexes on fields you filter and sort by —
+            <code>orders.city</code>, <code>customers.email</code>, compound indexes
+            for common query patterns.
+          </p>
+        </UnderTheHood>
+        <UnderTheHood title="Replication & sharding">
+          <p className="prose">
+            Production MongoDB clusters replicate data for durability and shard collections
+            across machines when a single server can't hold the dataset. That's how
+            document stores scale horizontally — at the cost of operational complexity.
+          </p>
+        </UnderTheHood>
+      </Section>
+
+      <Section id="terms" title="Key terms">
+        <KeyTerms
+          terms={[
+            { term: 'document', def: 'A JSON-like record stored in MongoDB.' },
+            { term: 'collection', def: 'A group of documents — loosely like a SQL table.' },
+            { term: '_id', def: 'Unique identifier for a document within a collection.' },
+            { term: 'embedding', def: 'Storing related data inside a document instead of joining.' },
+            { term: 'aggregation pipeline', def: 'A sequence of stages ($match, $group, …) transforming documents.' },
+            { term: 'operator', def: 'A query keyword like $gt, $in, or $set.' },
+            { term: 'shard', def: 'A horizontal partition of data across cluster nodes.' },
+          ]}
+        />
+      </Section>
+
+      <Section id="check" title="Check yourself">
+        <Quiz
+          questions={[
+            {
+              q: 'In MongoDB, a document is best described as:',
+              options: ['A row with fixed columns', 'A flexible JSON-like record', 'A SQL view', 'An index'],
+              answer: 1,
+              explain: 'Documents are schemaless JSON objects — fields can vary between records.',
+            },
+            {
+              q: 'What does db.orders.find({ "amount": { "$gt": 100 } }) return?',
+              options: ['Orders equal to 100', 'Orders with amount greater than 100', 'The 100 newest orders', 'An error'],
+              answer: 1,
+              explain: '$gt is a comparison operator meaning "greater than".',
+            },
+            {
+              q: 'Aggregation $group with $sum is most similar to SQL:',
+              options: ['ORDER BY', 'GROUP BY with SUM', 'LEFT JOIN', 'CREATE INDEX'],
+              answer: 1,
+              explain: '$group collapses documents; $sum totals a field per group.',
+            },
+            {
+              q: 'When should you embed data vs reference it?',
+              options: ['Always embed', 'Embed when read together; reference when shared and updated independently', 'Always reference', 'Never embed arrays'],
+              answer: 1,
+              explain: 'Embedding avoids joins on read; referencing avoids stale duplicated data.',
+            },
+            {
+              q: 'Flexible schema means:',
+              options: ['No validation ever', 'Documents in a collection can have different fields', 'No indexes needed', 'SQL is unsupported'],
+              answer: 1,
+              explain: 'Collections tolerate varying shapes — but teams still enforce conventions.',
+            },
+            {
+              q: 'updateMany with { "$set": { "status": "shipped" } }:',
+              options: ['Deletes documents', 'Replaces entire documents', 'Patches a field on matching documents', 'Creates an index'],
+              answer: 2,
+              explain: '$set updates specific fields without removing the rest of the document.',
+            },
+            {
+              q: 'MongoDB scales out horizontally mainly via:',
+              options: ['More indexes only', 'Sharding data across nodes', 'Smaller documents', 'Removing _id'],
+              answer: 1,
+              explain: 'Sharding splits collections across machines when one node is not enough.',
+            },
+          ]}
+        />
+      </Section>
+
+      <Section id="recap" title="Recap">
+        <Recap
+          items={[
+            <>MongoDB stores <strong>documents</strong> in <strong>collections</strong> with flexible fields.</>,
+            <>Query with JSON filters and operators like <code>$gt</code> and <code>$in</code>.</>,
+            <>Use <strong>aggregation pipelines</strong> for grouping and analytics.</>,
+            <>Choose <strong>embed vs reference</strong> based on read patterns and update independence.</>,
+            <>Indexes, replication, and sharding matter at production scale — same ideas as SQL, different tooling.</>,
+          ]}
+        />
+      </Section>
+    </Lesson>
+  )
+}
