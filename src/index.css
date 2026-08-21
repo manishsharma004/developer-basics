@@ -3598,6 +3598,37 @@ a {
   gap: 6px;
 }
 
+.react-counter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0;
+}
+.react-count-display {
+  font-family: ui-monospace, monospace;
+  font-size: 1.05rem;
+}
+.react-todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 12px 0;
+}
+.react-todo-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+.react-todo-item input {
+  accent-color: var(--accent);
+}
+
 /* OOP / SOLID ------------------------------------------------------------- */
 .solid-list {
   display: flex;

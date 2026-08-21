@@ -602,6 +602,50 @@ export const lessonsMeta: LessonMeta[] = [
       ...CLOSING,
     ],
   },
+  {
+    id: 'fastapi',
+    path: '/lessons/fastapi',
+    title: 'FastAPI',
+    tagline: 'Modern Python APIs with validation, dependency injection, and auto-generated docs.',
+    icon: '⚡',
+    level: 'Intermediate',
+    minutes: 28,
+    summary:
+      'Build REST endpoints with path operations, Pydantic models, query/path parameters, dependencies, and error handling — the Python backend that pairs with a React frontend.',
+    group: 'web',
+    sections: [
+      { id: 'intro', title: 'Why it matters' },
+      { id: 'routes', title: 'Routes & path operations' },
+      { id: 'models', title: 'Request & response models' },
+      { id: 'params', title: 'Path, query & body' },
+      { id: 'deps', title: 'Dependencies' },
+      { id: 'playground', title: 'Error handling lab' },
+      { id: 'hood', title: 'Under the hood' },
+      ...CLOSING,
+    ],
+  },
+  {
+    id: 'react',
+    path: '/lessons/react',
+    title: 'React',
+    tagline: 'Components, props, state, and hooks — building interactive UIs that scale.',
+    icon: '⚛️',
+    level: 'Intermediate',
+    minutes: 28,
+    summary:
+      'Learn JSX, components, props, useState, useEffect, and list rendering — with a live playground for counters, props, and todo lists.',
+    group: 'web',
+    sections: [
+      { id: 'intro', title: 'Why it matters' },
+      { id: 'components', title: 'Components & JSX' },
+      { id: 'props', title: 'Props: data flows down' },
+      { id: 'state', title: 'State with useState' },
+      { id: 'effects', title: 'Side effects with useEffect' },
+      { id: 'playground', title: 'Build UI live' },
+      { id: 'hood', title: 'Under the hood' },
+      ...CLOSING,
+    ],
+  },
 
   // ── Security & Cryptography ────────────────────────────────────────────
   {
