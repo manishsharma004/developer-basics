@@ -35,6 +35,14 @@ import FunctionalLesson from './functional/FunctionalLesson.tsx'
 import JsonLesson from './json/JsonLesson.tsx'
 import SearchLesson from './search/SearchLesson.tsx'
 import DebuggingLesson from './debugging/DebuggingLesson.tsx'
+import JsFundamentalsLesson from './js/JsFundamentalsLesson.tsx'
+import PackageManagersLesson from './packages/PackageManagersLesson.tsx'
+import EnvConfigLesson from './envconfig/EnvConfigLesson.tsx'
+import HttpClientsLesson from './httpclient/HttpClientsLesson.tsx'
+import GitAdvancedLesson from './git/GitAdvancedLesson.tsx'
+import BrowserRenderingLesson from './browser/BrowserRenderingLesson.tsx'
+import DockerLesson from './docker/DockerLesson.tsx'
+import CapstoneLesson from './capstone/CapstoneLesson.tsx'
 import { CSS_CHAPTERS } from './css/chapters.tsx'
 import { WEB_CHAPTERS } from './web/chapters.tsx'
 import { DATABASES_CHAPTERS } from './databases/chapters.tsx'
@@ -78,12 +86,20 @@ const COMPONENTS: Record<string, ComponentType> = {
   trees: TreesLesson,
   apis: ApisLesson,
   auth: AuthLesson,
+  'js-fundamentals': JsFundamentalsLesson,
+  'http-clients': HttpClientsLesson,
+  'browser-rendering': BrowserRenderingLesson,
+  docker: DockerLesson,
   ...WEB_CHAPTERS,
   ...CSS_CHAPTERS,
   security: SecurityLesson,
   testing: TestingLesson,
   debugging: DebuggingLesson,
   functional: FunctionalLesson,
+  'package-managers': PackageManagersLesson,
+  'env-config': EnvConfigLesson,
+  'git-advanced': GitAdvancedLesson,
+  capstone: CapstoneLesson,
   ...DATABASES_CHAPTERS,
   ...SQL_CHAPTERS,
   ...MONGODB_CHAPTERS,
