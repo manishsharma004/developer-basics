@@ -10,6 +10,7 @@ import {
 import { lessonNeedsPython } from '../lib/pythonLessons.ts'
 import { useProgress } from '../progress/ProgressContext.tsx'
 import { ModuleProgressCard } from '../components/ModuleProgress.tsx'
+import { CAPSTONE_STEPS } from '../lessons/capstone/CapstoneChecklist.tsx'
 
 function Home() {
   const { getProgress, ready } = useProgress()
@@ -75,6 +76,19 @@ function Home() {
             )
           })}
         </ol>
+      </section>
+
+      <section className="start-here capstone-home">
+        <div className="start-here-head">
+          <h2>Capstone path</h2>
+          <p className="start-here-blurb">
+            Ready to connect the dots? The task-tracker capstone links {CAPSTONE_STEPS.length}{' '}
+            steps across SQL, API, React, auth, tests, and deploy.
+          </p>
+        </div>
+        <Link to="/lessons/capstone" className="start-here-continue btn">
+          🏁 Open capstone checklist
+        </Link>
       </section>
 
       {groups.map((group) => {

@@ -4,6 +4,8 @@ import { Callout, CodePreview, SimReality, UnderTheHood, TryThis } from '../comp
 import { SnippetRunner } from '../components/SnippetRunner.tsx'
 import { SQL_SNIPPETS, snippets } from './snippets.ts'
 import { SqlPlayground } from './SqlPlayground.tsx'
+import { IndexScanSim } from './IndexScanSim.tsx'
+import { TransactionSim } from './TransactionSim.tsx'
 
 export const SQL_CHAPTERS: Record<string, ComponentType> = {
   'sql-intro': createChapterLesson({
@@ -710,6 +712,81 @@ with Session(engine) as session:
       <>Use <code>sqlite3</code> with <code>?</code> placeholders — values stay separate from SQL text.</>,
       <>Run all snippets to see connects, joins, Postgres-style drivers, pools, and ORM patterns.</>,
       <>Always <strong>parameterize</strong> user input to prevent SQL injection.</>,
+    ],
+  }),
+
+  'sql-indexes': createChapterLesson({
+    id: 'sql-indexes',
+    modelTitle: 'When indexes help',
+    intro: (
+      <p className="prose">
+        As tables grow, full scans become slow. An <strong>index</strong> is a sorted
+        structure (usually a B-tree) that lets the engine jump to matching rows instead
+        of reading every row.
+      </p>
+    ),
+    model: (
+      <Callout kind="why" title="The one idea">
+        Indexes trade <strong>write cost</strong> and <strong>storage</strong> for faster
+        reads on selective filters and joins.
+      </Callout>
+    ),
+    playground: (
+      <>
+        <IndexScanSim />
+        <TryThis>Toggle the index and compare row counts for <code>customer_id = 42</code> vs a non-indexed filter.</TryThis>
+      </>
+    ),
+    terms: [
+      { term: 'sequential scan', def: 'Reading every row in a table.' },
+      { term: 'index seek', def: 'Using a B-tree to find matching rows directly.' },
+      { term: 'selectivity', def: 'Fraction of rows matching a filter — high selectivity benefits most from indexes.' },
+    ],
+    quiz: [
+      { q: 'An index on a rarely-filtered column:', options: ['Always helps', 'May hurt writes without helping reads', 'Deletes the table', 'Replaces JOINs'], answer: 1 },
+      { q: 'EXPLAIN is used to:', options: ['Insert rows', 'See the query plan', 'Encrypt data', 'Start transactions'], answer: 1 },
+    ],
+    recap: [
+      <>Add indexes on columns you filter or join frequently.</>,
+      <>Low-selectivity queries may still scan; indexes have maintenance cost.</>,
+    ],
+  }),
+
+  'sql-transactions': createChapterLesson({
+    id: 'sql-transactions',
+    modelTitle: 'Atomic changes',
+    intro: (
+      <p className="prose">
+        Real apps need multi-step updates to succeed or fail together — transferring
+        money, reserving inventory, signing up a user. <strong>Transactions</strong> provide
+        atomicity and isolation.
+      </p>
+    ),
+    model: (
+      <p className="prose">
+        <code>BEGIN</code> starts a transaction; <code>COMMIT</code> makes changes permanent;
+        <code>ROLLBACK</code> undoes them. Without transactions, concurrent sessions can
+        cause <strong>lost updates</strong>.
+      </p>
+    ),
+    playground: (
+      <>
+        <TransactionSim />
+        <TryThis>Turn off transactions and run two transfers — watch the balance go wrong. Then enable BEGIN/COMMIT.</TryThis>
+      </>
+    ),
+    terms: [
+      { term: 'atomicity', def: 'All steps succeed or none do.' },
+      { term: 'isolation', def: 'Concurrent transactions do not see each other\'s partial work (level-dependent).' },
+      { term: 'lost update', def: 'Two sessions read the same value and overwrite each other\'s writes.' },
+    ],
+    quiz: [
+      { q: 'ROLLBACK:', options: ['Commits changes', 'Undoes uncommitted work', 'Creates an index', 'Runs EXPLAIN'], answer: 1 },
+      { q: 'Lost updates happen when:', options: ['You use indexes', 'Concurrent reads/writes lack coordination', 'You use SELECT only', 'You use HTTPS'], answer: 1 },
+    ],
+    recap: [
+      <>Wrap related writes in a transaction.</>,
+      <>Understand isolation levels for concurrent apps.</>,
     ],
   }),
 

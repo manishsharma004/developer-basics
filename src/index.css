@@ -5142,9 +5142,28 @@ button.waterfall-row {
 .start-here-step-title {
   flex: 1;
 }
-.start-here-step-tag,
-.start-here-step-check {
-  font-size: 0.9rem;
+.start-here-step-sub {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.render-pipeline-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.render-pipeline-demo {
+  margin: 12px 0;
+  border: 1px solid var(--border);
+}
+.chip--warn {
+  border-color: rgba(251, 191, 36, 0.5);
+}
+.event-loop-log {
+  min-height: 120px;
+}
+.capstone-checklist {
+  margin-top: 0;
 }
 .lesson-card-path,
 .lesson-card-python {
