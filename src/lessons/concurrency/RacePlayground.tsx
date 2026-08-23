@@ -16,7 +16,7 @@ interface RaceResult {
 }
 
 export function RacePlayground() {
-  const { pyodide, phase, message, error } = usePyodide()
+  const { pyodide, phase, message, error, retry, skip, skipped } = usePyodide()
   const [ready, setReady] = useState(false)
   const [threads, setThreads] = useState(4)
   const [iters, setIters] = useState(20)
@@ -48,7 +48,7 @@ export function RacePlayground() {
 
   return (
     <>
-      <RuntimeBanner phase={phase} message={message} error={error} />
+      <RuntimeBanner phase={phase} message={message} error={error} onRetry={retry} onSkip={skip} skipped={skipped} />
       <div className="panel">
         <div className="race-controls">
           <label className="conv-field">

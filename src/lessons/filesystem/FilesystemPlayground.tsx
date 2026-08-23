@@ -64,7 +64,7 @@ function shorten(path: string): string {
 }
 
 export function FilesystemPlayground() {
-  const { pyodide, phase, message, error } = usePyodide()
+  const { pyodide, phase, message, error, retry, skip, skipped } = usePyodide()
   const [ready, setReady] = useState(false)
   const [mode, setMode] = useState<'shell' | 'python'>('shell')
   const [history, setHistory] = useState<Line[]>([])
@@ -174,7 +174,7 @@ export function FilesystemPlayground() {
 
   return (
     <>
-      <RuntimeBanner phase={phase} message={message} error={error} />
+      <RuntimeBanner phase={phase} message={message} error={error} onRetry={retry} onSkip={skip} skipped={skipped} />
 
       <div className="demo-split demo-split--wide">
         <div className="panel panel--terminal">

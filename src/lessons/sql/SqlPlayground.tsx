@@ -86,7 +86,7 @@ export function SqlPlayground({ sampleLabels, defaultLabel, title = 'Query' }: S
     : SAMPLES
   const initial = samples.find((s) => s.label === defaultLabel) ?? samples[0]!
 
-  const { pyodide, phase, message, error } = usePyodide()
+  const { pyodide, phase, message, error, retry, skip, skipped } = usePyodide()
   const [ready, setReady] = useState(false)
   const [query, setQuery] = useState(initial.query)
   const [result, setResult] = useState<SqlResult | null>(null)
@@ -118,7 +118,7 @@ export function SqlPlayground({ sampleLabels, defaultLabel, title = 'Query' }: S
 
   return (
     <>
-      <RuntimeBanner phase={phase} message={message} error={error} />
+      <RuntimeBanner phase={phase} message={message} error={error} onRetry={retry} onSkip={skip} skipped={skipped} />
       <div className="panel">
         <div className="panel-title">{title}</div>
         <MonacoEditor value={query} onChange={setQuery} language="sql" minLines={4} ariaLabel="SQL query" />

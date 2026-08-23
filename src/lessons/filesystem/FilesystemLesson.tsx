@@ -1,5 +1,5 @@
 import { Lesson } from '../components/Lesson.tsx'
-import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
+import { Section, Callout, SimReality, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { FilesystemPlayground } from './FilesystemPlayground.tsx'
 
 export default function FilesystemLesson() {
@@ -45,6 +45,21 @@ export default function FilesystemLesson() {
           The prompt in the playground shows your current directory (<code>~</code>{' '}
           is short for your home folder). Watch it change as you <code>cd</code>.
         </Callout>
+        <SimReality
+          inSim={
+            <>
+              A small, in-memory tree with a handful of Unix-like commands. Permissions
+              are simplified; there is no real disk I/O.
+            </>
+          }
+          inReality={
+            <>
+              Real filesystems span disks and networks (NFS, cloud storage). Permissions
+              involve users, groups, ACLs, and mount options. Paths and symlinks behave
+              the same idea — but scale and failure modes are far richer.
+            </>
+          }
+        />
       </Section>
 
       <Section id="playground" title="Try it live">

@@ -8,11 +8,14 @@ import {
   type ReactNode,
 } from 'react'
 import {
+  clearAllLessonProgress,
   loadAllLessonProgress,
   normalizeQuizAnswers,
+  PROGRESS_EXPORT_VERSION,
   saveLessonProgress,
   serializeQuizAnswers,
   type LessonProgressRecord,
+  type ProgressExportPayload,
 } from '../lib/progressDb.ts'
 
 export interface LessonProgress {
@@ -31,6 +34,9 @@ interface ProgressContextValue {
   recordOpen: (lessonId: string) => Promise<void>
   setLessonRead: (lessonId: string, read: boolean) => Promise<void>
   saveQuizAnswer: (lessonId: string, questionIndex: number, optionIndex: number) => Promise<void>
+  exportProgress: () => ProgressExportPayload
+  importProgress: (payload: ProgressExportPayload, mode: 'merge' | 'replace') => Promise<void>
+  resetAllProgress: () => Promise<void>
 }
 
 const ProgressContext = createContext<ProgressContextValue | null>(null)
@@ -164,6 +170,52 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     [],
   )
 
+  const exportProgress = useCallback((): ProgressExportPayload => {
+    const lessons = Array.from(progressByLesson.values()).map(toRecord)
+    return {
+      version: PROGRESS_EXPORT_VERSION,
+      exportedAt: new Date().toISOString(),
+      lessons,
+    }
+  }, [progressByLesson])
+
+  const importProgress = useCallback(
+    async (payload: ProgressExportPayload, mode: 'merge' | 'replace') => {
+      const incoming = payload.lessons.map(toLessonProgress)
+      let nextMap: Map<string, LessonProgress>
+      if (mode === 'replace') {
+        await clearAllLessonProgress()
+        nextMap = new Map(incoming.map((p) => [p.lessonId, p]))
+      } else {
+        nextMap = new Map(progressByLesson)
+        for (const record of incoming) {
+          const existing = nextMap.get(record.lessonId)
+          nextMap.set(
+            record.lessonId,
+            existing
+              ? {
+                  ...existing,
+                  openCount: Math.max(existing.openCount, record.openCount),
+                  read: existing.read || record.read,
+                  firstOpenedAt: Math.min(existing.firstOpenedAt, record.firstOpenedAt),
+                  lastOpenedAt: Math.max(existing.lastOpenedAt, record.lastOpenedAt),
+                  quizAnswers: { ...record.quizAnswers, ...existing.quizAnswers },
+                }
+              : record,
+          )
+        }
+      }
+      setProgressByLesson(nextMap)
+      await Promise.all(Array.from(nextMap.values()).map((p) => saveLessonProgress(toRecord(p))))
+    },
+    [progressByLesson],
+  )
+
+  const resetAllProgress = useCallback(async () => {
+    await clearAllLessonProgress()
+    setProgressByLesson(new Map())
+  }, [])
+
   const value = useMemo<ProgressContextValue>(
     () => ({
       ready,
@@ -172,8 +224,21 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       recordOpen,
       setLessonRead,
       saveQuizAnswer,
+      exportProgress,
+      importProgress,
+      resetAllProgress,
     }),
-    [ready, progressByLesson, getProgress, recordOpen, setLessonRead, saveQuizAnswer],
+    [
+      ready,
+      progressByLesson,
+      getProgress,
+      recordOpen,
+      setLessonRead,
+      saveQuizAnswer,
+      exportProgress,
+      importProgress,
+      resetAllProgress,
+    ],
   )
 
   return <ProgressContext.Provider value={value}>{children}</ProgressContext.Provider>

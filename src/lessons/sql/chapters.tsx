@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react'
 import { createChapterLesson } from '../components/ChapterLesson.tsx'
-import { Callout, CodePreview, UnderTheHood, TryThis } from '../components/blocks.tsx'
+import { Callout, CodePreview, SimReality, UnderTheHood, TryThis } from '../components/blocks.tsx'
 import { SnippetRunner } from '../components/SnippetRunner.tsx'
 import { SQL_SNIPPETS, snippets } from './snippets.ts'
 import { SqlPlayground } from './SqlPlayground.tsx'
@@ -19,11 +19,28 @@ export const SQL_CHAPTERS: Record<string, ComponentType> = {
       </p>
     ),
     model: (
+      <>
       <Callout kind="why" title="The one idea">
         Data lives in <strong>tables</strong> (rows and columns). You{' '}
         <strong>query</strong> it by describing the result you want; the database
         engine figures out how to produce it efficiently.
       </Callout>
+      <SimReality
+        inSim={
+          <>
+            SQLite in your browser via Pyodide — a tiny sample database with a few
+            tables. Queries run locally with no server.
+          </>
+        }
+        inReality={
+          <>
+            Production databases (Postgres, MySQL, etc.) handle concurrency, backups,
+            replication, and millions of rows. SQL syntax transfers; operations and
+            performance tuning are a career unto themselves.
+          </>
+        }
+      />
+      </>
     ),
     playground: (
       <>

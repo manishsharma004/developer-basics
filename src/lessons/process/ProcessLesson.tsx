@@ -1,5 +1,5 @@
 import { Lesson } from '../components/Lesson.tsx'
-import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
+import { Section, Callout, SimReality, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { SchedulerPlayground } from './SchedulerPlayground.tsx'
 
 const STATES = [
@@ -50,6 +50,21 @@ export default function ProcessLesson() {
           A process rarely runs start-to-finish in one go. It runs a little, gets
           paused so another can run, waits for the disk or network, then resumes.
         </Callout>
+        <SimReality
+          inSim={
+            <>
+              A handful of processes with arrival/burst times and three textbook
+              scheduling algorithms. Time is discrete and the CPU is single-core.
+            </>
+          }
+          inReality={
+            <>
+              Real OS schedulers juggle priorities, power management, NUMA, cgroups,
+              and I/O wait on multi-core machines. The <em>states</em> transfer; the
+              exact policy and metrics differ by OS and workload.
+            </>
+          }
+        />
       </Section>
 
       <Section id="playground" title="Schedule it live">

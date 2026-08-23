@@ -10,7 +10,7 @@ type PyCallable = (...args: any[]) => any
 const CATEGORIES: (PatternCategory | 'All')[] = ['All', 'Creational', 'Structural', 'Behavioral', 'Industry']
 
 export function PatternsCatalog() {
-  const { pyodide, phase, message, error } = usePyodide()
+  const { pyodide, phase, message, error, retry, skip, skipped } = usePyodide()
   const [ready, setReady] = useState(false)
   const [category, setCategory] = useState<PatternCategory | 'All'>('All')
   const [query, setQuery] = useState('')
@@ -48,7 +48,7 @@ export function PatternsCatalog() {
 
   return (
     <>
-      <RuntimeBanner phase={phase} message={message} error={error} />
+      <RuntimeBanner phase={phase} message={message} error={error} onRetry={retry} onSkip={skip} skipped={skipped} />
       <div className="panel">
         <div className="patterns-controls">
           <div className="algo-picker">

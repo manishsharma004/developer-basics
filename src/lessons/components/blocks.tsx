@@ -47,6 +47,22 @@ export function Callout({ kind = 'note', title, children }: {
   )
 }
 
+/** Sim vs reality — what transfers from the in-browser lab and what doesn't. */
+export function SimReality({ inSim, inReality }: { inSim: ReactNode; inReality: ReactNode }) {
+  return (
+    <div className="sim-reality" role="note" aria-label="Simulation vs real world">
+      <div className="sim-reality-col sim-reality-col--sim">
+        <div className="sim-reality-label">In this sim</div>
+        <div className="sim-reality-body">{inSim}</div>
+      </div>
+      <div className="sim-reality-col sim-reality-col--real">
+        <div className="sim-reality-label">In the real world</div>
+        <div className="sim-reality-body">{inReality}</div>
+      </div>
+    </div>
+  )
+}
+
 // A collapsible panel for the internal details — the "how does this actually
 // work underneath" content that builds real system awareness.
 export function UnderTheHood({ title = 'Under the hood', children }: { title?: string; children: ReactNode }) {

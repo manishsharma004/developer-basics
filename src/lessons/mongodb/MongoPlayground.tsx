@@ -75,7 +75,7 @@ export function MongoPlayground({ sampleLabels, defaultLabel, title = 'MongoDB s
     : SAMPLES
   const initial = samples.find((s) => s.label === defaultLabel) ?? samples[0]!
 
-  const { pyodide, phase, message, error } = usePyodide()
+  const { pyodide, phase, message, error, retry, skip, skipped } = usePyodide()
   const [ready, setReady] = useState(false)
   const [query, setQuery] = useState(initial.query)
   const [result, setResult] = useState<MongoResult | null>(null)
@@ -107,7 +107,7 @@ export function MongoPlayground({ sampleLabels, defaultLabel, title = 'MongoDB s
 
   return (
     <>
-      <RuntimeBanner phase={phase} message={message} error={error} />
+      <RuntimeBanner phase={phase} message={message} error={error} onRetry={retry} onSkip={skip} skipped={skipped} />
       <div className="panel">
         <div className="panel-title">{title}</div>
         <MonacoEditor value={query} onChange={setQuery} language="javascript" minLines={4} ariaLabel="MongoDB query" />
