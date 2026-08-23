@@ -10,6 +10,9 @@ import { useTheme } from './theme/ThemeContext.tsx'
 import { THEMES, type ThemeId } from './theme/themes.ts'
 import { FeedbackDialog } from './components/FeedbackDialog.tsx'
 import { GlobalSearch, searchShortcutLabel, useGlobalSearchShortcut } from './components/GlobalSearch.tsx'
+import { PresenterNotesStrip } from './components/PresenterNotesStrip.tsx'
+import { ProgressManager } from './components/ProgressManager.tsx'
+import { useClassroom } from './experience/ClassroomContext.tsx'
 import { useProgress } from './progress/ProgressContext.tsx'
 
 const LEVELS: Level[] = ['Beginner', 'Intermediate', 'Advanced']
@@ -50,6 +53,7 @@ function NavStatusMarker({ read }: { read: boolean }) {
 function App() {
   const { experience, setExperience } = useExperience()
   const { theme, setTheme } = useTheme()
+  const { classroomMode, toggleClassroomMode } = useClassroom()
   const teacher = experience === 'teacher'
   const location = useLocation()
 
@@ -97,6 +101,18 @@ function App() {
 
   useGlobalSearchShortcut(() => setSearchOpen(true))
 
+  // Auto-collapse sidebar in classroom mode for projection.
+  useEffect(() => {
+    if (classroomMode && !collapsed) {
+      setCollapsed(true)
+      try {
+        localStorage.setItem(COLLAPSE_KEY, '1')
+      } catch {
+        /* ignore */
+      }
+    }
+  }, [classroomMode]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const closeMobile = () => setMobileOpen(false)
   const shortcut = searchShortcutLabel()
 
@@ -109,7 +125,7 @@ function App() {
 
   return (
     <div
-      className={`app${teacher ? ' app--teacher' : ''}${collapsed ? ' app--collapsed' : ''}${
+      className={`app${teacher ? ' app--teacher' : ''}${classroomMode ? ' app--classroom' : ''}${collapsed ? ' app--collapsed' : ''}${
         mobileOpen ? ' app--mobnav-open' : ''
       }`}
     >
@@ -133,6 +149,14 @@ function App() {
         </button>
         <button className="topbar-feedback" onClick={() => setFeedbackOpen(true)} aria-label="Request or report an issue" title="Request / report">
           💬
+        </button>
+        <button
+          className={`topbar-classroom${classroomMode ? ' topbar-classroom--on' : ''}`}
+          onClick={toggleClassroomMode}
+          aria-pressed={classroomMode}
+          title={classroomMode ? 'Exit classroom mode' : 'Enter classroom mode'}
+        >
+          {classroomMode ? '📽️ On' : '📽️'}
         </button>
         <span className={`topbar-mode${teacher ? ' topbar-mode--teacher' : ''}`}>
           {teacher ? '🧑‍🏫 Teacher' : '🎓 Student'}
@@ -195,6 +219,17 @@ function App() {
           </span>
           <span className="nav-label global-search-trigger-label">Search topics…</span>
           <kbd className="global-search-trigger-kbd nav-label">{shortcut}</kbd>
+        </button>
+
+        <button
+          type="button"
+          className={`classroom-toggle${classroomMode ? ' classroom-toggle--on' : ''}`}
+          onClick={toggleClassroomMode}
+          aria-pressed={classroomMode}
+          title={classroomMode ? 'Exit classroom mode' : 'Classroom mode — focus on lesson content'}
+        >
+          <span className="nav-icon" aria-hidden>📽️</span>
+          <span className="nav-label">{classroomMode ? 'Classroom mode on' : 'Classroom mode'}</span>
         </button>
 
         <nav className="nav">
@@ -317,6 +352,7 @@ function App() {
         </div>
 
         <div className="sidebar-footer">
+          <ProgressManager compact />
           <button className="feedback-btn" onClick={() => setFeedbackOpen(true)}>
             <span className="nav-icon">💬</span>
             <span className="nav-label">Request / feedback</span>
@@ -329,7 +365,14 @@ function App() {
       </aside>
 
       <main className="content">
-        {teacher && <div className="mode-ribbon">🧑‍🏫 Teacher mode — lesson plans &amp; teaching notes</div>}
+        {teacher && !classroomMode && (
+          <div className="mode-ribbon">🧑‍🏫 Teacher mode — lesson plans &amp; teaching notes</div>
+        )}
+        {classroomMode && (
+          <div className="mode-ribbon mode-ribbon--classroom">
+            📽️ Classroom mode — focused view for projection
+          </div>
+        )}
         <Routes>
           <Route path="/" element={teacher ? <TeacherHome /> : <Home />} />
           {lessons.map(({ id, path, Component }) => (
@@ -337,6 +380,7 @@ function App() {
           ))}
           <Route path="*" element={teacher ? <TeacherHome /> : <Home />} />
         </Routes>
+        <PresenterNotesStrip />
       </main>
 
       {feedbackOpen && <FeedbackDialog onClose={() => setFeedbackOpen(false)} />}

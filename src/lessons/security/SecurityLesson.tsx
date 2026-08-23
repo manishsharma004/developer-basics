@@ -1,5 +1,5 @@
 import { Lesson } from '../components/Lesson.tsx'
-import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
+import { Section, Callout, SimReality, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { SnippetRunner, type Snippet } from '../components/SnippetRunner.tsx'
 
 const SNIPPETS: Snippet[] = [
@@ -67,6 +67,21 @@ export default function SecurityLesson() {
           user-supplied values get treated as commands — SQL, HTML, shell — an
           attacker can rewrite what your program does.
         </Callout>
+        <SimReality
+          inSim={
+            <>
+              Toy Python snippets that illustrate injection and escaping. No real
+              attacker, network, or production database is involved.
+            </>
+          }
+          inReality={
+            <>
+              Real apps need defense in depth: parameterized queries, output encoding,
+              CSP headers, least-privilege accounts, secrets management, and regular
+              dependency updates. One fix rarely covers every attack path.
+            </>
+          }
+        />
       </Section>
 
       <Section id="model" title="Think like an attacker">

@@ -20,6 +20,10 @@ export function onPyodideProgress(listener: ProgressListener): () => void {
   return () => listeners.delete(listener)
 }
 
+export function resetPyodideLoad(): void {
+  pyodidePromise = null
+}
+
 export function getPyodide(): Promise<PyodideInterface> {
   if (!pyodidePromise) {
     emit('Downloading the CPython runtime…')

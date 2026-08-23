@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { getLessonMeta, getNextLesson, type SectionMeta } from '../meta.ts'
+import { getNextPathLesson, isOnBeginnerPath } from '../beginnerPath.ts'
+import { lessonNeedsPython } from '../../lib/pythonLessons.ts'
 import { CurrentLessonProvider } from '../../progress/CurrentLessonContext.tsx'
 import { useLessonProgress, useProgress } from '../../progress/ProgressContext.tsx'
 
@@ -14,7 +16,8 @@ interface Props {
 // tracks scroll position, the lesson body, and a link to the next lesson.
 export function Lesson({ id, children }: Props) {
   const meta = getLessonMeta(id)
-  const next = getNextLesson(id)
+  const nextInPath = getNextPathLesson(id)
+  const next = isOnBeginnerPath(id) && nextInPath ? nextInPath : getNextLesson(id)
   const location = useLocation()
   const sections: SectionMeta[] = meta?.sections ?? []
   const [active, setActive] = useState(sections[0]?.id ?? '')
@@ -86,6 +89,12 @@ export function Lesson({ id, children }: Props) {
             <div className="lesson-badges">
               <span className={`badge badge--${meta.level.toLowerCase()}`}>{meta.level}</span>
               <span className="badge badge--muted">{meta.minutes} min</span>
+              {isOnBeginnerPath(id) && (
+                <span className="badge badge--path" title="Part of the beginner path">Beginner path</span>
+              )}
+              {lessonNeedsPython(id) && (
+                <span className="badge badge--python" title="Needs Python runtime (~15 MB download)">Needs Python</span>
+              )}
               {openCount > 0 && (
                 <span className="badge badge--progress" title="Times you opened this chapter">
                   Opened {openCount}×
@@ -128,7 +137,9 @@ export function Lesson({ id, children }: Props) {
             <div className="lesson-footer">
               {next ? (
                 <Link to={next.path} className="next-lesson">
-                  <span className="next-lesson-label">Next lesson</span>
+                  <span className="next-lesson-label">
+                    {isOnBeginnerPath(id) && nextInPath ? 'Next on your path' : 'Next lesson'}
+                  </span>
                   <span className="next-lesson-title">
                     {next.icon} {next.title} →
                   </span>

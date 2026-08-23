@@ -53,7 +53,7 @@ const DEFAULT_PROCS: Proc[] = [
 ]
 
 export function SchedulerPlayground() {
-  const { pyodide, phase, message, error } = usePyodide()
+  const { pyodide, phase, message, error, retry, skip, skipped } = usePyodide()
   const [ready, setReady] = useState(false)
   const [procs, setProcs] = useState<Proc[]>(DEFAULT_PROCS)
   const [algo, setAlgo] = useState<Algo>('rr')
@@ -129,7 +129,7 @@ export function SchedulerPlayground() {
 
   return (
     <>
-      <RuntimeBanner phase={phase} message={message} error={error} />
+      <RuntimeBanner phase={phase} message={message} error={error} onRetry={retry} onSkip={skip} skipped={skipped} />
 
       <div className="demo-split demo-split--wide">
         <div className="panel">

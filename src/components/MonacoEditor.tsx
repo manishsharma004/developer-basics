@@ -29,12 +29,23 @@ export function MonacoEditor({
   const monacoRef = useRef<typeof Monaco | null>(null)
   const onChangeRef = useRef(onChange)
   const [ready, setReady] = useState(false)
+  const [useFallback, setUseFallback] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches,
+  )
 
   onChangeRef.current = onChange
 
   const minHeight = `${Math.max(minLines, value.split('\n').length + 1) * 1.45 + 1.5}rem`
 
   useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)')
+    const onChangeMq = () => setUseFallback(mq.matches)
+    mq.addEventListener('change', onChangeMq)
+    return () => mq.removeEventListener('change', onChangeMq)
+  }, [])
+
+  useEffect(() => {
+    if (useFallback) return
     let disposed = false
 
     void (async () => {
@@ -92,7 +103,7 @@ export function MonacoEditor({
     }
     // Mount once; value/theme sync handled below.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [useFallback])
 
   useEffect(() => {
     const monaco = monacoRef.current
@@ -109,19 +120,36 @@ export function MonacoEditor({
     if (model.getLanguageId() !== language) {
       monaco.editor.setModelLanguage(model, language)
     }
-  }, [language, readOnly])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useFallback])
 
   useEffect(() => {
+    if (useFallback) return
     const monaco = monacoRef.current
     if (!monaco) return
     applyMonacoTheme(monaco, theme)
-  }, [theme])
+  }, [theme, useFallback])
 
   useEffect(() => {
+    if (useFallback) return
     const model = modelRef.current
     if (!model || model.getValue() === value) return
     model.setValue(value)
-  }, [value])
+  }, [value, useFallback])
+
+  if (useFallback) {
+    return (
+      <textarea
+        className={`code-editor code-editor--fallback${className ? ` ${className}` : ''}`}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        readOnly={readOnly}
+        aria-label={ariaLabel}
+        spellCheck={false}
+        style={{ minHeight }}
+      />
+    )
+  }
 
   return (
     <div

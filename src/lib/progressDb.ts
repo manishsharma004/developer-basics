@@ -78,3 +78,27 @@ export function serializeQuizAnswers(answers: Record<number, number>): Record<st
   }
   return raw
 }
+
+export async function clearAllLessonProgress(): Promise<void> {
+  const db = await openDb()
+  try {
+    const tx = db.transaction(STORE, 'readwrite')
+    const store = tx.objectStore(STORE)
+    store.clear()
+    await new Promise<void>((resolve, reject) => {
+      tx.oncomplete = () => resolve()
+      tx.onerror = () => reject(tx.error ?? new Error('IndexedDB transaction failed'))
+      tx.onabort = () => reject(tx.error ?? new Error('IndexedDB transaction aborted'))
+    })
+  } finally {
+    db.close()
+  }
+}
+
+export const PROGRESS_EXPORT_VERSION = 1
+
+export interface ProgressExportPayload {
+  version: number
+  exportedAt: string
+  lessons: LessonProgressRecord[]
+}

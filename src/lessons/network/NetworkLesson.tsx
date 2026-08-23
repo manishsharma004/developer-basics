@@ -1,5 +1,5 @@
 import { Lesson } from '../components/Lesson.tsx'
-import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
+import { Section, Callout, SimReality, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { RequestTracer, UrlAnatomy } from './RequestTracer.tsx'
 import { HttpMatchQuiz } from './HttpMatchQuiz.tsx'
 
@@ -34,6 +34,21 @@ export default function NetworkLesson() {
           <strong>connect (TCP)</strong>, <strong>secure it (TLS)</strong>, then{' '}
           <strong>ask and answer (HTTP)</strong>. Each hop costs a round trip.
         </Callout>
+        <SimReality
+          inSim={
+            <>
+              A stylized timeline with adjustable RTT and toggles for DNS cache and
+              keep-alive. No real packets leave your browser.
+            </>
+          }
+          inReality={
+            <>
+              Real requests hit CDNs, load balancers, retries, HTTP/2 multiplexing,
+              and variable congestion. Latency is measured in percentiles, not one
+              fixed RTT slider — but the <em>stages</em> are the same.
+            </>
+          }
+        />
       </Section>
 
       <Section id="url" title="Anatomy of a URL">

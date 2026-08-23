@@ -23,7 +23,7 @@ const PRESETS = [
 ]
 
 export function CliPlayground() {
-  const { pyodide, phase, message, error } = usePyodide()
+  const { pyodide, phase, message, error, retry, skip, skipped } = usePyodide()
   const [ready, setReady] = useState(false)
   const [text, setText] = useState(SAMPLE)
   const [pipeline, setPipeline] = useState('grep ERROR | sort | uniq -c')
@@ -56,7 +56,7 @@ export function CliPlayground() {
 
   return (
     <>
-      <RuntimeBanner phase={phase} message={message} error={error} />
+      <RuntimeBanner phase={phase} message={message} error={error} onRetry={retry} onSkip={skip} skipped={skipped} />
       <div className="panel">
         <div className="panel-title">Input (stdin)</div>
         <MonacoEditor value={text} onChange={setText} language="plaintext" minLines={7} ariaLabel="input text" />

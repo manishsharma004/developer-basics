@@ -5033,3 +5033,382 @@ button.waterfall-row {
 .norm-tables {
   margin: 10px 0;
 }
+
+/* Sim vs reality ---------------------------------------------------------- */
+.sim-reality {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 18px 0;
+}
+.sim-reality-col {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+.sim-reality-col--sim {
+  border-color: rgba(56, 189, 248, 0.45);
+  background: rgba(56, 189, 248, 0.06);
+}
+.sim-reality-col--real {
+  border-color: rgba(52, 211, 153, 0.4);
+  background: rgba(52, 211, 153, 0.06);
+}
+.sim-reality-label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+  color: var(--muted);
+}
+.sim-reality-body {
+  line-height: 1.6;
+  color: var(--prose);
+}
+
+/* Start here / beginner path ---------------------------------------------- */
+.start-here {
+  margin: 28px 0 40px;
+  padding: 22px 24px;
+  border-radius: 16px;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(52, 211, 153, 0.06));
+}
+.start-here-head h2 {
+  margin: 0 0 8px;
+}
+.start-here-blurb {
+  margin: 0;
+  color: var(--muted);
+  max-width: 72ch;
+}
+.start-here-progress {
+  margin: 16px 0;
+}
+.start-here-progress-label {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.start-here-progress-bar {
+  height: 8px;
+  background: var(--panel-2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.start-here-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+.start-here-continue {
+  display: inline-flex;
+  margin-bottom: 18px;
+}
+.start-here-path {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.start-here-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, background 0.15s;
+}
+.start-here-step:hover {
+  border-color: var(--accent);
+  background: var(--panel-2);
+}
+.start-here-step--done .start-here-step {
+  opacity: 0.75;
+}
+.start-here-step-num {
+  font-weight: 700;
+  color: var(--muted);
+  min-width: 1.5rem;
+}
+.start-here-step-title {
+  flex: 1;
+}
+.start-here-step-tag,
+.start-here-step-check {
+  font-size: 0.9rem;
+}
+.lesson-card-path,
+.lesson-card-python {
+  font-size: 0.85rem;
+}
+.badge--path {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+.badge--python {
+  background: rgba(251, 191, 36, 0.12);
+  color: #fbbf24;
+}
+
+/* Module progress --------------------------------------------------------- */
+.module-progress {
+  margin: 12px 0 18px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+.module-progress--complete {
+  border-color: rgba(52, 211, 153, 0.45);
+}
+.module-progress-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.module-progress-pct {
+  font-weight: 700;
+  color: var(--accent);
+}
+.module-progress-bar {
+  height: 6px;
+  background: var(--panel-2);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.module-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+.module-progress-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+.module-progress-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  color: var(--prose);
+  text-decoration: none;
+}
+.module-progress-link:hover {
+  color: var(--accent);
+}
+.module-progress-item--done .module-progress-check {
+  color: var(--quiz-correct);
+}
+.module-progress-quiz {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.module-milestone {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.module-milestone-msg {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+.module-milestone-copied {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Progress manager -------------------------------------------------------- */
+.progress-manager {
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 8px;
+}
+.progress-manager-note {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+.progress-manager-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.progress-manager-status {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 6px 0 0;
+}
+
+/* Classroom mode ---------------------------------------------------------- */
+.classroom-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  margin: 4px 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+.classroom-toggle--on {
+  border-color: rgba(251, 191, 36, 0.5);
+  background: rgba(251, 191, 36, 0.1);
+}
+.topbar-classroom {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+.topbar-classroom--on {
+  border-color: rgba(251, 191, 36, 0.5);
+  background: rgba(251, 191, 36, 0.12);
+}
+.mode-ribbon--classroom {
+  background: rgba(251, 191, 36, 0.12);
+  border-color: rgba(251, 191, 36, 0.35);
+}
+.app--classroom .global-search-trigger,
+.app--classroom .theme-picker,
+.app--classroom .feedback-btn,
+.app--classroom .topbar-search,
+.app--classroom .topbar-feedback {
+  display: none;
+}
+.app--classroom .content {
+  max-width: none;
+}
+.app--classroom .lesson-body {
+  grid-template-columns: 1fr;
+}
+.app--classroom .lesson-toc {
+  display: none;
+}
+.app--classroom .lesson-hero {
+  padding-bottom: 12px;
+}
+.presenter-notes {
+  position: sticky;
+  bottom: 0;
+  margin-top: 24px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-elev);
+  padding: 8px 16px;
+}
+.presenter-notes-toggle {
+  background: none;
+  border: none;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--accent);
+  padding: 4px 0;
+}
+.presenter-notes-body {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--prose);
+}
+.presenter-notes-lab {
+  margin: 0 0 6px;
+}
+.presenter-notes-prompt {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* Runtime banner actions -------------------------------------------------- */
+.runtime-banner {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.runtime-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.runtime-banner--skipped {
+  border-color: rgba(251, 191, 36, 0.45);
+  background: rgba(251, 191, 36, 0.08);
+}
+.btn--sm {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+.code-editor--fallback {
+  width: 100%;
+  font-family: JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.45;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--prose);
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+/* Mobile lab improvements ------------------------------------------------- */
+@media (max-width: 640px) {
+  .sim-reality {
+    grid-template-columns: 1fr;
+  }
+  .chip,
+  .btn,
+  .quiz-option,
+  .toc-link,
+  .ref-snippets .chip {
+    min-height: 44px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .ref-run-row {
+    position: sticky;
+    bottom: 0;
+    background: var(--panel);
+    padding: 10px 0;
+    z-index: 2;
+  }
+  .demo-split,
+  .demo-split--wide {
+    grid-template-columns: 1fr !important;
+  }
+  .panel--terminal {
+    min-height: 200px;
+    max-height: 50vh;
+  }
+  .start-here {
+    padding: 16px;
+  }
+  .app--classroom .sidebar {
+    display: none;
+  }
+  .app--classroom .topbar {
+    display: flex;
+  }
+}

@@ -16,7 +16,7 @@ export interface Snippet {
 // Python (Pyodide). Each snippet runs in a fresh namespace and its stdout / any
 // traceback is captured. Chapters supply their own snippets.
 export function SnippetRunner({ snippets }: { snippets: Snippet[] }) {
-  const { pyodide, phase, message, error } = usePyodide()
+  const { pyodide, phase, message, error, retry, skip, skipped } = usePyodide()
   const [ready, setReady] = useState(false)
   const [code, setCode] = useState(snippets[0].code)
   const [output, setOutput] = useState('')
@@ -45,7 +45,15 @@ export function SnippetRunner({ snippets }: { snippets: Snippet[] }) {
 
   return (
     <>
-      <RuntimeBanner phase={phase} message={message} error={error} />
+      <RuntimeBanner
+        phase={phase}
+        message={message}
+        error={error}
+        onRetry={retry}
+        onSkip={skip}
+        skipped={skipped}
+      />
+      {!skipped && (
       <div className="panel">
         <div className="ref-snippets">
           {snippets.map((s) => (
@@ -75,6 +83,7 @@ export function SnippetRunner({ snippets }: { snippets: Snippet[] }) {
         </div>
         {output && <pre className={`term-output${isTraceback ? ' error-trace' : ''}`}>{output}</pre>}
       </div>
+      )}
     </>
   )
 }

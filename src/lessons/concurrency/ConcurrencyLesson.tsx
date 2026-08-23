@@ -1,5 +1,5 @@
 import { Lesson } from '../components/Lesson.tsx'
-import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
+import { Section, Callout, SimReality, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { SnippetRunner, type Snippet } from '../components/SnippetRunner.tsx'
 import { RacePlayground } from './RacePlayground.tsx'
 import { AsyncParallelSim } from './AsyncParallelSim.tsx'
@@ -110,6 +110,23 @@ export default function ConcurrencyLesson() {
           Concurrency is easy until state is <em>shared and mutable</em>. Protect
           shared data (or avoid sharing) and most concurrency bugs disappear.
         </Callout>
+        <SimReality
+          inSim={
+            <>
+              Python threads and a visual race simulator in one browser tab. This is
+              not true multi-core parallelism — the GIL limits real CPU parallelism
+              for Python threads here.
+            </>
+          }
+          inReality={
+            <>
+              Real systems use OS threads, async runtimes, and process pools across
+              many cores. Race conditions, deadlocks, and memory models are subtle —
+              the <em>lost-update pattern</em> you see here absolutely happens in
+              production.
+            </>
+          }
+        />
       </Section>
 
       <Section id="model" title="Threads & sharing">

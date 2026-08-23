@@ -74,7 +74,7 @@ alert(EmailNotifier(), "server down")`,
 ]
 
 export function OopPlayground() {
-  const { pyodide, phase, message, error } = usePyodide()
+  const { pyodide, phase, message, error, retry, skip, skipped } = usePyodide()
   const [ready, setReady] = useState(false)
   const [code, setCode] = useState(SNIPPETS[0].code)
   const [output, setOutput] = useState('')
@@ -101,7 +101,7 @@ export function OopPlayground() {
 
   return (
     <>
-      <RuntimeBanner phase={phase} message={message} error={error} />
+      <RuntimeBanner phase={phase} message={message} error={error} onRetry={retry} onSkip={skip} skipped={skipped} />
       <div className="panel">
         <div className="ref-snippets">
           {SNIPPETS.map((s) => (
