@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { getLessonMeta } from '../meta.ts'
-import { useProgress } from '../../progress/ProgressContext.tsx'
+import { CAPSTONE_TASK_TRACKER_ID, useProgress } from '../../progress/ProgressContext.tsx'
 
 /** Capstone steps mapping to existing lessons. */
 export const CAPSTONE_STEPS: { id: string; task: string; lessonId: string }[] = [
@@ -14,11 +14,19 @@ export const CAPSTONE_STEPS: { id: string; task: string; lessonId: string }[] = 
   { id: 'deploy', task: 'Understand CI/CD deploy flow', lessonId: 'cicd' },
 ]
 
-export function CapstoneChecklist() {
-  const { getProgress } = useProgress()
-
-  const done = CAPSTONE_STEPS.filter((s) => getProgress(s.lessonId)?.read).length
+export function capstoneProgress(
+  isDone: (stepId: string, lessonId: string) => boolean,
+): { done: number; total: number; percent: number } {
   const total = CAPSTONE_STEPS.length
+  const done = CAPSTONE_STEPS.filter((s) => isDone(s.id, s.lessonId)).length
+  return { done, total, percent: total ? Math.round((done / total) * 100) : 0 }
+}
+
+export function CapstoneChecklist() {
+  const { isCapstoneStepDone, setCapstoneStepDone } = useProgress()
+  const isDone = (stepId: string, lessonId: string) =>
+    isCapstoneStepDone(CAPSTONE_TASK_TRACKER_ID, stepId, lessonId)
+  const { done, total } = capstoneProgress(isDone)
   const complete = done === total
 
   return (
@@ -26,26 +34,38 @@ export function CapstoneChecklist() {
       <div className="panel-title">Capstone: Task tracker app</div>
       <p className="panel-hint">
         Build a small task API + UI by working through these existing chapters in order.
-        Each step links to a lesson — no new runtime required.
+        Each step links to a lesson — no new runtime required. Check steps off as you go;
+        marking a linked chapter as read also completes its step.
       </p>
-      <div className="start-here-progress-label">Progress: {done}/{total} steps read</div>
+      <div className="start-here-progress-label">Progress: {done}/{total} steps complete</div>
       <div className="start-here-progress-bar" aria-hidden>
         <div className="start-here-progress-fill" style={{ width: `${(done / total) * 100}%` }} />
       </div>
       <ol className="start-here-path">
         {CAPSTONE_STEPS.map((step, i) => {
           const meta = getLessonMeta(step.lessonId)
-          const read = getProgress(step.lessonId)?.read
+          const doneStep = isDone(step.id, step.lessonId)
           if (!meta) return null
           return (
-            <li key={step.id} className={read ? 'start-here-step--done' : ''}>
-              <Link to={meta.path} className="start-here-step">
-                <span className="start-here-step-num">{i + 1}</span>
-                <span className="start-here-step-icon" aria-hidden>{meta.icon}</span>
-                <span className="start-here-step-title">{step.task}</span>
-                <span className="start-here-step-sub">{meta.title}</span>
-                {read && <span className="start-here-step-check" aria-hidden>✓</span>}
-              </Link>
+            <li key={step.id} className={doneStep ? 'start-here-step--done' : ''}>
+              <div className="start-here-step capstone-step">
+                <label className="capstone-step-check">
+                  <input
+                    type="checkbox"
+                    checked={doneStep}
+                    onChange={(e) =>
+                      void setCapstoneStepDone(CAPSTONE_TASK_TRACKER_ID, step.id, e.target.checked)
+                    }
+                    aria-label={`Mark step ${i + 1} complete: ${step.task}`}
+                  />
+                </label>
+                <Link to={meta.path} className="capstone-step-link">
+                  <span className="start-here-step-num">{i + 1}</span>
+                  <span className="start-here-step-icon" aria-hidden>{meta.icon}</span>
+                  <span className="start-here-step-title">{step.task}</span>
+                  <span className="start-here-step-sub">{meta.title}</span>
+                </Link>
+              </div>
             </li>
           )
         })}

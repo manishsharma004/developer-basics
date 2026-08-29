@@ -5165,6 +5165,31 @@ button.waterfall-row {
 .capstone-checklist {
   margin-top: 0;
 }
+.capstone-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  width: 100%;
+}
+.capstone-step-check {
+  flex-shrink: 0;
+  padding-top: 0.65rem;
+}
+.capstone-step-check input {
+  width: 1.1rem;
+  height: 1.1rem;
+  cursor: pointer;
+}
+.capstone-step-link {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-template-rows: auto auto;
+  gap: 0.15rem 0.5rem;
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
+  padding: 0.5rem 0;
+}
 .lesson-card-path,
 .lesson-card-python {
   font-size: 0.85rem;

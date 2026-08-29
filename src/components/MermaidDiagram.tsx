@@ -50,8 +50,8 @@ export function MermaidDiagram({
   onNodeClick,
   className,
 }: MermaidDiagramProps) {
-  const { theme } = useTheme()
-  const mode = THEMES.find((t) => t.id === theme)?.mode ?? 'dark'
+  const { resolvedTheme } = useTheme()
+  const mode = THEMES.find((t) => t.id === resolvedTheme)?.mode ?? 'dark'
   const mermaidTheme = mode === 'light' ? 'default' : 'dark'
   const baseId = useId().replace(/:/g, '')
   const hostRef = useRef<HTMLDivElement>(null)

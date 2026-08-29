@@ -22,7 +22,7 @@ export function MonacoEditor({
   ariaLabel = 'Code editor',
   className = '',
 }: MonacoEditorProps) {
-  const { theme } = useTheme()
+  const { resolvedTheme } = useTheme()
   const hostRef = useRef<HTMLDivElement>(null)
   const editorRef = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null)
   const modelRef = useRef<Monaco.editor.ITextModel | null>(null)
@@ -60,7 +60,7 @@ export function MonacoEditor({
         model,
         readOnly,
         domReadOnly: readOnly,
-        theme: getMonacoThemeId(theme),
+        theme: getMonacoThemeId(resolvedTheme),
         automaticLayout: true,
         minimap: { enabled: false },
         lineNumbers: 'on',
@@ -90,7 +90,7 @@ export function MonacoEditor({
         onChangeRef.current(model.getValue())
       })
 
-      applyMonacoTheme(monaco, theme)
+      applyMonacoTheme(monaco, resolvedTheme)
       setReady(true)
     })()
 
@@ -127,8 +127,8 @@ export function MonacoEditor({
     if (useFallback) return
     const monaco = monacoRef.current
     if (!monaco) return
-    applyMonacoTheme(monaco, theme)
-  }, [theme, useFallback])
+    applyMonacoTheme(monaco, resolvedTheme)
+  }, [resolvedTheme, useFallback])
 
   useEffect(() => {
     if (useFallback) return
