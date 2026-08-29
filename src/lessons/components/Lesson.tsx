@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { getLessonMeta, getNextLesson, type SectionMeta } from '../meta.ts'
 import { getNextPathLesson, isOnBeginnerPath } from '../beginnerPath.ts'
 import { lessonNeedsPython } from '../../lib/pythonLessons.ts'
+import { parseSectionFromSearch } from '../../lib/lessonUrl.ts'
 import { CurrentLessonProvider } from '../../progress/CurrentLessonContext.tsx'
 import { useLessonProgress, useProgress } from '../../progress/ProgressContext.tsx'
 
@@ -19,6 +20,8 @@ export function Lesson({ id, children }: Props) {
   const nextInPath = getNextPathLesson(id)
   const next = isOnBeginnerPath(id) && nextInPath ? nextInPath : getNextLesson(id)
   const location = useLocation()
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const sections: SectionMeta[] = meta?.sections ?? []
   const [active, setActive] = useState(sections[0]?.id ?? '')
   const { recordOpen, setLessonRead } = useProgress()
@@ -27,12 +30,21 @@ export function Lesson({ id, children }: Props) {
   const isRead = progress?.read ?? false
 
   useEffect(() => {
-    const scrollTo = (location.state as { scrollTo?: string } | null)?.scrollTo
-    if (!scrollTo) return
+    const fromState = (location.state as { scrollTo?: string } | null)?.scrollTo
+    const fromUrl = parseSectionFromSearch(searchParams.toString())
+    const target = fromState ?? fromUrl
+    if (!target) return
     requestAnimationFrame(() => {
-      document.getElementById(scrollTo)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      document.getElementById(target)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     })
-  }, [location.pathname, location.state])
+  }, [location.pathname, location.state, searchParams])
+
+  const scrollToSection = (sectionId: string) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    const params = new URLSearchParams(searchParams)
+    params.set('section', sectionId)
+    navigate({ pathname: location.pathname, search: `?${params.toString()}` }, { replace: true })
+  }
 
   useEffect(() => {
     if (openedRef.current === id) return
@@ -68,9 +80,7 @@ export function Lesson({ id, children }: Props) {
     return () => observer.disconnect()
   }, [id, sections])
 
-  const scrollTo = (sectionId: string) => {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
+  const scrollTo = scrollToSection
 
   if (!meta) return null
 

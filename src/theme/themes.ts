@@ -36,11 +36,23 @@ export type ThemeId =
 
 export type ThemeMode = 'dark' | 'light'
 
+/** Stored in localStorage; `system` follows OS light/dark via prefers-color-scheme. */
+export type ThemePreference = ThemeId | 'system'
+
+export const SYSTEM_LIGHT_THEME: ThemeId = 'light'
+export const SYSTEM_DARK_THEME: ThemeId = 'midnight'
+
 export interface ThemeOption {
   id: ThemeId
   label: string
   swatch: string
   mode: ThemeMode
+}
+
+export function resolveTheme(preference: ThemePreference, prefersDark = true): ThemeId {
+  if (preference === 'system') return prefersDark ? SYSTEM_DARK_THEME : SYSTEM_LIGHT_THEME
+  if (THEMES.some((t) => t.id === preference)) return preference
+  return SYSTEM_DARK_THEME
 }
 
 // A broad catalog of popular editor/IDE themes. `midnight` is the :root default;
