@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { lessonSectionUrl } from '../lib/lessonUrl.ts'
 import {
   listLessonTopics,
   searchLessons,
@@ -68,7 +69,7 @@ export function GlobalSearch({ open, onClose }: Props) {
   const shortcutLabel = searchShortcutLabel()
 
   const goTo = (item: LessonSearchItem) => {
-    navigate(item.path, item.sectionId ? { state: { scrollTo: item.sectionId } } : undefined)
+    navigate(lessonSectionUrl(item.path, item.sectionId))
     onClose()
   }
 

@@ -17,7 +17,7 @@ const TYPES: { id: IssueType; label: string; ghLabel: string; prefix: string }[]
 export function FeedbackDialog({ onClose }: { onClose: () => void }) {
   const location = useLocation()
   const { experience } = useExperience()
-  const { theme } = useTheme()
+  const { preference, resolvedTheme } = useTheme()
   const [type, setType] = useState<IssueType>('feature')
   const [title, setTitle] = useState('')
   const [details, setDetails] = useState('')
@@ -44,7 +44,7 @@ export function FeedbackDialog({ onClose }: { onClose: () => void }) {
         '**Context** (auto-filled)',
         `- Page: ${current ? `${current.title} (${location.pathname})` : location.pathname || '/'}`,
         `- Experience: ${experience}`,
-        `- Theme: ${theme}`,
+        `- Theme: ${preference === 'system' ? `system (${resolvedTheme})` : preference}`,
         `- URL: ${typeof window !== 'undefined' ? window.location.href : ''}`,
       )
     }

@@ -7,7 +7,7 @@ import TeacherHome from './pages/TeacherHome.tsx'
 import { useExperience } from './experience/ExperienceContext.tsx'
 import { LessonPlan } from './experience/LessonPlan.tsx'
 import { useTheme } from './theme/ThemeContext.tsx'
-import { THEMES, type ThemeId } from './theme/themes.ts'
+import { THEMES, type ThemePreference } from './theme/themes.ts'
 import { FeedbackDialog } from './components/FeedbackDialog.tsx'
 import { GlobalSearch, searchShortcutLabel, useGlobalSearchShortcut } from './components/GlobalSearch.tsx'
 import { PresenterNotesStrip } from './components/PresenterNotesStrip.tsx'
@@ -52,7 +52,7 @@ function NavStatusMarker({ read }: { read: boolean }) {
 
 function App() {
   const { experience, setExperience } = useExperience()
-  const { theme, setTheme } = useTheme()
+  const { preference, resolvedTheme, setTheme } = useTheme()
   const { classroomMode, toggleClassroomMode } = useClassroom()
   const teacher = experience === 'teacher'
   const location = useLocation()
@@ -322,17 +322,25 @@ function App() {
           <div className="theme-select-wrap">
             <span
               className="theme-select-swatch"
-              style={{ background: THEMES.find((t) => t.id === theme)?.swatch }}
+              style={{
+                background:
+                  preference === 'system'
+                    ? 'linear-gradient(135deg, #f8fafc 50%, #0f172a 50%)'
+                    : THEMES.find((t) => t.id === resolvedTheme)?.swatch,
+              }}
               aria-hidden
             />
             <select
               id="theme-select"
               className="theme-select"
-              value={theme}
-              onChange={(e) => setTheme(e.target.value as ThemeId)}
+              value={preference}
+              onChange={(e) => setTheme(e.target.value as ThemePreference)}
               aria-label="Color theme"
-              title={THEMES.find((t) => t.id === theme)?.label}
+              title={preference === 'system' ? 'System' : THEMES.find((t) => t.id === resolvedTheme)?.label}
             >
+              <optgroup label="System">
+                <option value="system">System</option>
+              </optgroup>
               <optgroup label="Dark">
                 {THEMES.filter((t) => t.mode === 'dark').map((t) => (
                   <option key={t.id} value={t.id}>

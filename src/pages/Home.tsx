@@ -8,16 +8,21 @@ import {
   isOnBeginnerPath,
 } from '../lessons/beginnerPath.ts'
 import { lessonNeedsPython } from '../lib/pythonLessons.ts'
-import { useProgress } from '../progress/ProgressContext.tsx'
+import { CAPSTONE_STEPS, capstoneProgress } from '../lessons/capstone/CapstoneChecklist.tsx'
+import { CAPSTONE_TASK_TRACKER_ID, useProgress } from '../progress/ProgressContext.tsx'
 import { ModuleProgressCard } from '../components/ModuleProgress.tsx'
-import { CAPSTONE_STEPS } from '../lessons/capstone/CapstoneChecklist.tsx'
 
 function Home() {
-  const { getProgress, ready } = useProgress()
+  const { getProgress, isCapstoneStepDone, ready } = useProgress()
   const isRead = (id: string) => getProgress(id)?.read ?? false
   const pathLessons = getBeginnerPathLessons()
   const resume = ready ? getPathResumeLesson(isRead) : pathLessons[0]
   const pathStats = ready ? getPathProgress(isRead) : { completed: 0, total: pathLessons.length, percent: 0 }
+  const capstoneStats = ready
+    ? capstoneProgress((stepId, lessonId) =>
+        isCapstoneStepDone(CAPSTONE_TASK_TRACKER_ID, stepId, lessonId),
+      )
+    : { done: 0, total: CAPSTONE_STEPS.length, percent: 0 }
 
   return (
     <div className="page">
@@ -86,6 +91,19 @@ function Home() {
             steps across SQL, API, React, auth, tests, and deploy.
           </p>
         </div>
+        {ready && (
+          <div className="start-here-progress">
+            <div className="start-here-progress-label">
+              Capstone progress: {capstoneStats.done}/{capstoneStats.total} steps complete
+            </div>
+            <div className="start-here-progress-bar" aria-hidden>
+              <div
+                className="start-here-progress-fill"
+                style={{ width: `${capstoneStats.percent}%` }}
+              />
+            </div>
+          </div>
+        )}
         <Link to="/lessons/capstone" className="start-here-continue btn">
           🏁 Open capstone checklist
         </Link>
