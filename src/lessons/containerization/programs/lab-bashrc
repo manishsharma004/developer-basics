@@ -1,4 +1,9 @@
 # Simulated docker/kubectl CLIs for the in-browser bash lab.
+echo "Containerization lab ready (simulated CLIs)."
+echo "  docker build -t myapp:1.0 ."
+echo "  docker compose up -d"
+echo "  kubectl get pods"
+
 docker() {
   bash /opt/lab/docker.sh "$@" </dev/null
 }

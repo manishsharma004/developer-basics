@@ -23,11 +23,7 @@ async function waitForShellReady(page: Page): Promise<void> {
 
   await expect
     .poll(async () => terminalText(page), { timeout: WAIT_MS })
-    .toMatch(/Containerization lab ready/)
-
-  await expect
-    .poll(async () => terminalText(page), { timeout: WAIT_MS })
-    .toMatch(/lab\$|bash-dist#|ab\$/)
+    .toMatch(/bash-dist#|lab\$/)
 }
 
 async function runShellCommand(
@@ -50,8 +46,6 @@ async function runShellCommand(
     typeof expectInOutput === 'string'
       ? new RegExp(expectInOutput.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
       : expectInOutput
-
-  const commandPattern = command.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
   await expect
     .poll(async () => {
@@ -77,15 +71,16 @@ test.describe.serial('Wasmer container shell commands', () => {
   test.beforeAll(async ({ browser }: { browser: Browser }) => {
     shellPage = await browser.newPage()
     await waitForShellReady(shellPage)
+    await runShellCommand(shellPage, 'source /opt/lab/lab-bashrc', /Containerization lab ready/)
   })
 
   test.afterAll(async () => {
     await shellPage?.close()
   })
 
-  test('lab$ prompt returns after ls', async () => {
-    const text = await runShellCommand(shellPage, 'ls', /(?:lab\$|bash-dist#|ab\$)/)
-    expect(text.length).toBeGreaterThan('Containerization lab ready'.length)
+  test('bash prompt returns after echo', async () => {
+    const text = await runShellCommand(shellPage, 'echo ok', /ok/)
+    expect(text).toMatch(/bash-dist#|lab\$/)
   })
 
   test('docker ps returns container list or empty message', async () => {

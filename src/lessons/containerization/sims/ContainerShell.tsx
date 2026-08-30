@@ -16,6 +16,9 @@ export function ContainerShell({ fallback, hint = DEFAULT_HINT }: ContainerShell
     <div className="container-shell">
       <p className="panel-hint container-shell-hint">
         Simulated CLIs in bash when isolated: <code>{hint}</code>
+        {' '}At the <code>bash-dist#</code> prompt, run{' '}
+        <code>source /opt/lab/lab-bashrc</code> once to enable <code>docker</code> and{' '}
+        <code>kubectl</code> shortcuts.
       </p>
       <WasmerShell fallback={fallback} />
     </div>

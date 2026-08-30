@@ -70,16 +70,11 @@ function waitForLayout(container: HTMLElement): Promise<void> {
   })
 }
 
-const LAB_WELCOME =
-  'Containerization lab ready (simulated CLIs).\r\n' +
-  '  docker build -t myapp:1.0 .\r\n' +
-  '  docker compose up -d\r\n' +
-  '  kubectl get pods\r\n'
-
 const LAB_MOUNT = {
   'docker.sh': fakeDockerScript,
   'compose.sh': fakeComposeScript,
   'kubectl.sh': fakeKubectlScript,
+  'lab-bashrc': labBashrc,
 }
 
 function connectStreams(
@@ -157,21 +152,11 @@ export async function runBashTerminal(
   report('Starting bash shell…')
 
   const instance = await pkg.entrypoint!.run({
-    args: ['-i'],
-    env: {
-      HOME: '/root',
-      TERM: 'xterm-256color',
-      PS1: 'lab$ ',
-    },
     mount: {
       '/opt/lab': LAB_MOUNT,
-      '/root': {
-        '.bashrc': labBashrc,
-      },
     },
   })
 
-  term.write(LAB_WELCOME)
   connectStreams(instance, term)
   term.focus()
 
