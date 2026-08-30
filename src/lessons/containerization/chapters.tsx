@@ -5,7 +5,6 @@ import { Callout, SimReality, TryThis, UnderTheHood, CodePreview } from '../comp
 import { VmContainerCompare } from './sims/VmContainerCompare.tsx'
 import { ImageLayersSim } from './sims/ImageLayersSim.tsx'
 import { DockerCliSim } from './sims/DockerCliSim.tsx'
-import { WasmerShell } from './sims/WasmerShell.tsx'
 import { DockerfileEditorSim } from './sims/DockerfileEditorSim.tsx'
 import { DockerNetworkSim } from './sims/DockerNetworkSim.tsx'
 import { DockerVolumeSim } from './sims/DockerVolumeSim.tsx'
@@ -140,13 +139,16 @@ const dockerContainers = createChapterLesson({
   model: (
     <>
       <CodePreview language="plaintext" code={`docker run -d --name web -p 8080:80 -e NODE_ENV=prod myapp:1.0\ndocker ps\ndocker logs web\ndocker exec -it web sh\ndocker stop web && docker rm web`} />
-      {simNote(<span>CLI simulator or Wasmer bash when isolated.</span>, <span>containerd/dockerd, cgroups, namespaces.</span>)}
+      {simNote(
+        <span>Interactive CLI simulator — type docker commands below.</span>,
+        <span>containerd/dockerd, cgroups, namespaces.</span>,
+      )}
     </>
   ),
   playground: (
     <>
-      <WasmerShell fallback={<DockerCliSim />} />
-      <TryThis>Build an image, run two containers on different ports, then stop and remove one.</TryThis>
+      <DockerCliSim />
+      <TryThis>Run <code>docker build -t myapp:1.0 .</code>, then <code>docker run --name web myapp:1.0</code>, <code>docker ps</code>, and <code>docker stop c1</code>.</TryThis>
     </>
   ),
   terms: [
