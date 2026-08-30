@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Lesson } from '../components/Lesson.tsx'
 import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { ScalingSimulator } from './ScalingSimulator.tsx'
@@ -53,6 +54,11 @@ export default function ComputeLesson() {
           <strong>Horizontal scaling</strong> = more machines. Horizontal is how
           large systems grow, because a single box always has a hard ceiling.
         </Callout>
+        <p className="prose">
+          Containers are covered in depth in the{' '}
+          <Link to="/lessons/container-intro">Containerization</Link> module — images,
+          Compose, and Kubernetes.
+        </p>
       </Section>
 
       <Section id="playground" title="Scale it live">

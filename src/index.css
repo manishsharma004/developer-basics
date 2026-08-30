@@ -374,6 +374,38 @@ a {
   margin: 0 0 12px;
 }
 
+.terminal-output {
+  background: var(--code-bg, #0d1117);
+  color: var(--code-fg, #e6edf3);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.85rem;
+  padding: 12px 14px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 12px 0;
+  white-space: pre-wrap;
+}
+
+.wasmer-terminal {
+  background: #0d1117;
+  border-radius: 8px;
+  padding: 4px;
+  overflow: hidden;
+}
+
+.code-input {
+  width: 100%;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.85rem;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border, #30363d);
+  background: var(--code-bg, #0d1117);
+  color: var(--code-fg, #e6edf3);
+  margin-bottom: 12px;
+  resize: vertical;
+}
+
 /* Tree -------------------------------------------------------------------- */
 .tree,
 .tree-children {

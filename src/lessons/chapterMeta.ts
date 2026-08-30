@@ -14,6 +14,7 @@ const GROUP_ICON: Record<string, string> = {
   mongodb: '🍃',
   web: '🌐',
   css: '🎨',
+  containerization: '🐳',
 }
 
 export interface ChapterMetaInput {
@@ -21,7 +22,7 @@ export interface ChapterMetaInput {
   title: string
   tagline: string
   summary: string
-  group: 'react' | 'fastapi' | 'databases' | 'sql' | 'mongodb' | 'web' | 'css'
+  group: 'react' | 'fastapi' | 'databases' | 'sql' | 'mongodb' | 'web' | 'css' | 'containerization'
   minutes: number
   level?: Level
   modelTitle?: string

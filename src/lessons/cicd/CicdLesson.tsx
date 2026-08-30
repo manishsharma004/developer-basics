@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Lesson } from '../components/Lesson.tsx'
 import { Section, Callout, UnderTheHood, TryThis, Recap, Quiz, KeyTerms } from '../components/blocks.tsx'
 import { PipelineSimulator } from './PipelineSimulator.tsx'
@@ -29,7 +30,8 @@ export default function CicdLesson() {
           </li>
           <li>
             <strong>Build</strong> — compile or bundle artifacts (
-            <code>dist/</code>, Docker image).
+            <code>dist/</code>,{' '}
+            <Link to="/lessons/docker-images">Docker image</Link>).
           </li>
           <li>
             <strong>Deploy</strong> — promote the artifact to staging or
