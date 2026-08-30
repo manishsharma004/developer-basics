@@ -1,4 +1,6 @@
-/*! coi-serviceworker — Safari-safe variant (require-corp, no credentialless). */
+/*! coi-serviceworker — Safari-safe (require-corp). Keep registered on GitHub Pages. */
+const COI_SW_VERSION = '5'
+
 if (typeof window === 'undefined') {
   self.addEventListener('install', () => self.skipWaiting())
   self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()))
@@ -17,7 +19,6 @@ if (typeof window === 'undefined') {
           }
 
           const headers = new Headers(response.headers)
-          // credentialless is Chrome-only; require-corp works on Safari, Firefox, and Chrome.
           if (!headers.has('Cross-Origin-Embedder-Policy')) {
             headers.set('Cross-Origin-Embedder-Policy', 'require-corp')
           }
@@ -41,19 +42,16 @@ if (typeof window === 'undefined') {
   ;(() => {
     const coi = {
       shouldRegister: () => true,
-      shouldDeregister: () => false,
       doReload: () => window.location.reload(),
       quiet: false,
       ...window.coi,
     }
 
     const nav = navigator
+    const reloadKey = `coi-activated-${COI_SW_VERSION}`
 
-    // Already isolated — unregister any stale shim so it cannot override headers later.
-    if (window.crossOriginIsolated && nav.serviceWorker) {
-      void nav.serviceWorker.getRegistrations().then((regs) => {
-        for (const reg of regs) void reg.unregister()
-      })
+    if (window.crossOriginIsolated) {
+      sessionStorage.setItem(reloadKey, '1')
       return
     }
 
@@ -69,22 +67,20 @@ if (typeof window === 'undefined') {
     const script = document.currentScript
     if (!script || !('src' in script) || !script.src) return
 
-    // Avoid infinite reload loops if isolation still fails after one attempt.
-    const reloadKey = 'coi-reload-attempted'
-    const alreadyReloaded = sessionStorage.getItem(reloadKey) === '1'
+    const reloadOnce = () => {
+      if (sessionStorage.getItem(reloadKey) === '1') return
+      sessionStorage.setItem(reloadKey, '1')
+      coi.doReload()
+    }
 
     nav.serviceWorker.register(script.src).then(
       (registration) => {
         !coi.quiet && console.log('COI service worker registered', registration.scope)
-
-        const reloadOnce = () => {
-          if (alreadyReloaded) return
-          sessionStorage.setItem(reloadKey, '1')
-          coi.doReload()
-        }
+        void registration.update()
 
         registration.addEventListener('updatefound', () => {
           !coi.quiet && console.log('Reloading for updated COI service worker.')
+          sessionStorage.removeItem(reloadKey)
           reloadOnce()
         })
 

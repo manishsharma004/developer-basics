@@ -1,4 +1,5 @@
-import { COI_TROUBLESHOOTING, getCrossOriginIsolated } from '../lib/crossOriginIsolation.ts'
+import { useState } from 'react'
+import { COI_TROUBLESHOOTING, getCrossOriginIsolated, resetCoiServiceWorker } from '../lib/crossOriginIsolation.ts'
 import type { WasmerLoadPhase } from '../lib/wasmer.ts'
 
 interface Props {
@@ -9,10 +10,21 @@ interface Props {
 }
 
 export function WasmerRuntimeBanner({ phase, message, error, onRetry }: Props) {
+  const [resetting, setResetting] = useState(false)
+
   if (phase === 'ready') return null
 
   const state =
     phase === 'error' ? 'error' : phase === 'unsupported' ? 'skipped' : 'loading'
+
+  const enableShell = async () => {
+    setResetting(true)
+    try {
+      await resetCoiServiceWorker()
+    } catch {
+      setResetting(false)
+    }
+  }
 
   return (
     <div className={`runtime-banner runtime-banner--${state}`} role="status" aria-live="polite">
@@ -37,13 +49,18 @@ export function WasmerRuntimeBanner({ phase, message, error, onRetry }: Props) {
           </span>
         )}
       </div>
-      {phase === 'error' && onRetry && (
-        <div className="runtime-actions">
+      <div className="runtime-actions">
+        {phase === 'unsupported' && (
+          <button type="button" className="btn btn--sm" disabled={resetting} onClick={() => void enableShell()}>
+            {resetting ? 'Enabling…' : 'Enable shell runtime'}
+          </button>
+        )}
+        {phase === 'error' && onRetry && (
           <button type="button" className="btn btn--sm" onClick={onRetry}>
             Retry shell
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }
