@@ -121,7 +121,7 @@ case "$cmd" in
     echo "volume mounted: my-data"
     ;;
   compose)
-    exec bash /opt/lab/compose.sh "$@"
+    bash /opt/lab/compose.sh "$@" </dev/null
     ;;
   images)
     if has_image; then
