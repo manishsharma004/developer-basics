@@ -27,6 +27,11 @@ if (typeof window === 'undefined') {
             return;
         }
 
+        // Let the browser handle navigations; patching failed navigations breaks HashRouter.
+        if (r.mode === "navigate") {
+            return;
+        }
+
         const request = (coepCredentialless && r.mode === "no-cors")
             ? new Request(r, {
                 credentials: "omit",
@@ -54,7 +59,11 @@ if (typeof window === 'undefined') {
                         headers: newHeaders,
                     });
                 })
-                .catch((e) => console.error(e))
+                .catch((e) => {
+                    console.error(e);
+                    // Must return a Response — undefined rejects respondWith and breaks the page.
+                    return fetch(request);
+                })
         );
     });
 

@@ -8,8 +8,15 @@
   </head>
   <body>
     <div id="root"></div>
-    <!-- Enables COOP/COEP on GitHub Pages for Wasmer SharedArrayBuffer -->
-    <script src="%BASE_URL%coi-serviceworker.js"></script>
+    <!-- COOP/COEP for Wasmer SharedArrayBuffer on GitHub Pages (optional shell labs) -->
+    <script>
+      window.coi = {
+        // credentialless loads Pyodide CDN + Wasmer registry without CORP on every asset
+        coepCredentialless: () => true,
+        quiet: true,
+      };
+    </script>
+    <script src="%BASE_URL%coi-serviceworker.js?v=2"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
