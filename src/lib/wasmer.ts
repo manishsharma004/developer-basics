@@ -1,4 +1,4 @@
-import { isCrossOriginIsolated } from './crossOriginIsolation.ts'
+import { getCrossOriginIsolated } from './crossOriginIsolation.ts'
 import fakeDockerScript from '../lessons/containerization/programs/fake-docker.sh?raw'
 import fakeComposeScript from '../lessons/containerization/programs/fake-compose.sh?raw'
 import fakeKubectlScript from '../lessons/containerization/programs/fake-kubectl.sh?raw'
@@ -26,7 +26,7 @@ export function resetWasmerLoad(): void {
 }
 
 export async function ensureWasmer(onProgress?: (msg: string) => void): Promise<void> {
-  if (!isCrossOriginIsolated) {
+  if (!getCrossOriginIsolated()) {
     throw new Error('Cross-origin isolation required for Wasmer (SharedArrayBuffer).')
   }
   const report = (msg: string) => {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type RefObject } from 'react'
-import { isCrossOriginIsolated } from './crossOriginIsolation.ts'
+import { getCrossOriginIsolated, waitForCrossOriginIsolation } from './crossOriginIsolation.ts'
 import { onWasmerProgress, resetWasmerLoad, runBashTerminal, type WasmerLoadPhase } from './wasmer.ts'
 
 const LOAD_TIMEOUT_MS = 30_000
@@ -13,12 +13,12 @@ export interface UseWasmerResult {
 
 export function useWasmer(hostRef: RefObject<HTMLElement | null>): UseWasmerResult {
   const [phase, setPhase] = useState<WasmerLoadPhase>(() =>
-    isCrossOriginIsolated ? 'loading' : 'unsupported',
+    getCrossOriginIsolated() ? 'loading' : 'loading',
   )
   const [message, setMessage] = useState(() =>
-    isCrossOriginIsolated
+    getCrossOriginIsolated()
       ? 'Checking cross-origin isolation…'
-      : 'Cross-origin isolation unavailable — using built-in simulator.',
+      : 'Activating cross-origin isolation (first visit may reload once)…',
   )
   const [error, setError] = useState<string | null>(null)
   const [attempt, setAttempt] = useState(0)
@@ -30,7 +30,7 @@ export function useWasmer(hostRef: RefObject<HTMLElement | null>): UseWasmerResu
     cleanupRef.current?.()
     cleanupRef.current = undefined
     setError(null)
-    setPhase(isCrossOriginIsolated ? 'loading' : 'unsupported')
+    setPhase(getCrossOriginIsolated() ? 'loading' : 'loading')
     setMessage('Retrying shell runtime…')
     setAttempt((n) => n + 1)
   }, [])
@@ -41,34 +41,38 @@ export function useWasmer(hostRef: RefObject<HTMLElement | null>): UseWasmerResu
       if (mounted.current) setMessage(msg)
     })
 
-    if (!isCrossOriginIsolated) {
-      setPhase('unsupported')
-      setMessage('Cross-origin isolation unavailable — using built-in simulator below.')
-      return () => {
-        mounted.current = false
-        unsubscribe()
-      }
-    }
-
-    const host = hostRef.current
-    if (!host) {
-      setPhase('error')
-      setError('Terminal mount failed.')
-      return () => {
-        mounted.current = false
-        unsubscribe()
-      }
-    }
-
     let cancelled = false
-    const timeout = window.setTimeout(() => {
-      if (!cancelled && mounted.current) {
-        setPhase('error')
-        setError('Shell runtime timed out after 30s. Check your network or use the simulator below.')
-      }
-    }, LOAD_TIMEOUT_MS)
+    let timeout = 0
 
     void (async () => {
+      if (!getCrossOriginIsolated()) {
+        setPhase('loading')
+        setMessage('Activating cross-origin isolation (first visit may reload once)…')
+        const isolated = await waitForCrossOriginIsolation()
+        if (cancelled || !mounted.current) return
+        if (!isolated) {
+          setPhase('unsupported')
+          setMessage(
+            'Cross-origin isolation unavailable — using built-in simulator below. Try a hard refresh if you just updated the site.',
+          )
+          return
+        }
+      }
+
+      const host = hostRef.current
+      if (!host) {
+        setPhase('error')
+        setError('Terminal mount failed.')
+        return
+      }
+
+      timeout = window.setTimeout(() => {
+        if (!cancelled && mounted.current) {
+          setPhase('error')
+          setError('Shell runtime timed out after 30s. Check your network or use the simulator below.')
+        }
+      }, LOAD_TIMEOUT_MS)
+
       try {
         setPhase('loading')
         setError(null)
@@ -94,12 +98,12 @@ export function useWasmer(hostRef: RefObject<HTMLElement | null>): UseWasmerResu
     return () => {
       cancelled = true
       mounted.current = false
-      window.clearTimeout(timeout)
+      if (timeout) window.clearTimeout(timeout)
       cleanupRef.current?.()
       cleanupRef.current = undefined
       unsubscribe()
     }
-  }, [attempt])
+  }, [attempt, hostRef])
 
   return { phase, message, error, retry }
 }
