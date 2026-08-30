@@ -24,6 +24,10 @@ async function waitForShellReady(page: Page): Promise<void> {
   await expect
     .poll(async () => terminalText(page), { timeout: WAIT_MS })
     .toMatch(/bash-dist#|lab\$/)
+
+  await expect(page.locator('.wasmer-terminal[data-shell-bootstrapped="true"]')).toBeVisible({
+    timeout: WAIT_MS,
+  })
 }
 
 async function runShellCommand(
@@ -39,7 +43,7 @@ async function runShellCommand(
 
   const before = await terminalText(page)
 
-  await input.pressSequentially(command)
+  await input.pressSequentially(command, { delay: 15 })
   await input.press('Enter')
 
   const matcher =
@@ -51,7 +55,7 @@ async function runShellCommand(
     .poll(async () => {
       const text = await terminalText(page)
       if (text === before || !text.includes(command)) return ''
-      const tail = text.slice(text.indexOf(command) + command.length)
+      const tail = text.slice(text.lastIndexOf(command) + command.length)
       return matcher.test(tail) ? text : ''
     }, { timeout: WAIT_MS })
     .not.toBe('')
@@ -71,7 +75,6 @@ test.describe.serial('Wasmer container shell commands', () => {
   test.beforeAll(async ({ browser }: { browser: Browser }) => {
     shellPage = await browser.newPage()
     await waitForShellReady(shellPage)
-    await runShellCommand(shellPage, 'source /opt/lab/lab-bashrc', /Containerization lab ready/)
   })
 
   test.afterAll(async () => {

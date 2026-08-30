@@ -2,7 +2,6 @@ import { getCrossOriginIsolated } from './crossOriginIsolation.ts'
 import fakeDockerScript from '../lessons/containerization/programs/fake-docker.sh?raw'
 import fakeComposeScript from '../lessons/containerization/programs/fake-compose.sh?raw'
 import fakeKubectlScript from '../lessons/containerization/programs/fake-kubectl.sh?raw'
-import labBashrc from '../lessons/containerization/programs/lab-bashrc?raw'
 
 let initPromise: Promise<void> | null = null
 
@@ -74,8 +73,10 @@ const LAB_MOUNT = {
   'docker.sh': fakeDockerScript,
   'compose.sh': fakeComposeScript,
   'kubectl.sh': fakeKubectlScript,
-  'lab-bashrc': labBashrc,
 }
+
+const LAB_ALIAS_SETUP =
+  "alias docker='bash /opt/lab/docker.sh' && alias kubectl='bash /opt/lab/kubectl.sh'"
 
 function connectStreams(
   instance: {
@@ -84,18 +85,75 @@ function connectStreams(
     stderr: ReadableStream<Uint8Array>
   },
   term: import('xterm').Terminal,
+  container: HTMLElement,
 ) {
   const encoder = new TextEncoder()
-  const stdin = instance.stdin?.getWriter()
+  const decoder = new TextDecoder()
+  const stdinStream = instance.stdin
+  let bootstrapped = false
+  let bootstrapping = false
+  let outputTail = ''
+  let writeChain: Promise<void> = Promise.resolve()
+
+  const enqueueStdin = (data: string, charDelayMs = 0) => {
+    writeChain = writeChain.then(async () => {
+      if (!stdinStream) return
+      const writer = stdinStream.getWriter()
+      try {
+        for (const char of data) {
+          await writer.write(encoder.encode(char))
+          if (charDelayMs > 0) {
+            await new Promise((resolve) => setTimeout(resolve, charDelayMs))
+          }
+        }
+        await writer.ready
+      } finally {
+        writer.releaseLock()
+      }
+    })
+    return writeChain
+  }
+
+  const waitForNewPrompt = async (afterLen: number, timeoutMs = 8_000) => {
+    const start = Date.now()
+    while (Date.now() - start < timeoutMs) {
+      const tail = outputTail.slice(afterLen)
+      if (/bash-dist#|lab\$/.test(tail)) return
+      await new Promise((resolve) => setTimeout(resolve, 40))
+    }
+    throw new Error('Timed out waiting for shell prompt')
+  }
+
+  const trackOutput = (chunk: Uint8Array) => {
+    outputTail += decoder.decode(chunk)
+    if (outputTail.length > 4096) outputTail = outputTail.slice(-2048)
+    if (!bootstrapped && /bash-dist#|lab\$/.test(outputTail)) {
+      bootstrapped = true
+      bootstrapping = true
+      void (async () => {
+        try {
+          await new Promise((resolve) => setTimeout(resolve, 200))
+          const mark = outputTail.length
+          await enqueueStdin(`${LAB_ALIAS_SETUP}\r`, 12)
+          await waitForNewPrompt(mark)
+        } finally {
+          bootstrapping = false
+          container.dataset.shellBootstrapped = 'true'
+        }
+      })()
+    }
+    term.write(chunk)
+  }
 
   term.onData((data) => {
-    void stdin?.write(encoder.encode(data))
+    if (bootstrapping) return
+    void enqueueStdin(data)
   })
 
   void instance.stdout.pipeTo(
     new WritableStream<Uint8Array>({
       write(chunk) {
-        term.write(chunk)
+        trackOutput(chunk)
       },
     }),
   )
@@ -103,7 +161,7 @@ function connectStreams(
   void instance.stderr.pipeTo(
     new WritableStream<Uint8Array>({
       write(chunk) {
-        term.write(chunk)
+        trackOutput(chunk)
       },
     }),
   )
@@ -151,13 +209,15 @@ export async function runBashTerminal(
   report('Mounting simulated docker, compose, and kubectl CLIs…')
   report('Starting bash shell…')
 
+  // wasmer-js wasmer.sh pattern: default entrypoint + xterm stream piping only.
+  // Lab scripts mount under /opt/lab; aliases register after the bash-dist prompt.
   const instance = await pkg.entrypoint!.run({
     mount: {
       '/opt/lab': LAB_MOUNT,
     },
   })
 
-  connectStreams(instance, term)
+  connectStreams(instance, term, container)
   term.focus()
 
   report('Shell ready — type docker, compose, or kubectl commands.')
