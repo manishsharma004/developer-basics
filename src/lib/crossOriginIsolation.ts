@@ -9,8 +9,12 @@ export const isCrossOriginIsolated = getCrossOriginIsolated()
 export const COI_TROUBLESHOOTING =
   'https://docs.wasmer.io/sdk/wasmer-js/explainers/troubleshooting/#sharedarraybuffer-and-cross-origin-isolation'
 
-const COI_WAIT_MS = 10_000
-const COI_POLL_MS = 150
+const COI_WAIT_MS = 30_000
+const COI_POLL_MS = 200
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 /**
  * Wait for coi-serviceworker to activate (first visit reloads once).
@@ -18,11 +22,31 @@ const COI_POLL_MS = 150
  */
 export async function waitForCrossOriginIsolation(timeoutMs = COI_WAIT_MS): Promise<boolean> {
   if (getCrossOriginIsolated()) return true
+  if (typeof window === 'undefined') return false
 
   const deadline = Date.now() + timeoutMs
-  while (Date.now() < deadline) {
-    await new Promise((resolve) => setTimeout(resolve, COI_POLL_MS))
-    if (getCrossOriginIsolated()) return true
+
+  const waitUntil = async (): Promise<boolean> => {
+    while (Date.now() < deadline) {
+      if (getCrossOriginIsolated()) return true
+      await sleep(COI_POLL_MS)
+    }
+    return getCrossOriginIsolated()
   }
-  return getCrossOriginIsolated()
+
+  if (!('serviceWorker' in navigator)) {
+    return waitUntil()
+  }
+
+  const onController = new Promise<boolean>((resolve) => {
+    const check = () => {
+      if (getCrossOriginIsolated()) resolve(true)
+    }
+    navigator.serviceWorker.addEventListener('controllerchange', check)
+    void navigator.serviceWorker.ready.then(check)
+    setTimeout(() => resolve(getCrossOriginIsolated()), timeoutMs)
+  })
+
+  const raced = await Promise.race([waitUntil(), onController])
+  return raced || getCrossOriginIsolated()
 }

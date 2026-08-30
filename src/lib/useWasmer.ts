@@ -53,7 +53,7 @@ export function useWasmer(hostRef: RefObject<HTMLElement | null>): UseWasmerResu
         if (!isolated) {
           setPhase('unsupported')
           setMessage(
-            'Cross-origin isolation unavailable — using built-in simulator below. Try a hard refresh if you just updated the site.',
+            'Cross-origin isolation unavailable — using built-in simulator below. On first visit, allow the one-time reload. If this persists, clear site data for this page and refresh.',
           )
           return
         }
