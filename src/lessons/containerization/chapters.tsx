@@ -5,6 +5,7 @@ import { Callout, SimReality, TryThis, UnderTheHood, CodePreview } from '../comp
 import { VmContainerCompare } from './sims/VmContainerCompare.tsx'
 import { ImageLayersSim } from './sims/ImageLayersSim.tsx'
 import { DockerCliSim } from './sims/DockerCliSim.tsx'
+import { WasmerShell } from './sims/WasmerShell.tsx'
 import { DockerfileEditorSim } from './sims/DockerfileEditorSim.tsx'
 import { DockerNetworkSim } from './sims/DockerNetworkSim.tsx'
 import { DockerVolumeSim } from './sims/DockerVolumeSim.tsx'
@@ -140,15 +141,18 @@ const dockerContainers = createChapterLesson({
     <>
       <CodePreview language="plaintext" code={`docker run -d --name web -p 8080:80 -e NODE_ENV=prod myapp:1.0\ndocker ps\ndocker logs web\ndocker exec -it web sh\ndocker stop web && docker rm web`} />
       {simNote(
-        <span>Interactive CLI simulator — type docker commands below.</span>,
+        <span>Real bash shell when isolated, or the built-in CLI simulator as fallback.</span>,
         <span>containerd/dockerd, cgroups, namespaces.</span>,
       )}
     </>
   ),
   playground: (
     <>
-      <DockerCliSim />
-      <TryThis>Run <code>docker build -t myapp:1.0 .</code>, then <code>docker run --name web myapp:1.0</code>, <code>docker ps</code>, and <code>docker stop c1</code>.</TryThis>
+      <WasmerShell fallback={<DockerCliSim />} />
+      <TryThis>
+        Watch the runtime banner for load progress. Try <code>docker build -t myapp:1.0 .</code> in
+        the shell or simulator, then <code>docker run --name web myapp:1.0</code> and <code>docker ps</code>.
+      </TryThis>
     </>
   ),
   terms: [

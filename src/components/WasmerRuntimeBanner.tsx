@@ -1,8 +1,9 @@
 import { COI_TROUBLESHOOTING, isCrossOriginIsolated } from '../lib/crossOriginIsolation.ts'
+import type { WasmerLoadPhase } from '../lib/wasmer.ts'
 
 interface Props {
-  phase: 'loading' | 'ready' | 'error' | 'unsupported'
-  message?: string
+  phase: WasmerLoadPhase
+  message: string
   error?: string | null
   onRetry?: () => void
 }
@@ -10,7 +11,8 @@ interface Props {
 export function WasmerRuntimeBanner({ phase, message, error, onRetry }: Props) {
   if (phase === 'ready') return null
 
-  const state = phase === 'error' ? 'error' : phase === 'unsupported' ? 'skipped' : 'loading'
+  const state =
+    phase === 'error' ? 'error' : phase === 'unsupported' ? 'skipped' : 'loading'
 
   return (
     <div className={`runtime-banner runtime-banner--${state}`} role="status" aria-live="polite">
@@ -19,26 +21,26 @@ export function WasmerRuntimeBanner({ phase, message, error, onRetry }: Props) {
       <div className="runtime-text">
         {phase === 'unsupported' ? (
           <span>
-            Shell lab needs <strong>cross-origin isolation</strong> (SharedArrayBuffer). On GitHub
-            Pages this is enabled via <code>coi-serviceworker</code> — reload once if you just
-            landed. A React fallback simulator is shown below.{' '}
+            <strong>Shell runtime unavailable.</strong> {message}{' '}
             <a href={COI_TROUBLESHOOTING} target="_blank" rel="noreferrer">
-              Troubleshooting
+              Why cross-origin isolation matters
             </a>
-            {!isCrossOriginIsolated && ' — currently: not isolated.'}
+            {!isCrossOriginIsolated && ' (currently not isolated).'}
           </span>
         ) : phase === 'error' ? (
           <span>
-            Wasmer failed to load{error ? `: ${error}` : ''}. Use the fallback simulator below.
+            <strong>Shell runtime failed.</strong> {error ?? message}
           </span>
         ) : (
-          <span>{message ?? 'Loading shell runtime…'}</span>
+          <span>
+            <strong>Loading shell runtime…</strong> {message}
+          </span>
         )}
       </div>
       {phase === 'error' && onRetry && (
         <div className="runtime-actions">
           <button type="button" className="btn btn--sm" onClick={onRetry}>
-            Retry
+            Retry shell
           </button>
         </div>
       )}
