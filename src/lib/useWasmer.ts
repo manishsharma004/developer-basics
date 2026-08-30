@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState, type RefObject } from 'react'
 import { getCrossOriginIsolated, waitForCrossOriginIsolation } from './crossOriginIsolation.ts'
 import { onWasmerProgress, resetWasmerLoad, runBashTerminal, type WasmerLoadPhase } from './wasmer.ts'
 
-const LOAD_TIMEOUT_MS = 30_000
+const LOAD_TIMEOUT_MS = 19_000
 
 export interface UseWasmerResult {
   phase: WasmerLoadPhase
@@ -69,7 +69,7 @@ export function useWasmer(hostRef: RefObject<HTMLElement | null>): UseWasmerResu
       timeout = window.setTimeout(() => {
         if (!cancelled && mounted.current) {
           setPhase('error')
-          setError('Shell runtime timed out after 30s. Check your network or use the simulator below.')
+          setError('Shell runtime timed out after 19s. Check your network or use the simulator below.')
         }
       }, LOAD_TIMEOUT_MS)
 

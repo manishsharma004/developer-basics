@@ -1,9 +1,4 @@
-# Containerization lab — simulated docker, compose, and kubectl CLIs.
-export DOCKER_SIM=1
-export K8S_SIM=1
-
-# Functions (not aliases) so we can detach stdin from nested bash scripts.
-# Without </dev/null>, child bash blocks on the shared WASI stdin stream.
+# Simulated docker/kubectl CLIs for the in-browser bash lab.
 docker() {
   bash /opt/lab/docker.sh "$@" </dev/null
 }
@@ -11,18 +6,3 @@ docker() {
 kubectl() {
   bash /opt/lab/kubectl.sh "$@" </dev/null
 }
-
-echo "Containerization lab ready (simulated CLIs)."
-echo "  docker build -t myapp:1.0 ."
-echo "  docker compose up -d"
-echo "  kubectl get pods"
-
-while true; do
-  printf 'lab$ '
-  IFS= read -r line || break
-  line="${line//$'\r'/}"
-  line="${line#"${line%%[![:space:]]*}"}"
-  line="${line%"${line##*[![:space:]]}"}"
-  [ -z "$line" ] && continue
-  eval "$line"
-done

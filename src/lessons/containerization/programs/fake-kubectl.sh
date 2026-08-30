@@ -1,4 +1,7 @@
 #!/bin/bash
+# Detach from the shared xterm stdin stream (WASI has no TTY).
+exec 0<&- 2>/dev/null || true
+
 # Simulated kubectl for the in-browser bash lab.
 STATE="/tmp/.k8s-sim"
 mkdir -p "$STATE"

@@ -11,7 +11,7 @@ export const COI_TROUBLESHOOTING =
 
 export const COI_SW_VERSION = '5'
 
-const COI_WAIT_MS = 30_000
+const COI_WAIT_MS = 19_000
 const COI_POLL_MS = 200
 
 function sleep(ms: number): Promise<void> {

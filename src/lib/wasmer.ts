@@ -70,6 +70,12 @@ function waitForLayout(container: HTMLElement): Promise<void> {
   })
 }
 
+const LAB_WELCOME =
+  'Containerization lab ready (simulated CLIs).\r\n' +
+  '  docker build -t myapp:1.0 .\r\n' +
+  '  docker compose up -d\r\n' +
+  '  kubectl get pods\r\n'
+
 const LAB_MOUNT = {
   'docker.sh': fakeDockerScript,
   'compose.sh': fakeComposeScript,
@@ -77,7 +83,11 @@ const LAB_MOUNT = {
 }
 
 function connectStreams(
-  instance: { stdin?: WritableStream<Uint8Array>; stdout: ReadableStream<Uint8Array>; stderr: ReadableStream<Uint8Array> },
+  instance: {
+    stdin?: WritableStream<Uint8Array>
+    stdout: ReadableStream<Uint8Array>
+    stderr: ReadableStream<Uint8Array>
+  },
   term: import('xterm').Terminal,
 ) {
   const encoder = new TextEncoder()
@@ -125,6 +135,7 @@ export async function runBashTerminal(
   await import('xterm/css/xterm.css')
 
   await waitForLayout(container)
+  container.replaceChildren()
 
   const term = new Terminal({
     cursorBlink: true,
@@ -160,6 +171,7 @@ export async function runBashTerminal(
     },
   })
 
+  term.write(LAB_WELCOME)
   connectStreams(instance, term)
   term.focus()
 
