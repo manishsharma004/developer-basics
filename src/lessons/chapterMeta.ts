@@ -29,6 +29,7 @@ export interface ChapterMetaInput {
   playgroundTitle?: string
   hasPlayground?: boolean
   hasHood?: boolean
+  extraSections?: { id: string; title: string }[]
 }
 
 export function chapterMeta(input: ChapterMetaInput): LessonMeta {
@@ -36,6 +37,9 @@ export function chapterMeta(input: ChapterMetaInput): LessonMeta {
     { id: 'intro', title: 'Why it matters' },
     { id: 'model', title: input.modelTitle ?? 'Core ideas' },
   ]
+  if (input.extraSections?.length) {
+    sections.push(...input.extraSections)
+  }
   if (input.hasPlayground) {
     sections.push({ id: 'playground', title: input.playgroundTitle ?? 'Try it' })
   }
