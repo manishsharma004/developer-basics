@@ -393,6 +393,14 @@ a {
   overflow: hidden;
 }
 
+.wasmer-fallback {
+  margin-top: 0.75rem;
+}
+
+.runtime-fallback-label {
+  margin-bottom: 0.5rem;
+}
+
 .code-input {
   width: 100%;
   font-family: var(--font-mono, ui-monospace, monospace);

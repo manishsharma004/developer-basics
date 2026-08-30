@@ -2,22 +2,45 @@ import { isCrossOriginIsolated } from './crossOriginIsolation.ts'
 
 let initPromise: Promise<void> | null = null
 
-export type WasmerPhase = 'idle' | 'loading' | 'ready' | 'error' | 'unsupported'
+export type WasmerLoadPhase = 'idle' | 'loading' | 'ready' | 'error' | 'unsupported'
+
+type ProgressListener = (message: string) => void
+
+const listeners = new Set<ProgressListener>()
+
+function emit(message: string) {
+  for (const listener of listeners) listener(message)
+}
+
+export function onWasmerProgress(listener: ProgressListener): () => void {
+  listeners.add(listener)
+  return () => listeners.delete(listener)
+}
+
+export function resetWasmerLoad(): void {
+  initPromise = null
+}
 
 export async function ensureWasmer(onProgress?: (msg: string) => void): Promise<void> {
   if (!isCrossOriginIsolated) {
     throw new Error('Cross-origin isolation required for Wasmer (SharedArrayBuffer).')
   }
+  const report = (msg: string) => {
+    emit(msg)
+    onProgress?.(msg)
+  }
   if (!initPromise) {
     initPromise = (async () => {
-      onProgress?.('Loading Wasmer runtime…')
+      report('Downloading Wasmer WebAssembly runtime…')
       const { init } = await import('@wasmer/sdk')
       await init()
-      onProgress?.('Wasmer ready.')
+      report('Wasmer runtime initialized.')
     })().catch((err) => {
       initPromise = null
       throw err
     })
+  } else {
+    report('Wasmer runtime already loaded.')
   }
   return initPromise
 }
@@ -26,8 +49,14 @@ export async function runBashTerminal(
   container: HTMLElement,
   onProgress?: (msg: string) => void,
 ): Promise<() => void> {
-  await ensureWasmer(onProgress)
+  const report = (msg: string) => {
+    emit(msg)
+    onProgress?.(msg)
+  }
 
+  await ensureWasmer(report)
+
+  report('Loading terminal UI…')
   const [{ Terminal }, { FitAddon }, { Wasmer }] = await Promise.all([
     import('xterm'),
     import('xterm-addon-fit'),
@@ -42,9 +71,11 @@ export async function runBashTerminal(
   term.open(container)
   fit.fit()
 
-  onProgress?.('Fetching bash package from Wasmer registry…')
+  report('Fetching bash from Wasmer registry (network required)…')
   const pkg = await Wasmer.fromRegistry('sharrattj/bash')
+  report('Starting bash shell…')
   const instance = await pkg.entrypoint!.run()
+  report('Shell ready — type commands in the terminal.')
 
   const stdin = instance.stdin?.getWriter()
   const stdout = instance.stdout
