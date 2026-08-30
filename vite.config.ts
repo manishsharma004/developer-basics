@@ -10,6 +10,18 @@ const base = process.env.BASE_PATH ?? '/'
 export default defineConfig({
   base,
   plugins: [react()],
+  server: {
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
+  },
+  preview: {
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
+  },
   // Pyodide ships large wasm/asm files and its own loader shim; excluding it
   // from dependency pre-bundling avoids esbuild choking on those assets. The
   // runtime itself is fetched from the jsDelivr CDN at load time (see

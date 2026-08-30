@@ -1,4 +1,7 @@
 #!/bin/bash
+# Detach from the shared xterm stdin stream (WASI has no TTY).
+exec 0<&- 2>/dev/null || true
+
 # Simulated docker CLI for the in-browser bash lab (not a real daemon).
 STATE="/tmp/.docker-sim"
 mkdir -p "$STATE"
@@ -121,7 +124,7 @@ case "$cmd" in
     echo "volume mounted: my-data"
     ;;
   compose)
-    bash /opt/lab/compose.sh "$@" </dev/null
+    bash /opt/lab/compose.sh "$@"
     ;;
   images)
     if has_image; then
