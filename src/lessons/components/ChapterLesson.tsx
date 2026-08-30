@@ -9,13 +9,21 @@ export interface QuizQuestion {
   explain?: string
 }
 
+export interface ChapterExtraSection {
+  id: string
+  title: string
+  content: ReactNode
+}
+
 export interface ChapterConfig {
   id: string
   modelTitle?: string
   intro: ReactNode
   model: ReactNode
+  extraSections?: ChapterExtraSection[]
   playground?: ReactNode
   playgroundTitle?: string
+  playgroundIntro?: ReactNode
   hood?: ReactNode
   terms: { term: string; def: string }[]
   quiz: QuizQuestion[]
@@ -28,8 +36,10 @@ export function createChapterLesson(config: ChapterConfig) {
     intro,
     model,
     modelTitle = 'Core ideas',
+    extraSections,
     playground,
     playgroundTitle = 'Try it',
+    playgroundIntro,
     hood,
     terms,
     quiz,
@@ -45,8 +55,14 @@ export function createChapterLesson(config: ChapterConfig) {
         <Section id="model" title={modelTitle}>
           {model}
         </Section>
+        {extraSections?.map((section) => (
+          <Section key={section.id} id={section.id} title={section.title}>
+            {section.content}
+          </Section>
+        ))}
         {playground && (
           <Section id="playground" title={playgroundTitle}>
+            {playgroundIntro}
             {playground}
           </Section>
         )}
