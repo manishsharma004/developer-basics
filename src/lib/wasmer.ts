@@ -74,7 +74,34 @@ const LAB_MOUNT = {
   'docker.sh': fakeDockerScript,
   'compose.sh': fakeComposeScript,
   'kubectl.sh': fakeKubectlScript,
-  bashrc: labBashrc,
+}
+
+function connectStreams(
+  instance: { stdin?: WritableStream<Uint8Array>; stdout: ReadableStream<Uint8Array>; stderr: ReadableStream<Uint8Array> },
+  term: import('xterm').Terminal,
+) {
+  const encoder = new TextEncoder()
+  const stdin = instance.stdin?.getWriter()
+
+  term.onData((data) => {
+    void stdin?.write(encoder.encode(data))
+  })
+
+  void instance.stdout.pipeTo(
+    new WritableStream<Uint8Array>({
+      write(chunk) {
+        term.write(chunk)
+      },
+    }),
+  )
+
+  void instance.stderr.pipeTo(
+    new WritableStream<Uint8Array>({
+      write(chunk) {
+        term.write(chunk)
+      },
+    }),
+  )
 }
 
 export async function runBashTerminal(
@@ -119,50 +146,24 @@ export async function runBashTerminal(
   report('Starting bash shell…')
 
   const instance = await pkg.entrypoint!.run({
-    args: ['--rcfile', '/opt/lab/bashrc', '-i'],
+    args: ['-i'],
     env: {
       HOME: '/root',
       TERM: 'xterm-256color',
+      PS1: 'lab$ ',
     },
     mount: {
       '/opt/lab': LAB_MOUNT,
+      '/root': {
+        '.bashrc': labBashrc,
+      },
     },
   })
 
-  report('Shell ready — docker, compose, and kubectl are simulated in this lab.')
+  connectStreams(instance, term)
+  term.focus()
 
-  const stdin = instance.stdin?.getWriter()
-  const stdout = instance.stdout
-  const stderr = instance.stderr
-
-  const writeChunk = (value: Uint8Array) => {
-    term.write(value)
-  }
-
-  if (stdout) {
-    const reader = stdout.getReader()
-    void (async () => {
-      for (;;) {
-        const { value, done } = await reader.read()
-        if (done) break
-        if (value) writeChunk(value)
-      }
-    })()
-  }
-  if (stderr) {
-    const reader = stderr.getReader()
-    void (async () => {
-      for (;;) {
-        const { value, done } = await reader.read()
-        if (done) break
-        if (value) writeChunk(value)
-      }
-    })()
-  }
-
-  term.onData((data) => {
-    void stdin?.write(new TextEncoder().encode(data))
-  })
+  report('Shell ready — type docker, compose, or kubectl commands.')
 
   const onResize = () => {
     try {
