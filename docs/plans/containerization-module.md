@@ -2,6 +2,7 @@
 
 > Status: **Implemented** — see [PR #58](https://github.com/manishsharma004/developer-basics/pull/58)  
 > Plan PR: [#57](https://github.com/manishsharma004/developer-basics/pull/57) (reference)  
+> COI / shell follow-ups: [#63](https://github.com/manishsharma004/developer-basics/pull/63)  
 > Branch base: `cursor-agent/issue-backlog-72bc` (rebased onto `main` as of 2026-08-30)
 
 ## Goal
@@ -416,7 +417,7 @@ Run `bun run sitemap` after metadata changes.
 
 - [x] `docker` no longer appears under Systems & the OS
 - [x] New Containerization module with ≥20 chapters, each with sim + TryThis + quiz
-- [x] Wasmer shell labs work on GitHub Pages (`crossOriginIsolated === true`) — via `coi-serviceworker`
+- [x] Wasmer shell labs work on GitHub Pages (`crossOriginIsolated === true`) — via `coi-serviceworker` ([follow-up fixes in PR #63](https://github.com/manishsharma004/developer-basics/pull/63))
 - [x] Graceful fallback when isolation unavailable
 - [x] No regressions to existing Pyodide / Monaco lessons (build passes)
 - [x] Teacher guides and sitemap updated
