@@ -41,7 +41,7 @@ import EnvConfigLesson from './envconfig/EnvConfigLesson.tsx'
 import HttpClientsLesson from './httpclient/HttpClientsLesson.tsx'
 import GitAdvancedLesson from './git/GitAdvancedLesson.tsx'
 import BrowserRenderingLesson from './browser/BrowserRenderingLesson.tsx'
-import DockerLesson from './docker/DockerLesson.tsx'
+import { CONTAINERIZATION_CHAPTERS } from './containerization/chapters.tsx'
 import CapstoneLesson from './capstone/CapstoneLesson.tsx'
 import { CSS_CHAPTERS } from './css/chapters.tsx'
 import { WEB_CHAPTERS } from './web/chapters.tsx'
@@ -89,7 +89,7 @@ const COMPONENTS: Record<string, ComponentType> = {
   'js-fundamentals': JsFundamentalsLesson,
   'http-clients': HttpClientsLesson,
   'browser-rendering': BrowserRenderingLesson,
-  docker: DockerLesson,
+  ...CONTAINERIZATION_CHAPTERS,
   ...WEB_CHAPTERS,
   ...CSS_CHAPTERS,
   security: SecurityLesson,

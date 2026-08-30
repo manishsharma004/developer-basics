@@ -9,6 +9,7 @@ import { mongodbLessonsMeta } from './mongodb/chapterMeta.ts'
 import { reactLessonsMeta } from './react/chapterMeta.ts'
 import { sqlLessonsMeta } from './sql/chapterMeta.ts'
 import { webLessonsMeta } from './web/chapterMeta.ts'
+import { containerizationLessonsMeta } from './containerization/chapterMeta.ts'
 
 export type Level = 'Beginner' | 'Intermediate' | 'Advanced'
 
@@ -59,6 +60,12 @@ export const groups: LessonGroup[] = [
     title: 'Systems & the OS',
     icon: '🖥️',
     blurb: 'How your code actually runs on a real machine and shares its resources.',
+  },
+  {
+    id: 'containerization',
+    title: 'Containerization',
+    icon: '🐳',
+    blurb: 'Package apps with Docker, orchestrate with Kubernetes, and deploy on managed platforms — with interactive labs.',
   },
   {
     id: 'dsa',
@@ -379,24 +386,7 @@ export const lessonsMeta: LessonMeta[] = [
       ...CLOSING,
     ],
   },
-  {
-    id: 'docker',
-    path: '/lessons/docker',
-    title: 'Docker for Developers',
-    tagline: 'Images, containers, and volumes — package once, run anywhere.',
-    icon: '🐳',
-    level: 'Intermediate',
-    minutes: 16,
-    summary:
-      'Build images from a Dockerfile, run containers with port maps, and persist data with volumes.',
-    group: 'systems',
-    sections: [
-      { id: 'intro', title: 'Why it matters' },
-      { id: 'model', title: 'Images, containers, volumes' },
-      { id: 'playground', title: 'Build and run' },
-      ...CLOSING,
-    ],
-  },
+  ...containerizationLessonsMeta,
 
   // ── Data Structures & Algorithms ───────────────────────────────────────
   {

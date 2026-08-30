@@ -2,7 +2,7 @@
 
 > Auto-generated from `src/lessons/meta.ts`. Run `bun run sitemap` to refresh.
 
-An interactive course with **14 modules** and **123 chapters**.
+An interactive course with **15 modules** and **146 chapters**.
 Student and teacher experiences share the same curriculum; the sidebar switcher
 is persisted in `localStorage` (`devbasics.experience`).
 
@@ -32,11 +32,17 @@ The building blocks every program is made of: variables, control flow, data, enc
 
 Chapter ids: `variables, controlflow, data, json, floatingpoint, memory, time, errors`
 
-### 🖥️ Systems & the OS (5 chapters)
+### 🖥️ Systems & the OS (4 chapters)
 
 How your code actually runs on a real machine and shares its resources.
 
-Chapter ids: `filesystem, process, concurrency, compute, docker`
+Chapter ids: `filesystem, process, concurrency, compute`
+
+### 🐳 Containerization (24 chapters)
+
+Package apps with Docker, orchestrate with Kubernetes, and deploy on managed platforms — with interactive labs.
+
+Chapter ids: `container-intro, docker-images, docker-containers, docker-dockerfile, docker-networks, docker-volumes, compose-intro, compose-services, compose-production, k8s-intro, k8s-architecture, k8s-workloads, k8s-services, k8s-ingress, k8s-networking, k8s-storage, k8s-config-secrets, k8s-commands, k8s-nodes, k8s-operators-builtin, k8s-operators-custom, platforms-managed-k8s, platforms-ecs-rancher, container-capstone`
 
 ### 🧮 Data Structures & Algorithms (5 chapters)
 
@@ -126,7 +132,30 @@ Chapter ids: `classes, oop, patterns, functional, capstone`
 | Systems & the OS | Processes & the CPU | `/lessons/process` | Beginner | 19 |
 | Systems & the OS | Concurrency & Races | `/lessons/concurrency` | Intermediate | 28 |
 | Systems & the OS | Compute Instances | `/lessons/compute` | Intermediate | 18 |
-| Systems & the OS | Docker for Developers | `/lessons/docker` | Intermediate | 16 |
+| Containerization | Why containers? | `/lessons/container-intro` | Intermediate | 5 |
+| Containerization | Images & layers | `/lessons/docker-images` | Intermediate | 6 |
+| Containerization | Containers & lifecycle | `/lessons/docker-containers` | Intermediate | 7 |
+| Containerization | Dockerfile deep dive | `/lessons/docker-dockerfile` | Intermediate | 6 |
+| Containerization | Networks & ports | `/lessons/docker-networks` | Intermediate | 5 |
+| Containerization | Volumes & bind mounts | `/lessons/docker-volumes` | Intermediate | 5 |
+| Containerization | Compose mental model | `/lessons/compose-intro` | Intermediate | 5 |
+| Containerization | Services & depends_on | `/lessons/compose-services` | Intermediate | 6 |
+| Containerization | Compose in production | `/lessons/compose-production` | Intermediate | 6 |
+| Containerization | Why orchestration? | `/lessons/k8s-intro` | Intermediate | 5 |
+| Containerization | Control plane & nodes | `/lessons/k8s-architecture` | Intermediate | 7 |
+| Containerization | Pods & controllers | `/lessons/k8s-workloads` | Intermediate | 6 |
+| Containerization | Service types | `/lessons/k8s-services` | Intermediate | 6 |
+| Containerization | Ingress & TLS | `/lessons/k8s-ingress` | Intermediate | 5 |
+| Containerization | DNS, CNI & IPs | `/lessons/k8s-networking` | Intermediate | 6 |
+| Containerization | PV, PVC & StorageClass | `/lessons/k8s-storage` | Intermediate | 6 |
+| Containerization | ConfigMaps & Secrets | `/lessons/k8s-config-secrets` | Intermediate | 5 |
+| Containerization | kubectl for DevOps | `/lessons/k8s-commands` | Intermediate | 7 |
+| Containerization | Node management | `/lessons/k8s-nodes` | Intermediate | 5 |
+| Containerization | Built-in controllers | `/lessons/k8s-operators-builtin` | Intermediate | 5 |
+| Containerization | CRDs & custom operators | `/lessons/k8s-operators-custom` | Intermediate | 6 |
+| Containerization | EKS, GKE & AKS | `/lessons/platforms-managed-k8s` | Intermediate | 6 |
+| Containerization | ECS, Rancher & Docker Desktop | `/lessons/platforms-ecs-rancher` | Intermediate | 6 |
+| Containerization | Ship a small stack | `/lessons/container-capstone` | Advanced | 8 |
 | Data Structures & Algorithms | Data Structures | `/lessons/datastructures` | Intermediate | 22 |
 | Data Structures & Algorithms | Algorithms & Big-O | `/lessons/algorithms` | Intermediate | 22 |
 | Data Structures & Algorithms | Searching & Binary Search | `/lessons/search` | Beginner | 17 |

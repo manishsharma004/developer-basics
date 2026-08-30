@@ -15,7 +15,7 @@ export default defineConfig({
   // runtime itself is fetched from the jsDelivr CDN at load time (see
   // src/lib/pyodide.ts), so nothing extra needs to be bundled.
   optimizeDeps: {
-    exclude: ['pyodide'],
+    exclude: ['pyodide', '@wasmer/sdk'],
   },
   worker: {
     format: 'es',

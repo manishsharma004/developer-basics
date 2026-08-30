@@ -3,7 +3,7 @@
 // for an instructor: what to achieve, what to emphasize, what students get wrong,
 // how to run the interactive lab, and how to assess understanding.
 
-import { cssChapterGuides, databasesChapterGuides, fastapiChapterGuides, mongodbChapterGuides, reactChapterGuides, sqlChapterGuides, webChapterGuides } from './chapterGuides.ts'
+import { cssChapterGuides, containerizationChapterGuides, databasesChapterGuides, fastapiChapterGuides, mongodbChapterGuides, reactChapterGuides, sqlChapterGuides, webChapterGuides } from './chapterGuides.ts'
 
 export interface TeacherGuide {
   objectives: string[]
@@ -848,6 +848,7 @@ export const teacherGuides: Record<string, TeacherGuide> = {
   ...cssChapterGuides,
   ...fastapiChapterGuides,
   ...reactChapterGuides,
+  ...containerizationChapterGuides,
   security: {
     objectives: [
       'Recognize injection and XSS.',
@@ -1080,14 +1081,6 @@ export const teacherGuides: Record<string, TeacherGuide> = {
     discussion: ['How does this connect to React reconciliation?'],
     lab: 'RenderPipeline: toggle width vs color; note invalidated stages.',
     assess: ['Animating width triggers:', 'React updates:'],
-  },
-  docker: {
-    objectives: ['Distinguish image vs container.', 'Explain port mapping and volumes.'],
-    keyConcepts: ['Dockerfile layers', 'docker build/run', 'Volume persistence'],
-    misconceptions: ['"Containers are VMs."'],
-    discussion: ['When pick Docker vs serverless from compute lesson?'],
-    lab: 'DockerSim: build image, run container, discuss volume survival.',
-    assess: ['docker run creates:', 'Volumes help because:'],
   },
   capstone: {
     objectives: ['Map a full-stack task app to existing lessons.', 'Complete a vertical slice checklist.'],
