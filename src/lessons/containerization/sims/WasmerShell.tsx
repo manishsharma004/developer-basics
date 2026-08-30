@@ -19,6 +19,7 @@ export function WasmerShell({ fallback }: { fallback?: ReactNode }) {
           ref={hostRef}
           className={`wasmer-terminal${phase === 'ready' ? '' : ' wasmer-terminal--booting'}`}
           aria-hidden={phase !== 'ready'}
+          style={phase !== 'ready' ? { visibility: 'hidden' } : undefined}
         />
       )}
       {showFallback && (

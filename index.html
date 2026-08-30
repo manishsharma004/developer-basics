@@ -5,15 +5,11 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Developer Basics</title>
-    <!-- COOP/COEP for Wasmer SharedArrayBuffer on GitHub Pages — must run before the app bundle -->
+    <!-- COOP/COEP for Wasmer SharedArrayBuffer — must run before the app bundle -->
     <script>
-      window.coi = {
-        // credentialless loads Pyodide CDN + Wasmer registry without CORP on every asset
-        coepCredentialless: () => true,
-        quiet: true,
-      };
+      window.coi = { quiet: true };
     </script>
-    <script src="%BASE_URL%coi-serviceworker.js?v=3"></script>
+    <script src="%BASE_URL%coi-serviceworker.js?v=4"></script>
   </head>
   <body>
     <div id="root"></div>

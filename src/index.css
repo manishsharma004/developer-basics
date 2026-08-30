@@ -414,13 +414,8 @@ a {
 }
 
 .wasmer-terminal--booting {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  min-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  pointer-events: none;
+  /* Keep full layout for xterm fit(); hide visually while the runtime loads */
+  visibility: hidden;
 }
 
 .wasmer-fallback {
