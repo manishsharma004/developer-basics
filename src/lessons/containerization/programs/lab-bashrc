@@ -1,0 +1,12 @@
+# Containerization lab — simulated docker, compose, and kubectl CLIs.
+export DOCKER_SIM=1
+export K8S_SIM=1
+export PS1='\u@lab:\w\$ '
+
+alias docker='bash /opt/lab/docker.sh'
+alias kubectl='bash /opt/lab/kubectl.sh'
+
+echo "Containerization lab ready (simulated CLIs)."
+echo "  docker build -t myapp:1.0 ."
+echo "  docker compose up -d"
+echo "  kubectl get pods"

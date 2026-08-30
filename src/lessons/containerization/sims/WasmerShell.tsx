@@ -17,13 +17,7 @@ export function WasmerShell({ fallback }: { fallback?: ReactNode }) {
       {showTerminal && (
         <div
           ref={hostRef}
-          className="wasmer-terminal"
-          style={{
-            height: phase === 'ready' ? 280 : 0,
-            marginTop: phase === 'ready' ? '0.5rem' : 0,
-            overflow: 'hidden',
-            visibility: phase === 'ready' ? 'visible' : 'hidden',
-          }}
+          className={`wasmer-terminal${phase === 'ready' ? '' : ' wasmer-terminal--booting'}`}
           aria-hidden={phase !== 'ready'}
         />
       )}
