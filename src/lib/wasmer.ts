@@ -2,6 +2,10 @@ import { getCrossOriginIsolated } from './crossOriginIsolation.ts'
 import fakeDockerScript from '../lessons/containerization/programs/fake-docker.sh?raw'
 import fakeComposeScript from '../lessons/containerization/programs/fake-compose.sh?raw'
 import fakeKubectlScript from '../lessons/containerization/programs/fake-kubectl.sh?raw'
+import labDockerfile from '../lessons/containerization/programs/lab/Dockerfile?raw'
+import labPackageJson from '../lessons/containerization/programs/lab/package.json?raw'
+import labReadme from '../lessons/containerization/programs/lab/README.md?raw'
+import labAppJs from '../lessons/containerization/programs/lab/src/app.js?raw'
 
 let initPromise: Promise<void> | null = null
 
@@ -75,8 +79,17 @@ const LAB_MOUNT = {
   'kubectl.sh': fakeKubectlScript,
 }
 
+const LAB_PROJECT_MOUNT = {
+  Dockerfile: labDockerfile,
+  'package.json': labPackageJson,
+  'README.md': labReadme,
+  'src/app.js': labAppJs,
+}
+
+const LAB_HOME = '/home/lab'
+
 const LAB_ALIAS_SETUP =
-  "alias docker='bash /opt/lab/docker.sh' && alias kubectl='bash /opt/lab/kubectl.sh'"
+  `cd ${LAB_HOME} && alias docker='bash /opt/lab/docker.sh' && alias kubectl='bash /opt/lab/kubectl.sh'`
 
 function connectStreams(
   instance: {
@@ -209,11 +222,20 @@ export async function runBashTerminal(
   report('Mounting simulated docker, compose, and kubectl CLIs…')
   report('Starting bash shell…')
 
+  const { Directory } = await import('@wasmer/sdk')
+  const labState = new Directory()
+
   // wasmer-js wasmer.sh pattern: default entrypoint + xterm stream piping only.
-  // Lab scripts mount under /opt/lab; aliases register after the bash-dist prompt.
+  // Lab project at ~/lab; simulated CLIs under /opt/lab; writable state under /var/lab.
   const instance = await pkg.entrypoint!.run({
+    env: {
+      HOME: LAB_HOME,
+    },
+    cwd: LAB_HOME,
     mount: {
       '/opt/lab': LAB_MOUNT,
+      [LAB_HOME]: LAB_PROJECT_MOUNT,
+      '/var/lab': labState,
     },
   })
 
