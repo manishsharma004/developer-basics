@@ -1,4 +1,8 @@
 import { isCrossOriginIsolated } from './crossOriginIsolation.ts'
+import fakeDockerScript from '../lessons/containerization/programs/fake-docker.sh?raw'
+import fakeComposeScript from '../lessons/containerization/programs/fake-compose.sh?raw'
+import fakeKubectlScript from '../lessons/containerization/programs/fake-kubectl.sh?raw'
+import labBashrc from '../lessons/containerization/programs/lab-bashrc?raw'
 
 let initPromise: Promise<void> | null = null
 
@@ -45,6 +49,34 @@ export async function ensureWasmer(onProgress?: (msg: string) => void): Promise<
   return initPromise
 }
 
+function waitForLayout(container: HTMLElement): Promise<void> {
+  if (container.clientWidth >= 200 && container.clientHeight >= 120) {
+    return Promise.resolve()
+  }
+  return new Promise((resolve) => {
+    const ro = new ResizeObserver(() => {
+      if (container.clientWidth >= 200 && container.clientHeight >= 120) {
+        ro.disconnect()
+        resolve()
+      }
+    })
+    ro.observe(container)
+    requestAnimationFrame(() => {
+      if (container.clientWidth >= 200 && container.clientHeight >= 120) {
+        ro.disconnect()
+        resolve()
+      }
+    })
+  })
+}
+
+const LAB_MOUNT = {
+  'docker.sh': fakeDockerScript,
+  'compose.sh': fakeComposeScript,
+  'kubectl.sh': fakeKubectlScript,
+  bashrc: labBashrc,
+}
+
 export async function runBashTerminal(
   container: HTMLElement,
   onProgress?: (msg: string) => void,
@@ -65,7 +97,17 @@ export async function runBashTerminal(
 
   await import('xterm/css/xterm.css')
 
-  const term = new Terminal({ cursorBlink: true, fontSize: 13, theme: { background: '#0d1117' } })
+  await waitForLayout(container)
+
+  const term = new Terminal({
+    cursorBlink: true,
+    fontSize: 14,
+    lineHeight: 1.15,
+    convertEol: true,
+    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace',
+    theme: { background: '#0d1117', foreground: '#e6edf3', cursor: '#58a6ff' },
+    scrollback: 800,
+  })
   const fit = new FitAddon()
   term.loadAddon(fit)
   term.open(container)
@@ -73,13 +115,29 @@ export async function runBashTerminal(
 
   report('Fetching bash from Wasmer registry (network required)…')
   const pkg = await Wasmer.fromRegistry('sharrattj/bash')
+  report('Mounting simulated docker, compose, and kubectl CLIs…')
   report('Starting bash shell…')
-  const instance = await pkg.entrypoint!.run()
-  report('Shell ready — type commands in the terminal.')
+
+  const instance = await pkg.entrypoint!.run({
+    args: ['--rcfile', '/opt/lab/bashrc', '-i'],
+    env: {
+      HOME: '/root',
+      TERM: 'xterm-256color',
+    },
+    mount: {
+      '/opt/lab': LAB_MOUNT,
+    },
+  })
+
+  report('Shell ready — docker, compose, and kubectl are simulated in this lab.')
 
   const stdin = instance.stdin?.getWriter()
   const stdout = instance.stdout
   const stderr = instance.stderr
+
+  const writeChunk = (value: Uint8Array) => {
+    term.write(value)
+  }
 
   if (stdout) {
     const reader = stdout.getReader()
@@ -87,7 +145,7 @@ export async function runBashTerminal(
       for (;;) {
         const { value, done } = await reader.read()
         if (done) break
-        if (value) term.write(value)
+        if (value) writeChunk(value)
       }
     })()
   }
@@ -97,7 +155,7 @@ export async function runBashTerminal(
       for (;;) {
         const { value, done } = await reader.read()
         if (done) break
-        if (value) term.write(value)
+        if (value) writeChunk(value)
       }
     })()
   }
@@ -106,11 +164,20 @@ export async function runBashTerminal(
     void stdin?.write(new TextEncoder().encode(data))
   })
 
-  const onResize = () => fit.fit()
+  const onResize = () => {
+    try {
+      fit.fit()
+    } catch {
+      /* container may be hidden during layout */
+    }
+  }
   window.addEventListener('resize', onResize)
+  const ro = new ResizeObserver(onResize)
+  ro.observe(container)
 
   return () => {
     window.removeEventListener('resize', onResize)
+    ro.disconnect()
     term.dispose()
   }
 }

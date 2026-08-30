@@ -5,7 +5,7 @@ import { Callout, SimReality, TryThis, UnderTheHood, CodePreview } from '../comp
 import { VmContainerCompare } from './sims/VmContainerCompare.tsx'
 import { ImageLayersSim } from './sims/ImageLayersSim.tsx'
 import { DockerCliSim } from './sims/DockerCliSim.tsx'
-import { WasmerShell } from './sims/WasmerShell.tsx'
+import { ContainerShell } from './sims/ContainerShell.tsx'
 import { DockerfileEditorSim } from './sims/DockerfileEditorSim.tsx'
 import { DockerNetworkSim } from './sims/DockerNetworkSim.tsx'
 import { DockerVolumeSim } from './sims/DockerVolumeSim.tsx'
@@ -113,6 +113,7 @@ const dockerImages = createChapterLesson({
   playground: (
     <>
       <ImageLayersSim />
+      <ContainerShell fallback={<DockerCliSim />} hint="docker build -t myapp:1.0 ., docker images" />
       <TryThis>Click build repeatedly — notice layers already marked cached are skipped on rebuild.</TryThis>
     </>
   ),
@@ -148,7 +149,7 @@ const dockerContainers = createChapterLesson({
   ),
   playground: (
     <>
-      <WasmerShell fallback={<DockerCliSim />} />
+      <ContainerShell fallback={<DockerCliSim />} />
       <TryThis>
         Watch the runtime banner for load progress. Try <code>docker build -t myapp:1.0 .</code> in
         the shell or simulator, then <code>docker run --name web myapp:1.0</code> and <code>docker ps</code>.
@@ -213,6 +214,7 @@ const dockerNetworks = createChapterLesson({
   playground: (
     <>
       <DockerNetworkSim />
+      <ContainerShell fallback={<DockerCliSim />} hint="docker network create mynet, docker run -p 8080:80 myapp:1.0" />
       <TryThis>Switch bridge vs host and change port mapping — read the path diagram.</TryThis>
     </>
   ),
@@ -238,6 +240,7 @@ const dockerVolumes = createChapterLesson({
   playground: (
     <>
       <DockerVolumeSim />
+      <ContainerShell fallback={<DockerCliSim />} hint="docker volume create my-data, docker run -v my-data:/data myapp:1.0" />
       <TryThis>Run without a volume, write data, remove container — data is lost. Repeat with a named volume.</TryThis>
     </>
   ),
@@ -287,6 +290,7 @@ const composeServices = createChapterLesson({
   playground: (
     <>
       <ComposeSim />
+      <ContainerShell fallback={<DockerCliSim />} hint="docker compose up -d, docker compose ps, docker compose logs web" />
       <TryThis>Run compose up and watch db → api → web come up in dependency order.</TryThis>
     </>
   ),
@@ -313,6 +317,7 @@ const composeProduction = createChapterLesson({
   playground: (
     <>
       <ComposeSim showProfiles />
+      <ContainerShell fallback={<DockerCliSim />} hint="docker compose --profile debug up -d, docker compose down" />
       <TryThis>Add a profile to a service in YAML and toggle profiles before compose up.</TryThis>
     </>
   ),
@@ -541,7 +546,7 @@ const k8sCommands = createChapterLesson({
   ),
   playground: (
     <>
-      <KubectlLab />
+      <ContainerShell fallback={<KubectlLab />} hint="kubectl get pods, kubectl scale deploy web --replicas=3, kubectl logs web" />
       <TryThis>Run get pods, scale deploy web, delete a pod, get logs.</TryThis>
     </>
   ),
@@ -678,6 +683,10 @@ const containerCapstone = createChapterLesson({
   playground: (
     <>
       <ContainerCapstoneSim />
+      <ContainerShell
+        fallback={<DockerCliSim />}
+        hint="docker build -t myapp:1.0 ., docker compose up -d, kubectl apply -f deploy.yaml"
+      />
       <TryThis>Step through each phase and name the command you would run in real life.</TryThis>
     </>
   ),

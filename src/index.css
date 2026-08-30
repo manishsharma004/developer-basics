@@ -389,12 +389,46 @@ a {
 .wasmer-terminal {
   background: #0d1117;
   border-radius: 8px;
-  padding: 4px;
+  padding: 0;
   overflow: hidden;
+  width: 100%;
+  min-height: 280px;
+  height: 280px;
+  box-sizing: border-box;
+}
+
+.wasmer-terminal .xterm {
+  height: 100%;
+  width: 100%;
+  padding: 8px 10px;
+  box-sizing: border-box;
+}
+
+.wasmer-terminal .xterm-viewport {
+  width: initial !important;
+  overflow-y: auto !important;
+}
+
+.wasmer-terminal .xterm-screen {
+  width: 100% !important;
+}
+
+.wasmer-terminal--booting {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .wasmer-fallback {
   margin-top: 0.75rem;
+}
+
+.container-shell-hint {
+  margin-bottom: 0.5rem;
 }
 
 .runtime-fallback-label {
