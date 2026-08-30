@@ -5,10 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Developer Basics</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <!-- COOP/COEP for Wasmer SharedArrayBuffer on GitHub Pages (optional shell labs) -->
+    <!-- COOP/COEP for Wasmer SharedArrayBuffer on GitHub Pages — must run before the app bundle -->
     <script>
       window.coi = {
         // credentialless loads Pyodide CDN + Wasmer registry without CORP on every asset
@@ -16,7 +13,10 @@
         quiet: true,
       };
     </script>
-    <script src="%BASE_URL%coi-serviceworker.js?v=2"></script>
+    <script src="%BASE_URL%coi-serviceworker.js?v=3"></script>
+  </head>
+  <body>
+    <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

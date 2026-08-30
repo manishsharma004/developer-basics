@@ -1,4 +1,4 @@
-import { COI_TROUBLESHOOTING, isCrossOriginIsolated } from '../lib/crossOriginIsolation.ts'
+import { COI_TROUBLESHOOTING, getCrossOriginIsolated } from '../lib/crossOriginIsolation.ts'
 import type { WasmerLoadPhase } from '../lib/wasmer.ts'
 
 interface Props {
@@ -25,7 +25,7 @@ export function WasmerRuntimeBanner({ phase, message, error, onRetry }: Props) {
             <a href={COI_TROUBLESHOOTING} target="_blank" rel="noreferrer">
               Why cross-origin isolation matters
             </a>
-            {!isCrossOriginIsolated && ' (currently not isolated).'}
+            {!getCrossOriginIsolated() && ' (currently not isolated).'}
           </span>
         ) : phase === 'error' ? (
           <span>

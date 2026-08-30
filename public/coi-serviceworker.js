@@ -27,11 +27,6 @@ if (typeof window === 'undefined') {
             return;
         }
 
-        // Let the browser handle navigations; patching failed navigations breaks HashRouter.
-        if (r.mode === "navigate") {
-            return;
-        }
-
         const request = (coepCredentialless && r.mode === "no-cors")
             ? new Request(r, {
                 credentials: "omit",
