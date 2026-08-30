@@ -1,12 +1,11 @@
 #!/bin/bash
-# Detach from the shared xterm stdin stream (WASI has no TTY).
-exec 0<&- 2>/dev/null || true
+# Detach nested bash from the shared xterm stdin stream (WASI has no TTY).
+exec 0<&-
 
 # Simulated docker compose for the in-browser bash lab.
-STATE="/tmp/.compose-sim"
-mkdir -p "$STATE"
-STACK_FILE="$STATE/stack.tsv"
-touch "$STACK_FILE"
+STATE="/var/lab"
+STACK_FILE="$STATE/compose-stack.tsv"
+touch "$STACK_FILE" 2>/dev/null || true
 
 usage() {
   cat <<'EOF'
@@ -18,7 +17,7 @@ Commands:
   ps       List services
   logs     Show service logs
 
-State lives in /tmp/.compose-sim
+State lives in /var/lab
 EOF
 }
 

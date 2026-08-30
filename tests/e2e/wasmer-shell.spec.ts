@@ -86,14 +86,24 @@ test.describe.serial('Wasmer container shell commands', () => {
     expect(text).toMatch(/bash-dist#|lab\$/)
   })
 
-  test('docker ps returns container list or empty message', async () => {
-    const text = await runShellCommand(shellPage, 'docker ps', /(no containers)|ID.*NAME.*IMAGE/)
-    expect(text).toMatch(/(no containers)|ID/)
+  test('docker run without build shows helpful error', async () => {
+    const text = await runShellCommand(
+      shellPage,
+      'docker run myapp:1.0',
+      /Unable to find image|build it first/i,
+    )
+    expect(text).toMatch(/Unable to find image|build it first/i)
   })
 
-  test('docker build then docker ps shows workflow', async () => {
-    await runShellCommand(shellPage, 'docker build -t myapp:1.0 .', /Successfully tagged myapp:1\.0/)
-    const text = await runShellCommand(shellPage, 'docker ps', /myapp:1\.0|running|(no containers)/)
-    expect(text).toMatch(/Successfully tagged|myapp|running/)
+  test('lab filesystem is mounted in ~/lab', async () => {
+    const text = await runShellCommand(shellPage, 'pwd', /\/home\/lab/)
+    expect(text).toMatch(/\/home\/lab/)
+  })
+
+  test('docker build run and ps workflow', async () => {
+    await runShellCommand(shellPage, 'docker build -t myapp:1.0 .', /Successfully built and tagged/)
+    await runShellCommand(shellPage, 'docker run -d myapp:1.0', /c\d+/)
+    const text = await runShellCommand(shellPage, 'docker ps', /myapp:1\.0|running/)
+    expect(text).toMatch(/running|myapp:1\.0/)
   })
 })

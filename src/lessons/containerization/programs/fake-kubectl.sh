@@ -1,12 +1,11 @@
 #!/bin/bash
-# Detach from the shared xterm stdin stream (WASI has no TTY).
-exec 0<&- 2>/dev/null || true
+# Detach nested bash from the shared xterm stdin stream (WASI has no TTY).
+exec 0<&-
 
 # Simulated kubectl for the in-browser bash lab.
-STATE="/tmp/.k8s-sim"
-mkdir -p "$STATE"
-PODS_FILE="$STATE/pods.tsv"
-DEPLOYS_FILE="$STATE/deploys.tsv"
+STATE="/var/lab"
+PODS_FILE="$STATE/k8s-pods.tsv"
+DEPLOYS_FILE="$STATE/k8s-deploys.tsv"
 
 init_cluster() {
   if [ ! -s "$PODS_FILE" ]; then
@@ -34,7 +33,7 @@ Commands:
   logs <resource>
   apply -f <file>   (simulated)
 
-State lives in /tmp/.k8s-sim
+State lives in /var/lab
 EOF
 }
 
@@ -81,18 +80,24 @@ case "$cmd" in
       echo "usage: kubectl scale deploy <name> --replicas=N" >&2
       exit 1
     fi
-    awk -F'\t' -v n="$name" -v r="$replicas" '
-      BEGIN { OFS="\t" }
-      $1 == n { $2 = r; if ($3 > r) $3 = r; print; next }
-      { print }
-    ' "$DEPLOYS_FILE" > "$DEPLOYS_FILE.tmp" && mv "$DEPLOYS_FILE.tmp" "$DEPLOYS_FILE"
+    while IFS=$'\t' read -r dname dreplicas dready; do
+      if [ "$dname" = "$name" ]; then
+        dreplicas="$replicas"
+        [ "$dready" -gt "$replicas" ] 2>/dev/null && dready="$replicas"
+      fi
+      printf '%s\t%s\t%s\n' "$dname" "$dreplicas" "$dready"
+    done < "$DEPLOYS_FILE" > "$DEPLOYS_FILE.tmp"
+    mv "$DEPLOYS_FILE.tmp" "$DEPLOYS_FILE"
     echo "deployment/${name} scaled"
     ;;
   delete)
     resource="${1:-}"
     name="${2:-}"
     if [ "$resource" = "pod" ] && [ -n "$name" ]; then
-      grep -v "^${name}" "$PODS_FILE" > "$PODS_FILE.tmp" && mv "$PODS_FILE.tmp" "$PODS_FILE"
+      while IFS= read -r line; do
+        [ "${line%%$'\t'*}" = "$name" ] || printf '%s\n' "$line"
+      done < "$PODS_FILE" > "$PODS_FILE.tmp"
+      mv "$PODS_FILE.tmp" "$PODS_FILE"
       echo "pod \"${name}\" deleted"
     else
       echo "kubectl delete: try delete pod <name>" >&2

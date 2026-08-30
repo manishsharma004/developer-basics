@@ -16,16 +16,18 @@ export function ContainerShell({ fallback, hint = DEFAULT_HINT }: ContainerShell
     <div className="container-shell">
       <div className="container-shell-welcome panel-hint">
         <p>
-          <strong>Containerization lab ready</strong> — simulated CLIs mount on{' '}
-          <code>PATH</code> when the Wasmer shell loads.
+          <strong>Containerization lab ready</strong> — shell starts in <code>~/lab</code> with a
+          sample app, <code>Dockerfile</code>, and simulated <code>docker</code> / <code>kubectl</code>{' '}
+          CLIs.
         </p>
         <p>
           Try: <code>{hint}</code>
         </p>
       </div>
       <p className="panel-hint container-shell-hint">
-        At the <code>bash-dist#</code> prompt, run <code>docker</code>,{' '}
-        <code>docker compose</code>, and <code>kubectl</code> like on a real workstation.
+        Run <code>ls</code> and <code>cat Dockerfile</code>, then <code>docker build -t myapp:1.0 .</code>{' '}
+        before <code>docker run</code>. At the <code>bash-dist#</code> prompt, commands behave like a real
+        workstation.
       </p>
       <WasmerShell fallback={fallback} />
     </div>

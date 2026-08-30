@@ -53,9 +53,17 @@ test('capture wasmer shell walkthrough screenshots', async ({ page }) => {
 
   await input.pressSequentially('docker build -t myapp:1.0 .', { delay: 15 })
   await input.press('Enter')
-  await expect.poll(async () => terminalText(page), { timeout: WAIT_MS }).toMatch(/Successfully tagged/)
+  await expect.poll(async () => terminalText(page), { timeout: WAIT_MS }).toMatch(/Successfully built/)
+  await input.pressSequentially('docker run -d myapp:1.0', { delay: 15 })
+  await input.press('Enter')
+  await expect.poll(async () => terminalText(page), { timeout: WAIT_MS }).toMatch(/c\d+/)
 
   await input.pressSequentially('docker ps', { delay: 15 })
   await input.press('Enter')
-  await expect.poll(async () => terminalText(page), { timeout: WAIT_MS }).toMatch(/myapp|no containers|ID/)
+  await expect.poll(async () => terminalText(page), { timeout: WAIT_MS }).toMatch(/myapp:1\.0|running/)
+
+  await page.screenshot({
+    path: path.join(ARTIFACTS_DIR, 'shell_docker_build_run_ps.png'),
+    fullPage: false,
+  })
 })
