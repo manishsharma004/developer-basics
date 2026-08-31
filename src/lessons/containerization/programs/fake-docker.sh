@@ -61,6 +61,17 @@ if [ "$cmd" = "build" ]; then
   if [ -f "$ctx/Dockerfile" ]; then
     cat "$ctx/Dockerfile" > "${base}-fs-Dockerfile"
   fi
+  if [ -f "$ctx/Dockerfile" ]; then
+    echo "$tag" > "${base}-tag"
+    echo "aba3f2c1d0e9" > "${base}-id"
+    echo "$tag" > "$STATE/built-tag"
+    repo="${tag%%:*}"
+    tagpart="${tag#*:}"
+    if [ "$tagpart" = "$tag" ]; then
+      tagpart="latest"
+    fi
+    echo "${repo}	${tagpart}	aba3f2c1d0e9	2 minutes ago	42MB" > "${base}-images-row"
+  fi
 fi
 
 if [ "$cmd" = "run" ]; then
@@ -94,6 +105,30 @@ if [ "$cmd" = "run" ]; then
   fi
   if [ -f "${img_base}-fs-Dockerfile" ]; then
     cat "${img_base}-fs-Dockerfile" > "${p}-fs-Dockerfile"
+  fi
+  if [ -f "$STATE/built-tag" ] || [ -f "${img_base}-tag" ] || [ -f "${img_base}-fs-package.json" ]; then
+    if [ -z "$name" ]; then
+      name="$cid"
+    fi
+    ports="0.0.0.0:8080:80/tcp"
+    if [ -n "$publish" ]; then
+      ports="0.0.0.0:${publish}/tcp"
+    fi
+    echo "$n" > "$STATE/next-cid"
+    echo "$name" > "${p}-name"
+    echo "$image" > "${p}-image"
+    echo "running" > "${p}-status"
+    echo "$ports" > "${p}-ports"
+    echo "Up 1 second" > "${p}-created"
+    if [ -f "${p}-fs-package.json" ]; then
+      printf '%s\n' \
+        'myapp listening on :80' \
+        'GET /health 200' \
+        'Loaded package.json from image layer' > "${p}-log"
+    else
+      printf '%s\n' 'myapp listening on :80' 'GET /health 200' > "${p}-log"
+    fi
+    echo "${cid}   ${image}   node src/app.js   Up 1 second   running   ${ports}" > "${p}-row"
   fi
 fi
 
@@ -183,15 +218,6 @@ if [ "$cmd" = "build" ]; then
     echo "Step 5/6 : COPY src/ ./src/ (skipped — file missing)"
   fi
   echo "Step 6/6 : CMD [\"node\", \"src/app.js\"]"
-  echo "$tag" > "${base}-tag"
-  echo "aba3f2c1d0e9" > "${base}-id"
-  echo "$tag" > "$STATE/built-tag"
-  repo="${tag%%:*}"
-  tagpart="${tag#*:}"
-  if [ "$tagpart" = "$tag" ]; then
-    tagpart="latest"
-  fi
-  echo "${repo}	${tagpart}	aba3f2c1d0e9	2 minutes ago	42MB" > "${base}-images-row"
   echo "Successfully built aba3f2c1d0e9"
   echo "Successfully built and tagged $tag"
   exit 0
@@ -209,25 +235,6 @@ if [ "$cmd" = "run" ]; then
     echo "Error: lab supports up to 10 containers"
     exit 1
   fi
-  if [ -z "$name" ]; then
-    name="$cid"
-  fi
-  ports="0.0.0.0:8080:80/tcp"
-  if [ -n "$publish" ]; then
-    ports="0.0.0.0:${publish}/tcp"
-  fi
-  echo "$n" > "$STATE/next-cid"
-  echo "$name" > "${p}-name"
-  echo "$image" > "${p}-image"
-  echo "running" > "${p}-status"
-  echo "$ports" > "${p}-ports"
-  echo "Up 1 second" > "${p}-created"
-  echo "myapp listening on :80" > "${p}-log"
-  echo "GET /health 200" >> "${p}-log"
-  if [ -f "${p}-fs-package.json" ]; then
-    echo "Loaded package.json from image layer" >> "${p}-log"
-  fi
-  echo "${cid}   ${image}   node src/app.js   Up 1 second   running   ${ports}" > "${p}-row"
   if [ "$detach" = 1 ]; then
     echo "$cid"
   else

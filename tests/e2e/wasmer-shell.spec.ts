@@ -100,6 +100,13 @@ test.describe.serial('Wasmer container shell commands', () => {
     expect(text).toMatch(/\/home\/lab/)
   })
 
+  test('touch and ls work in /var/lab', async () => {
+    await runShellCommand(shellPage, 'cd /var/lab', /bash-dist#|lab\$/)
+    await runShellCommand(shellPage, 'touch a-file.txt', /bash-dist#|lab\$/)
+    const text = await runShellCommand(shellPage, 'ls -1 a-file.txt', /a-file\.txt/)
+    expect(text).toMatch(/a-file\.txt/)
+  })
+
   test('docker build run and ps workflow', async () => {
     await runShellCommand(shellPage, 'docker build -t myapp:1.0 .', /Successfully built and tagged/)
     await runShellCommand(shellPage, 'docker image ls', /myapp.*1\.0|REPOSITORY/)
