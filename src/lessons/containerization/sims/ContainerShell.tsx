@@ -25,9 +25,9 @@ export function ContainerShell({ fallback, hint = DEFAULT_HINT }: ContainerShell
       </div>
       <p className="panel-hint container-shell-hint">
         Run <code>ls</code> and <code>cat Dockerfile</code>, then{' '}
-        <code>podman build -t sample-img .</code> before <code>podman run</code>. The v86 VM uses real
-        Podman; <code>docker</code> is an alias. Build the VM image once with{' '}
-        <code>bun run v86:build-image</code> (requires Docker).
+        <code>podman build -t sample-img .</code> before <code>podman run</code>. Use the shell
+        mode toggle for <strong>Fast (Wasmer)</strong> on phones or <strong>Real VM (v86 Podman)</strong>{' '}
+        on desktop after <code>bun run v86:build-image</code>.
       </p>
       <ShellTerminal fallback={fallback} />
     </div>

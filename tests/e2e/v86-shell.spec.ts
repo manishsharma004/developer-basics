@@ -2,11 +2,28 @@ import { expect, test } from '@playwright/test'
 
 const SHELL_LESSON = '/#/lessons/docker-containers'
 
-test('v86 podman plan assets are documented', async ({ page }) => {
-  await page.goto(SHELL_LESSON)
-  const text = await page.locator('.container-shell').innerText()
-  expect(text).toMatch(/podman build/i)
-  expect(text).toMatch(/v86:build-image/i)
+test.describe('shell runtime', () => {
+  test('v86 podman plan assets are documented', async ({ page }) => {
+    await page.goto(SHELL_LESSON)
+    const text = await page.locator('.container-shell').innerText()
+    expect(text).toMatch(/podman build/i)
+    expect(text).toMatch(/v86:build-image/i)
+    expect(text).toMatch(/Shell mode/i)
+  })
+
+  test('shell backend toggle works on mobile viewport', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(SHELL_LESSON)
+    const toggle = page.locator('.shell-backend-toggle')
+    await expect(toggle).toBeVisible()
+    await expect(toggle.getByRole('button', { name: /Wasmer shell/i })).toBeVisible()
+    await expect(toggle.getByRole('button', { name: /v86 Podman VM/i })).toBeVisible()
+    await toggle.getByRole('button', { name: /Wasmer shell/i }).click()
+    await expect(toggle.getByRole('button', { name: /Wasmer shell/i })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+  })
 })
 
 test.describe('v86 shell (optional)', () => {

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type RefObject } from 'react'
 import { getCrossOriginIsolated, waitForCrossOriginIsolation } from './crossOriginIsolation.ts'
 import {
-  preferredShellBackend,
   V86_LOAD_TIMEOUT_MS,
   WASMER_LOAD_TIMEOUT_MS,
   type ShellBackend,
@@ -18,8 +17,11 @@ export interface UseShellRuntimeResult {
   retry: () => void
 }
 
-export function useShellRuntime(hostRef: RefObject<HTMLElement | null>): UseShellRuntimeResult {
-  const [phase, setPhase] = useState<ShellLoadPhase>('loading')
+export function useShellRuntime(
+  hostRef: RefObject<HTMLElement | null>,
+  selectedBackend: ShellBackend | null,
+): UseShellRuntimeResult {
+  const [phase, setPhase] = useState<ShellLoadPhase>(selectedBackend ? 'loading' : 'idle')
   const [backend, setBackend] = useState<ShellBackend | null>(null)
   const [message, setMessage] = useState('Checking shell runtime…')
   const [error, setError] = useState<string | null>(null)
@@ -49,9 +51,17 @@ export function useShellRuntime(hostRef: RefObject<HTMLElement | null>): UseShel
     })
 
     let cancelled = false
-    let timeout = 0
 
     void (async () => {
+      if (!selectedBackend) {
+        setPhase('idle')
+        return
+      }
+
+      setPhase('loading')
+      setError(null)
+      setMessage(`Loading ${selectedBackend === 'v86' ? 'v86 Podman VM' : 'Wasmer'} shell…`)
+
       if (!getCrossOriginIsolated()) {
         setMessage('Activating cross-origin isolation (first visit may reload once)…')
         const isolated = await waitForCrossOriginIsolation()
@@ -79,7 +89,7 @@ export function useShellRuntime(hostRef: RefObject<HTMLElement | null>): UseShel
             (async () => {
               setPhase('loading')
               setError(null)
-              setMessage(`Loading ${name} shell…`)
+              setMessage(`Loading ${name === 'v86' ? 'v86 Podman VM' : 'Wasmer'} shell…`)
               const cleanup =
                 name === 'v86'
                   ? await runV86Terminal(host, (msg) => mounted.current && setMessage(msg))
@@ -111,38 +121,36 @@ export function useShellRuntime(hostRef: RefObject<HTMLElement | null>): UseShel
         }
       }
 
-      const order: ShellBackend[] =
-        preferredShellBackend() === 'v86' ? ['v86', 'wasmer'] : ['wasmer', 'v86']
-
-      for (const name of order) {
-        if (cancelled || !mounted.current) return
-        if (name === 'v86') {
-          const available = await isV86LabImageAvailable()
-          if (!available) {
-            setMessage('v86 Podman image not built — trying Wasmer fallback…')
-            continue
-          }
+      if (selectedBackend === 'v86') {
+        const available = await isV86LabImageAvailable()
+        if (!available) {
+          setPhase('error')
+          setError(
+            'v86 Podman image not built. Run bun run v86:build-image on a machine with Docker, or switch to Fast (Wasmer).',
+          )
+          return
         }
-        const ok = await tryBackend(name, name === 'v86' ? V86_LOAD_TIMEOUT_MS : WASMER_LOAD_TIMEOUT_MS)
-        if (ok) return
       }
 
-      if (!cancelled && mounted.current) {
+      const ok = await tryBackend(
+        selectedBackend,
+        selectedBackend === 'v86' ? V86_LOAD_TIMEOUT_MS : WASMER_LOAD_TIMEOUT_MS,
+      )
+      if (!ok && !cancelled && mounted.current) {
         setPhase('error')
-        setError((prev) => prev ?? 'No shell runtime could be started.')
+        setError((prev) => prev ?? `Could not start ${selectedBackend} shell.`)
       }
     })()
 
     return () => {
       cancelled = true
       mounted.current = false
-      if (timeout) window.clearTimeout(timeout)
       cleanupRef.current?.()
       cleanupRef.current = undefined
       unsubV86()
       unsubWasmer()
     }
-  }, [attempt, hostRef])
+  }, [attempt, hostRef, selectedBackend])
 
   return { phase, backend, message, error, retry }
 }

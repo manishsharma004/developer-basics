@@ -1,0 +1,100 @@
+import { useEffect, useState } from 'react'
+import {
+  isLikelyMobileDevice,
+  readStoredShellBackend,
+  SHELL_BACKEND_LABELS,
+  writeStoredShellBackend,
+  type ShellBackend,
+} from '../lib/shellRuntime.ts'
+import { isV86LabImageAvailable } from '../lib/v86.ts'
+
+type ShellBackendToggleProps = {
+  value: ShellBackend
+  onChange: (backend: ShellBackend) => void
+  disabled?: boolean
+}
+
+export function ShellBackendToggle({ value, onChange, disabled }: ShellBackendToggleProps) {
+  const [v86Ready, setV86Ready] = useState<boolean | null>(null)
+  const mobile = isLikelyMobileDevice()
+
+  useEffect(() => {
+    void isV86LabImageAvailable().then(setV86Ready)
+  }, [])
+
+  return (
+    <div className="shell-backend-toggle" role="group" aria-label="Shell runtime">
+      <span className="shell-backend-toggle__label">Shell mode</span>
+      <div className="shell-backend-toggle__options">
+        {(['wasmer', 'v86'] as const).map((id) => {
+          const meta = SHELL_BACKEND_LABELS[id]
+          const unavailable = id === 'v86' && v86Ready === false
+          return (
+            <button
+              key={id}
+              type="button"
+              className={`shell-backend-toggle__btn${value === id ? ' shell-backend-toggle__btn--active' : ''}`}
+              aria-pressed={value === id}
+              disabled={disabled || unavailable}
+              title={
+                unavailable
+                  ? 'Build the VM image with bun run v86:build-image first'
+                  : meta.blurb
+              }
+              onClick={() => {
+                writeStoredShellBackend(id)
+                onChange(id)
+              }}
+            >
+              <span className="shell-backend-toggle__short">{meta.short}</span>
+              <span className="shell-backend-toggle__name">{meta.title}</span>
+            </button>
+          )
+        })}
+      </div>
+      <p className="shell-backend-toggle__hint panel-hint">
+        {mobile
+          ? 'Fast (Wasmer) is recommended on phones. Real VM needs more memory and a built image.'
+          : v86Ready === false
+            ? 'Real VM requires bun run v86:build-image. Fast mode works without extra setup.'
+            : 'Switch anytime — the terminal reloads with your choice.'}
+      </p>
+    </div>
+  )
+}
+
+export function useShellBackendPreference(): [
+  ShellBackend | null,
+  (backend: ShellBackend) => void,
+  boolean,
+] {
+  const [backend, setBackend] = useState<ShellBackend | null>(null)
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    void isV86LabImageAvailable().then((v86Ready) => {
+      if (cancelled) return
+      const stored = readStoredShellBackend()
+      if (stored) {
+        setBackend(stored)
+      } else if (isLikelyMobileDevice()) {
+        setBackend('wasmer')
+      } else if (v86Ready) {
+        setBackend('v86')
+      } else {
+        setBackend('wasmer')
+      }
+      setReady(true)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const select = (next: ShellBackend) => {
+    writeStoredShellBackend(next)
+    setBackend(next)
+  }
+  return [backend, select, ready]
+}
