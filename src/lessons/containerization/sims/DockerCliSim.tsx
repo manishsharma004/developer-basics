@@ -58,9 +58,17 @@ export function DockerCliSim() {
         setOutput((o) => [...o, id])
         return
       }
-      if (sub === 'ps') {
+      if (sub === 'ps' || (sub === 'container' && parts[2] === 'ls')) {
         const rows = containers.map((c) => `${c.id}\t${c.image}\t${c.ports}\t${c.status}`)
         setOutput((o) => [...o, rows.length ? rows.join('\n') : '(no containers)'])
+        return
+      }
+      if (sub === 'images' || (sub === 'image' && (parts[2] === 'ls' || !parts[2]))) {
+        if (!imageBuilt) {
+          setOutput((o) => [...o, 'REPOSITORY   TAG       IMAGE ID\n(no images)'])
+          return
+        }
+        setOutput((o) => [...o, 'REPOSITORY   TAG       IMAGE ID\nmyapp        1.0       aba3f2c1d0e9'])
         return
       }
       if (sub === 'stop' && parts[2]) {
