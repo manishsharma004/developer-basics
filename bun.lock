@@ -14,6 +14,7 @@
         "react": "^19.2.8",
         "react-dom": "^19.2.8",
         "react-router-dom": "^7.9.1",
+        "v86": "^0.5.451",
         "xterm": "^5.3.0",
         "xterm-addon-fit": "^0.8.0",
         "yaml": "^2.9.0",
@@ -447,6 +448,8 @@
     "undici-types": ["undici-types@8.3.0", "", {}, "sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ=="],
 
     "uuid": ["uuid@14.0.2", "", { "bin": { "uuid": "dist-node/bin/uuid" } }, "sha512-xZe/16rV4aa+HGSOCiY2YeLT1OybRLrrkL/Rqaq7p7GMVXjFh+6wN4oMYgjFmnSnhY8t6Xpdl2l9qmnHYuMHwQ=="],
+
+    "v86": ["v86@0.5.451", "", {}, "sha512-uSr6wEczwlnLC54yl/j04jwHgabWwAwc/Nk+d6jeZUtFEujGEWRPJMOruJ1HWAcrNo6mZFpVO3AoMlL2RrhKSQ=="],
 
     "vite": ["vite@8.2.1", "", { "dependencies": { "lightningcss": "^1.33.0", "picomatch": "^4.0.5", "postcss": "^8.5.25", "rolldown": "~1.2.1", "tinyglobby": "^0.2.17" }, "optionalDependencies": { "fsevents": "~2.3.3" }, "peerDependencies": { "@types/node": "^20.19.0 || >=22.12.0", "@vitejs/devtools": "^0.4.0", "esbuild": "^0.27.0 || ^0.28.0", "jiti": ">=1.21.0", "less": "^4.0.0", "sass": "^1.70.0", "sass-embedded": "^1.70.0", "stylus": ">=0.54.8", "sugarss": "^5.0.0", "terser": "^5.16.0", "tsx": "^4.8.1", "yaml": "^2.4.2" }, "optionalPeers": ["@types/node", "@vitejs/devtools", "esbuild", "jiti", "less", "sass", "sass-embedded", "stylus", "sugarss", "terser", "tsx", "yaml"], "bin": { "vite": "bin/vite.js" } }, "sha512-EU/eS7BH3XROHh2YnBefjM6DBKA6ZeMZEYQbj7NLWg5wHYlhB8B/Mayd5XsgWq+NFYccDOTemRpdETWR6Ka/lw=="],
 
