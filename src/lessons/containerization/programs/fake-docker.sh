@@ -71,6 +71,11 @@ if [ "$cmd" = "build" ]; then
       tagpart="latest"
     fi
     echo "${repo}	${tagpart}	aba3f2c1d0e9	2 minutes ago	42MB" > "${base}-images-row"
+    if [ -f "$STATE/images-index" ]; then
+      grep -v "^${slug}$" "$STATE/images-index" > "$STATE/images-index.tmp" 2>/dev/null || true
+      mv "$STATE/images-index.tmp" "$STATE/images-index"
+    fi
+    echo "$slug" >> "$STATE/images-index"
   fi
 fi
 
@@ -194,9 +199,9 @@ exec 0<&-
 # --- Phase 2: metadata, output, and reads via echo/read (no extra file descriptors) ---
 
 if [ "$cmd" = "build" ]; then
-  context="."
-  tag="myapp:1.0"
-  # Args consumed in phase 1; variables slug/base/ctx/tag still in scope from same shell.
+  if [ -f "${base}-tag" ]; then
+    read -r tag < "${base}-tag"
+  fi
   dockerfile="${ctx}/Dockerfile"
   if [ ! -f "$dockerfile" ]; then
     echo "ERROR: failed to solve: Dockerfile not found in $context"
@@ -311,21 +316,16 @@ if [ "$cmd" = "images" ]; then
   done
   echo "REPOSITORY	TAG	IMAGE ID	CREATED		SIZE"
   found=0
-  row=""
-  if [ -f "$STATE/img-myapp-1.0-images-row" ]; then
-    read -r row < "$STATE/img-myapp-1.0-images-row"
-    echo "$row"
-    found=1
-  fi
-  if [ -f "$STATE/img-myapp-latest-images-row" ]; then
-    read -r row < "$STATE/img-myapp-latest-images-row"
-    echo "$row"
-    found=1
-  fi
-  if [ -f "$STATE/img-web-latest-images-row" ]; then
-    read -r row < "$STATE/img-web-latest-images-row"
-    echo "$row"
-    found=1
+  if [ -f "$STATE/images-index" ]; then
+    while read -r slug; do
+      [ -z "$slug" ] && continue
+      rowfile="$STATE/img-${slug}-images-row"
+      if [ -f "$rowfile" ]; then
+        read -r row < "$rowfile"
+        echo "$row"
+        found=1
+      fi
+    done < "$STATE/images-index"
   fi
   if [ "$found" = 0 ]; then
     echo "(no images — run: docker build -t myapp:1.0 .)"
@@ -365,6 +365,10 @@ if [ "$cmd" = "rmi" ]; then
   slug="${ref//:/-}"
   ibase="$STATE/img-$slug"
   rm -f "${ibase}-tag" "${ibase}-id" "${ibase}-images-row" "${ibase}-fs-package.json" "${ibase}-fs-src-app.js" "${ibase}-fs-Dockerfile"
+  if [ -f "$STATE/images-index" ]; then
+    grep -v "^${slug}$" "$STATE/images-index" > "$STATE/images-index.tmp" 2>/dev/null || true
+    mv "$STATE/images-index.tmp" "$STATE/images-index"
+  fi
   rm -f "$STATE/built-tag"
   echo "Untagged: $ref"
   exit 0
