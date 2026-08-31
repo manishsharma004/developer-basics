@@ -1,0 +1,22 @@
+import { expect, test } from '@playwright/test'
+
+const SHELL_LESSON = '/#/lessons/docker-containers'
+
+test('v86 podman plan assets are documented', async ({ page }) => {
+  await page.goto(SHELL_LESSON)
+  const text = await page.locator('.container-shell').innerText()
+  expect(text).toMatch(/podman build/i)
+  expect(text).toMatch(/v86:build-image/i)
+})
+
+test.describe('v86 shell (optional)', () => {
+  test.skip(!process.env.V86_E2E, 'Set V86_E2E=1 after bun run v86:build-image')
+
+  test('podman build in v86 VM', async ({ page }) => {
+    test.setTimeout(180_000)
+    await page.goto(SHELL_LESSON)
+    await expect(page.locator('.wasmer-terminal[data-shell-backend="v86"]')).toBeVisible({
+      timeout: 120_000,
+    })
+  })
+})
