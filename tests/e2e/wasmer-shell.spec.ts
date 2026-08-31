@@ -107,8 +107,18 @@ test.describe.serial('Wasmer container shell commands', () => {
     expect(text).toMatch(/a-file\.txt/)
   })
 
+  test('docker build honors custom image tags', async () => {
+    await runShellCommand(
+      shellPage,
+      'docker build -t sample-img .',
+      /Successfully built and tagged sample-img/,
+    )
+    const text = await runShellCommand(shellPage, 'docker image ls', /sample-img/)
+    expect(text).toMatch(/sample-img/)
+  })
+
   test('docker build run and ps workflow', async () => {
-    await runShellCommand(shellPage, 'docker build -t myapp:1.0 .', /Successfully built and tagged/)
+    await runShellCommand(shellPage, 'docker build -t myapp:1.0 .', /Successfully built and tagged myapp:1\.0/)
     await runShellCommand(shellPage, 'docker image ls', /myapp.*1\.0|REPOSITORY/)
     await runShellCommand(shellPage, 'docker run -d myapp:1.0', /c\d+/)
     const text = await runShellCommand(shellPage, 'docker ps', /myapp:1\.0|running/)
