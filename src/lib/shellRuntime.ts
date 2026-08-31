@@ -13,21 +13,10 @@ export const SHELL_BACKEND_STORAGE_KEY = 'developer-basics:shell-backend'
 export const V86_LOAD_TIMEOUT_MS = 90_000
 export const WASMER_LOAD_TIMEOUT_MS = 19_000
 
-/** Phones and small touch devices — default to the lighter Wasmer shell. */
-export function isLikelyMobileDevice(): boolean {
-  if (typeof window === 'undefined') return false
-  const coarsePointer = window.matchMedia('(pointer: coarse)').matches
-  const narrow = window.matchMedia('(max-width: 768px)').matches
-  const touch =
-    typeof navigator !== 'undefined' &&
-    (navigator.maxTouchPoints > 0 || 'ontouchstart' in window)
-  return narrow || (coarsePointer && touch)
-}
-
 export function preferredShellBackend(): ShellBackend {
   const env = import.meta.env.VITE_SHELL_BACKEND
   if (env === 'wasmer' || env === 'v86') return env
-  return isLikelyMobileDevice() ? 'wasmer' : 'v86'
+  return 'v86'
 }
 
 export function readStoredShellBackend(): ShellBackend | null {
@@ -55,7 +44,7 @@ export const SHELL_BACKEND_LABELS: Record<
   wasmer: {
     short: 'Fast',
     title: 'Wasmer shell',
-    blurb: 'Lightweight bash — best on phones and slow networks.',
+    blurb: 'Lightweight bash — quick to load on any device.',
   },
   v86: {
     short: 'Real VM',

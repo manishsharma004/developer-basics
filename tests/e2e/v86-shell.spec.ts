@@ -16,13 +16,16 @@ test.describe('shell runtime', () => {
     await page.goto(SHELL_LESSON)
     const toggle = page.locator('.shell-backend-toggle')
     await expect(toggle).toBeVisible()
-    await expect(toggle.getByRole('button', { name: /Wasmer shell/i })).toBeVisible()
-    await expect(toggle.getByRole('button', { name: /v86 Podman VM/i })).toBeVisible()
-    await toggle.getByRole('button', { name: /Wasmer shell/i }).click()
-    await expect(toggle.getByRole('button', { name: /Wasmer shell/i })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    )
+    const wasmerBtn = toggle.getByRole('button', { name: /Wasmer shell/i })
+    const v86Btn = toggle.getByRole('button', { name: /v86 Podman VM/i })
+    await expect(wasmerBtn).toBeVisible()
+    await expect(v86Btn).toBeVisible()
+    await wasmerBtn.click()
+    await expect(wasmerBtn).toHaveAttribute('aria-pressed', 'true')
+    if (await v86Btn.isEnabled()) {
+      await v86Btn.click()
+      await expect(v86Btn).toHaveAttribute('aria-pressed', 'true')
+    }
   })
 })
 

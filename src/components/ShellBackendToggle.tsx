@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import {
-  isLikelyMobileDevice,
   readStoredShellBackend,
   SHELL_BACKEND_LABELS,
   writeStoredShellBackend,
@@ -16,7 +15,6 @@ type ShellBackendToggleProps = {
 
 export function ShellBackendToggle({ value, onChange, disabled }: ShellBackendToggleProps) {
   const [v86Ready, setV86Ready] = useState<boolean | null>(null)
-  const mobile = isLikelyMobileDevice()
 
   useEffect(() => {
     void isV86LabImageAvailable().then(setV86Ready)
@@ -53,11 +51,9 @@ export function ShellBackendToggle({ value, onChange, disabled }: ShellBackendTo
         })}
       </div>
       <p className="shell-backend-toggle__hint panel-hint">
-        {mobile
-          ? 'Fast (Wasmer) is recommended on phones. Real VM needs more memory and a built image.'
-          : v86Ready === false
-            ? 'Real VM requires bun run v86:build-image. Fast mode works without extra setup.'
-            : 'Switch anytime — the terminal reloads with your choice.'}
+        {v86Ready === false
+          ? 'Real VM requires bun run v86:build-image. Fast mode works without extra setup.'
+          : 'Switch anytime — the terminal reloads with your choice.'}
       </p>
     </div>
   )
@@ -78,8 +74,6 @@ export function useShellBackendPreference(): [
       const stored = readStoredShellBackend()
       if (stored) {
         setBackend(stored)
-      } else if (isLikelyMobileDevice()) {
-        setBackend('wasmer')
       } else if (v86Ready) {
         setBackend('v86')
       } else {
