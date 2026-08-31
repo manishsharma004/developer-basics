@@ -102,8 +102,28 @@ test.describe.serial('Wasmer container shell commands', () => {
 
   test('docker build run and ps workflow', async () => {
     await runShellCommand(shellPage, 'docker build -t myapp:1.0 .', /Successfully built and tagged/)
+    await runShellCommand(shellPage, 'docker image ls', /myapp.*1\.0|REPOSITORY/)
     await runShellCommand(shellPage, 'docker run -d myapp:1.0', /c\d+/)
     const text = await runShellCommand(shellPage, 'docker ps', /myapp:1\.0|running/)
     expect(text).toMatch(/running|myapp:1\.0/)
+    expect(text).not.toMatch(/\(no containers\)/)
+  })
+
+  test('docker container ls matches docker ps after run', async () => {
+    const text = await runShellCommand(shellPage, 'docker container ls', /myapp:1\.0|running/)
+    expect(text).toMatch(/running|myapp:1\.0/)
+  })
+
+  test('docker images and logs show staged build context', async () => {
+    const imagesText = await runShellCommand(shellPage, 'docker images', /myapp.*1\.0/)
+    expect(imagesText).toMatch(/myapp.*1\.0/)
+    const logsText = await runShellCommand(
+      shellPage,
+      'docker logs c1',
+      /package\.json from image layer|listening on/,
+    )
+    expect(logsText).toMatch(/package\.json from image layer|listening on/)
+    const execText = await runShellCommand(shellPage, 'docker exec c1 ls', /package\.json/)
+    expect(execText).toMatch(/package\.json/)
   })
 })
