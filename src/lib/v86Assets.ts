@@ -44,19 +44,30 @@ function manifestCandidates(): string[] {
   ]
 }
 
+/** Resolve relative manifest URLs to an absolute directory URL. */
+function manifestDirFromUrl(manifestUrl: string): string {
+  const resolved = /^https?:\/\//i.test(manifestUrl)
+    ? manifestUrl
+    : new URL(
+        manifestUrl,
+        typeof window !== 'undefined' ? window.location.origin : 'http://localhost',
+      ).href
+  return resolved.replace(/\/[^/]*$/, '')
+}
+
 /** Resolve relative manifest baseurl against the manifest file URL. */
 export function resolveManifestBaseUrl(manifest: V86LabManifest, manifestUrl: string): V86LabManifest {
   const raw = manifest.baseurl.replace(/\/$/, '')
   if (/^https?:\/\//i.test(raw)) return manifest
 
-  const manifestDir = manifestUrl.replace(/\/[^/]*$/, '')
+  const manifestDir = manifestDirFromUrl(manifestUrl)
   if (raw === '.' || raw === '') {
     return { ...manifest, baseurl: manifestDir }
   }
 
   if (raw.startsWith('/')) {
-    // Legacy manifests used site-root paths; resolve from manifest origin + dirname prefix.
-    return { ...manifest, baseurl: `${manifestDir}` }
+    // Legacy manifests used site-root paths; co-locate with the manifest file.
+    return { ...manifest, baseurl: manifestDir }
   }
 
   return { ...manifest, baseurl: new URL(raw, `${manifestDir}/`).href.replace(/\/$/, '') }
@@ -77,7 +88,7 @@ export async function fetchLabManifest(): Promise<V86LabManifest | null> {
       if (!res.ok) continue
       const manifest = (await res.json()) as V86LabManifest
       if (manifest.profile !== 'alpine-podman-lab') continue
-      return resolveManifestBaseUrl(manifest, url)
+      return resolveManifestBaseUrl(manifest, res.url)
     } catch {
       /* try next source */
     }
