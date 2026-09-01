@@ -34,10 +34,37 @@ jobs:
       - name: Lint
         run: bun run lint
 
+      - name: Compute v86 lab image cache key
+        id: v86-lab-key
+        run: echo "key=$(bash scripts/v86/lab-image-cache-key.sh)" >> "$GITHUB_OUTPUT"
+
+      - name: Restore v86 lab rootfs cache
+        uses: actions/cache/restore@v4
+        id: v86-lab-cache
+        with:
+          path: |
+            public/v86/lab-rootfs/manifest.json
+            public/v86/lab-rootfs/fs.json
+            public/v86/lab-rootfs/flat
+            .cache/v86-tools
+          key: v86-lab-${{ steps.v86-lab-key.outputs.key }}
+
       - name: Build v86 Podman lab image
+        if: steps.v86-lab-cache.outputs.cache-hit != 'true'
         run: |
           bun run v86:download-bios
           bun run v86:build-image
+
+      - name: Save v86 lab rootfs cache
+        if: steps.v86-lab-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            public/v86/lab-rootfs/manifest.json
+            public/v86/lab-rootfs/fs.json
+            public/v86/lab-rootfs/flat
+            .cache/v86-tools
+          key: v86-lab-${{ steps.v86-lab-key.outputs.key }}
 
       - name: Build
         # Vite needs the repo name as the base path for project Pages sites.
