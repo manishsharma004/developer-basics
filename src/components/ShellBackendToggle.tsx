@@ -26,17 +26,17 @@ export function ShellBackendToggle({ value, onChange, disabled }: ShellBackendTo
       <div className="shell-backend-toggle__options">
         {(['wasmer', 'v86'] as const).map((id) => {
           const meta = SHELL_BACKEND_LABELS[id]
-          const unavailable = id === 'v86' && v86Ready === false
+          const needsSetup = id === 'v86' && v86Ready === false
           return (
             <button
               key={id}
               type="button"
-              className={`shell-backend-toggle__btn${value === id ? ' shell-backend-toggle__btn--active' : ''}`}
+              className={`shell-backend-toggle__btn${value === id ? ' shell-backend-toggle__btn--active' : ''}${needsSetup ? ' shell-backend-toggle__btn--needs-setup' : ''}`}
               aria-pressed={value === id}
-              disabled={disabled || unavailable}
+              disabled={disabled}
               title={
-                unavailable
-                  ? 'Build the VM image with bun run v86:build-image first'
+                needsSetup
+                  ? 'VM image is still building or run bun run v86:build-image locally'
                   : meta.blurb
               }
               onClick={() => {
@@ -52,8 +52,10 @@ export function ShellBackendToggle({ value, onChange, disabled }: ShellBackendTo
       </div>
       <p className="shell-backend-toggle__hint panel-hint">
         {v86Ready === false
-          ? 'Real VM requires bun run v86:build-image. Fast mode works without extra setup.'
-          : 'Switch anytime — the terminal reloads with your choice.'}
+          ? 'Real VM needs the lab image (built on deploy, or run bun run v86:build-image locally). You can still select it to see setup status.'
+          : v86Ready === null
+            ? 'Checking VM image…'
+            : 'Switch anytime — the terminal reloads with your choice.'}
       </p>
     </div>
   )

@@ -39,5 +39,9 @@ export async function fetchLabManifest(): Promise<V86LabManifest | null> {
 }
 
 export function labRootfsFilesystem(manifest: V86LabManifest) {
-  return { baseurl: asset(`${manifest.baseurl.replace(/^\//, '')}/fs.json`) }
+  const root = manifest.baseurl.replace(/^\//, '').replace(/\/$/, '')
+  return {
+    baseurl: asset(`${root}/flat/`),
+    basefs: asset(`${root}/fs.json`),
+  }
 }
