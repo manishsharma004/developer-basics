@@ -20,12 +20,21 @@ test.describe('shell runtime', () => {
     const v86Btn = toggle.getByRole('button', { name: /v86 Podman VM/i })
     await expect(wasmerBtn).toBeVisible()
     await expect(v86Btn).toBeVisible()
+    await expect(v86Btn).toBeEnabled()
     await wasmerBtn.click()
     await expect(wasmerBtn).toHaveAttribute('aria-pressed', 'true')
     if (await v86Btn.isEnabled()) {
       await v86Btn.click()
       await expect(v86Btn).toHaveAttribute('aria-pressed', 'true')
     }
+  })
+
+  test('v86 option is selectable even when lab image is missing', async ({ page }) => {
+    await page.goto(SHELL_LESSON)
+    const v86Btn = page.getByRole('button', { name: /v86 Podman VM/i })
+    await expect(v86Btn).toBeEnabled()
+    await v86Btn.click()
+    await expect(v86Btn).toHaveAttribute('aria-pressed', 'true')
   })
 })
 

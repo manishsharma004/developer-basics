@@ -477,6 +477,10 @@ a {
   background: color-mix(in srgb, var(--accent, #58a6ff) 12%, var(--panel-2, #161b22));
 }
 
+.shell-backend-toggle__btn--needs-setup:not(.shell-backend-toggle__btn--active) {
+  border-style: dashed;
+}
+
 .shell-backend-toggle__btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
