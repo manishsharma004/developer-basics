@@ -34,6 +34,11 @@ jobs:
       - name: Lint
         run: bun run lint
 
+      - name: Build v86 Podman lab image
+        run: |
+          bun run v86:download-bios
+          bun run v86:build-image
+
       - name: Build
         # Vite needs the repo name as the base path for project Pages sites.
         env:
