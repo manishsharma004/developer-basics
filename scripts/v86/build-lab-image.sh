@@ -53,10 +53,7 @@ mkdir -p "$FLAT"
 python3 "$TOOLS/tools/fs2json.py" --out "$FSJSON" "$ROOTFS_TAR"
 python3 "$TOOLS/tools/copy-to-sha256.py" "$ROOTFS_TAR" "$FLAT"
 
-# v86 expects baseurl to directory containing fs.json + flat/
-mv "$FSJSON" "$OUT/fs.json"
-rm -rf "$OUT/flat"
-mv "$FLAT" "$OUT/flat"
+# fs.json and flat/ are already in $OUT — no move needed.
 
 BYTES=$(wc -c < "$ROOTFS_TAR" | tr -d ' ')
 CHUNK=256000
