@@ -36,6 +36,8 @@ bun run v86:build-image      # Docker required: Alpine i386 + podman → public/
 
 Without `public/v86/lab-rootfs/manifest.json`, the app falls back to Wasmer automatically.
 
+**GitHub Pages deploy:** add `bun run v86:download-bios && bun run v86:build-image` before `bun run build` in `.github/workflows/deploy.yml` so the VM image ships with the site.
+
 ## Guest layout
 
 | Path | Contents |
