@@ -36,7 +36,7 @@ export function ShellBackendToggle({ value, onChange, disabled }: ShellBackendTo
               disabled={disabled}
               title={
                 needsSetup
-                  ? 'VM image is still building or run bun run v86:build-image locally'
+                  ? 'Pre-built VM image is not reachable yet'
                   : meta.blurb
               }
               onClick={() => {
@@ -52,9 +52,9 @@ export function ShellBackendToggle({ value, onChange, disabled }: ShellBackendTo
       </div>
       <p className="shell-backend-toggle__hint panel-hint">
         {v86Ready === false
-          ? 'Real VM needs the lab image (built on deploy, or run bun run v86:build-image locally). You can still select it to see setup status.'
+          ? 'Real VM uses a pre-built Alpine+Podman image. It loads from this site after deploy, or run bun run v86:fetch-lab-image for local dev.'
           : v86Ready === null
-            ? 'Checking VM image…'
+            ? 'Loading pre-built VM image info…'
             : 'Switch anytime — the terminal reloads with your choice.'}
       </p>
     </div>

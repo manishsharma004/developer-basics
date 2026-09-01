@@ -26,8 +26,8 @@ export function ContainerShell({ fallback, hint = DEFAULT_HINT }: ContainerShell
       <p className="panel-hint container-shell-hint">
         Run <code>ls</code> and <code>cat Dockerfile</code>, then{' '}
         <code>podman build -t sample-img .</code> before <code>podman run</code>. Use the shell
-        mode toggle for <strong>Fast (Wasmer)</strong> or <strong>Real VM (v86 Podman)</strong>{' '}
-        after <code>bun run v86:build-image</code>.
+        mode toggle for <strong>Fast (Wasmer)</strong> or <strong>Real VM (v86 Podman)</strong>. The
+        VM image is pre-built on deploy — no Docker needed in the browser.
       </p>
       <ShellTerminal fallback={fallback} />
     </div>

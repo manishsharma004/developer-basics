@@ -5,6 +5,7 @@ import {
   fetchLabManifest,
   labRootfsFilesystem,
   V86_BIOS,
+  V86_LAB_UNAVAILABLE_HINT,
 } from './v86Assets.ts'
 
 export type V86LoadPhase = 'idle' | 'loading' | 'ready' | 'error' | 'unsupported'
@@ -132,9 +133,7 @@ export async function runV86Terminal(
 
   const manifest = await fetchLabManifest()
   if (!manifest) {
-    throw new Error(
-      'v86 Podman lab image not found. Run: bun run v86:build-image (requires Docker).',
-    )
+    throw new Error(V86_LAB_UNAVAILABLE_HINT)
   }
 
   report('Loading v86 emulator…')
@@ -251,7 +250,7 @@ export async function ensureV86(onProgress?: (msg: string) => void): Promise<voi
     initPromise = (async () => {
       const ok = await isV86LabImageAvailable()
       if (!ok) {
-        throw new Error('v86 lab image not built')
+        throw new Error('v86 lab image not available')
       }
       report('v86 lab image found.')
     })().catch((err) => {
