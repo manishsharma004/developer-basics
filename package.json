@@ -13,8 +13,9 @@
     "sitemap": "bun scripts/generate-sitemap.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "v86:download-bios": "bash scripts/v86/download-bios.sh",
-    "v86:build-image": "bash scripts/v86/build-lab-image.sh"
+  "v86:download-bios": "bash scripts/v86/download-bios.sh",
+  "v86:build-image": "bash scripts/v86/build-lab-image.sh",
+  "v86:fetch-lab-image": "bash scripts/v86/download-lab-image.sh"
   },
   "dependencies": {
     "@wasmer/sdk": "^0.10.0",

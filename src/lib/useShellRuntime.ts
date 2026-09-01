@@ -7,6 +7,7 @@ import {
   type ShellLoadPhase,
 } from './shellRuntime.ts'
 import { isV86LabImageAvailable, onV86Progress, resetV86Load, runV86Terminal } from './v86.ts'
+import { V86_LAB_UNAVAILABLE_HINT } from './v86Assets.ts'
 import { onWasmerProgress, resetWasmerLoad, runBashTerminal } from './wasmer.ts'
 
 export interface UseShellRuntimeResult {
@@ -125,9 +126,7 @@ export function useShellRuntime(
         const available = await isV86LabImageAvailable()
         if (!available) {
           setPhase('error')
-          setError(
-            'v86 Podman image not built. Run bun run v86:build-image on a machine with Docker, or switch to Fast (Wasmer).',
-          )
+          setError(V86_LAB_UNAVAILABLE_HINT)
           return
         }
       }

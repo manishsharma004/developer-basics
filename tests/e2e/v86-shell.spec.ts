@@ -7,7 +7,7 @@ test.describe('shell runtime', () => {
     await page.goto(SHELL_LESSON)
     const text = await page.locator('.container-shell').innerText()
     expect(text).toMatch(/podman build/i)
-    expect(text).toMatch(/v86:build-image/i)
+    expect(text).toMatch(/pre-built/i)
     expect(text).toMatch(/Shell mode/i)
   })
 

@@ -68,7 +68,7 @@ cat > "$OUT/manifest.json" <<EOF
   "profile": "alpine-podman-lab",
   "rootfsBytes": $BYTES,
   "chunkSize": $CHUNK,
-  "baseurl": "/v86/lab-rootfs",
+  "baseurl": ".",
   "memoryMb": 384,
   "cmdline": "rw root=/dev/root rootfstype=9p rootflags=trans=virtio,cache=loose console=ttyS0"
 }

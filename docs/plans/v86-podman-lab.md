@@ -27,16 +27,15 @@ ContainerShell
 
 ## Image build
 
-Podman requires the custom Alpine rootfs (not bundled in git — ~50–80 MB chunked).
+Podman requires the custom Alpine rootfs (~50–80 MB chunked). It is **not committed to git**; deploy CI builds it and serves it as a pre-built asset.
 
 ```bash
-bun run v86:download-bios    # seabios + vgabios → public/v86/bios/
-bun run v86:build-image      # Docker required: Alpine i386 + podman → public/v86/lab-rootfs/
+bun run v86:download-bios    # seabios + vgabios → public/v86/bios/ (committed)
+bun run v86:fetch-lab-image  # download pre-built image for local dev
+bun run v86:build-image      # optional: rebuild with Docker
 ```
 
-Without `public/v86/lab-rootfs/manifest.json`, the app falls back to Wasmer automatically.
-
-**GitHub Pages deploy:** add `bun run v86:download-bios && bun run v86:build-image` before `bun run build` in `.github/workflows/deploy.yml` so the VM image ships with the site.
+Without a reachable `manifest.json` (local, same-origin, or pre-built CDN), the app falls back to Wasmer.
 
 ## Guest layout
 
