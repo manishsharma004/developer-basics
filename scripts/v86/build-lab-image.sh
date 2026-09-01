@@ -18,6 +18,11 @@ bash "$V86_DIR/download-bios.sh"
 
 mkdir -p "$IMAGES" "$OUT" "$V86_DIR/staging/opt-lab"
 
+if [[ "${V86_SKIP_IF_PRESENT:-}" == "1" ]] && [[ -f "$OUT/manifest.json" ]] && [[ -f "$OUT/fs.json" ]] && [[ -d "$OUT/flat" ]]; then
+  echo "v86 lab rootfs already present — skipping build (V86_SKIP_IF_PRESENT=1)"
+  exit 0
+fi
+
 # Stage compose/kubectl simulators (podman handles build/run).
 cp "$ROOT/src/lessons/containerization/programs/fake-compose.sh" "$V86_DIR/staging/opt-lab/compose.sh"
 cp "$ROOT/src/lessons/containerization/programs/fake-kubectl.sh" "$V86_DIR/staging/opt-lab/kubectl.sh"

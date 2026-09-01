@@ -37,6 +37,8 @@ bun run v86:build-image      # optional: rebuild with Docker
 
 Without a reachable `manifest.json` (local, same-origin, or pre-built CDN), the app falls back to Wasmer.
 
+**CI cache:** deploy restores `public/v86/lab-rootfs/` from GitHub Actions cache (keyed on Dockerfile, lab-init, and lab files). Rebuilds only when those inputs change.
+
 ## Guest layout
 
 | Path | Contents |
