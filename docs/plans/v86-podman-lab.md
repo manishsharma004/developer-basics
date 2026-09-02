@@ -25,6 +25,8 @@ ContainerShell
 | 2 | Alpine i386 image with `podman`, `podman-docker`, lab tree | Done (`scripts/v86/`) |
 | 3 | VM snapshot cache (IndexedDB), boot progress UI | Done |
 
+**9p root:** kernel cmdline must use `root=host9p` (not `root=/dev/root`). Alpine **3.18.6** + edge `mkinitfs` for reliable v86 virtio-9p boot.
+
 ## Image build
 
 Podman requires the custom Alpine rootfs (~50–80 MB chunked). It is **not committed to git**; deploy CI builds it and serves it as a pre-built asset.
