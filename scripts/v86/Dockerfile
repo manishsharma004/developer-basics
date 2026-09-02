@@ -4,6 +4,7 @@
 FROM docker.io/i386/alpine:3.18.6
 
 ENV KERNEL=virt
+# compose is simulated via /opt/lab/compose.sh (not in Alpine 3.18 repos).
 ENV ADDPKGS="bash curl podman podman-docker"
 
 RUN apk add --no-cache openrc alpine-base agetty alpine-conf \
