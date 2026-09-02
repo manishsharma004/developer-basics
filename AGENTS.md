@@ -29,6 +29,8 @@ Before **every push** and before **creating or updating a pull request**:
 
 If a feature branch’s changes are already on the base after rebase (zero commits ahead), note that in the PR and close it instead of leaving an empty PR open.
 
+**Before reporting back to the user**, check whether the PR is already merged (rebase may skip commits; `git log origin/main..HEAD` may be empty). Do not ask the user to merge work that is already on `main`. See [`.cursor/AGENTS.md`](.cursor/AGENTS.md) for the full checklist.
+
 Branch names for cloud agents: `cursor-agent/<descriptive-name>-<suffix>` (suffix from the active cloud task).
 
 ## Project conventions

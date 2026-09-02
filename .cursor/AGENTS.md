@@ -41,6 +41,15 @@ git rebase origin/<base>
 
 If rebase skips commits already on the base (zero commits ahead), close or do not open an empty PR — note that the work is already merged.
 
+### Check merge status before reporting back
+
+**Before summarizing work to the user**, confirm whether the PR for your branch is already merged into the base branch. Do not tell the user to “merge the PR” or “wait for deploy after merge” if it is already on `main`.
+
+1. After rebasing, run `git log origin/<base>..HEAD` — if empty, your branch adds nothing new.
+2. Use `ManagePullRequest` `get_ci_status` or compare the branch diff to `main` to see if an open PR still exists.
+3. If commits were skipped during rebase or the PR was merged, say clearly that **the work is already on the base branch** and only describe any remaining follow-up (e.g. wait for deploy, hard-refresh).
+4. Do not open a duplicate PR for changes already merged; open a new PR only for commits that are still ahead of the base.
+
 ### Branch naming
 
 Use the prefix and suffix required by the active cloud task, e.g.:
