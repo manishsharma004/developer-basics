@@ -101,6 +101,39 @@ scripts/v86/
 
 Manifest gains a `profile` field (already used for `alpine-podman-lab`) and per-profile `memoryMb`, `cmdline`, `snapshotKey`.
 
+### Lazy-fetch (per lab preset)
+
+Images are **not** bundled in one mega-download. Each profile is fetched on demand when a chapter lab mounts.
+
+```
+public/v86/profiles/
+  worker-min/manifest.json + fs.json + flat/
+  worker-net/manifest.json + fs.json + flat/
+  worker-agent/manifest.json + ...
+  alpine-podman-lab/          # existing path (alias or redirect)
+  lab-bundles/
+    net-dns-svc/hosts.overlay   # tiny preset-specific files merged at boot
+```
+
+Runtime flow:
+
+1. Chapter declares `labPreset` → `preset.requiredProfiles[]` (e.g. `['worker-net', 'worker-net']`).
+2. `fetchLabManifest(profile)` tries same-origin, then GitHub Pages CDN (mirror today's podman lab).
+3. Download progress shown per profile; profiles already in Cache API / IndexedDB skipped.
+4. Content-addressed `flat/` chunks **deduplicate** across profiles (shared Alpine base layers).
+5. Optional `lab-bundles/<preset>/` fetched only when preset needs extra files (e.g. `/etc/hosts`).
+
+API sketch:
+
+```ts
+export type V86ProfileId = 'worker-min' | 'worker-net' | 'worker-agent' | 'alpine-podman-lab'
+
+export async function fetchLabManifest(profile: V86ProfileId): Promise<V86LabManifest | null>
+export async function ensureProfiles(profiles: V86ProfileId[], onProgress): Promise<void>
+```
+
+Scripts: `bun run v86:fetch-profile -- worker-min` (local dev); CI builds all profiles, deploy serves each independently.
+
 ---
 
 ## Network bridge (host-side)
@@ -144,11 +177,12 @@ export class V86NetworkBridge {
 
 | Address | Role | Typical process |
 | --- | --- | --- |
-| `10.42.0.10` | infra | dnsmasq (optional) or static hosts file publisher |
 | `10.42.0.11` | worker-1 | `busybox httpd` or Podman pod |
 | `10.42.0.12` | worker-2 | second replica |
-| `10.42.0.20` | client | learner shell — `curl` origin |
+| `10.42.0.20` | client | learner shell — `curl` / proxied `kubectl` |
 | `10.43.0.10` | ClusterIP (virtual) | host bridge DNAT → `.11`/`.12` round-robin |
+
+No dedicated **infra/DNS VM** — see [Decisions](#decisions) (host-injected `/etc/hosts`).
 
 Guest cmdline addition: pass `lab.ip=10.42.0.11` via kernel cmdline or 9p small `lab-env` file read by init.
 
@@ -165,7 +199,7 @@ TypeScript state machine aligned with existing `fake-kubectl.sh` TSV files but a
 - **Endpoints** → health-checked HTTP ports on workers.
 - **Events** → feed `K8sWorkloadSim` / `KubectlLab` React panels.
 
-`kubectl apply -f` in the client VM calls a **host webhook** (postMessage from serial command hook) or reads YAML from 9p — implementation TBD in spike.
+`kubectl` in multi-VM labs is handled by a **host terminal proxy** — see [Decisions](#decisions). The client VM shell runs `curl`/`ping` natively; `kubectl` lines are intercepted before they reach the guest.
 
 ### What learners actually run
 
@@ -199,7 +233,7 @@ Each use case = one **lab preset** (`LabPreset` config: profiles, bridge topolog
 | ID | Title | VMs | Learner does | Concepts |
 | --- | --- | --- | --- | --- |
 | `net-curl-api` | Call an API over the bridge | api + client | `curl http://10.42.0.11:8080/health` | HTTP, JSON, service vs client |
-| `net-dns-svc` | Name → IP | infra DNS + api + client | `nslookup my-api`, then curl | DNS, stable names |
+| `net-dns-svc` | Name → IP | api + client (preset hosts) | `curl http://my-api/health` | `/etc/hosts`, stable names |
 | `net-nodeport` | Published port | api + client | curl node IP:30080 | NodePort mapping |
 | `net-firewall` | Blocked path | api + client | iptables DROP, curl fails | NetworkPolicy intuition |
 
@@ -296,12 +330,72 @@ Each use case = one **lab preset** (`LabPreset` config: profiles, bridge topolog
 
 ---
 
-## Open questions
+## Decisions
 
-1. **dnsmasq in infra VM** — add to worker-net (+2 MB) vs host-injected `/etc/hosts` via 9p sync?
-2. **Single download bundle** — one manifest with multiple profiles vs on-demand fetch per chapter?
-3. **kubectl in client VM** — shell hook to host orchestrator vs HTTP sidecar on infra VM?
-4. **Ingress TLS** — terminate on ingress VM with self-signed cert for `curl -k` lab?
+Resolved 2026-09-02 — optimize for **low browser resource use**, **low complexity**, and **stability**.
+
+### 1. DNS → host-injected `/etc/hosts` (no dnsmasq, no infra VM)
+
+| Option | Verdict |
+| --- | --- |
+| dnsmasq in infra VM | Rejected — extra VM, daemon RAM, UDP stack, boot ordering |
+| Host-injected `/etc/hosts` | **Chosen** |
+
+**How it works**
+
+- Each lab preset ships a **static `hosts` overlay** in its lazy-fetched `lab-bundles/<preset>/` (typically &lt;1 KB).
+- Guest `bring-up-net.sh` appends overlay to `/etc/hosts` on boot.
+- Typical k8s preset entries (stable for the whole lab — scale/drain does not change service names):
+
+  ```
+  10.43.0.10  my-svc.default.svc.cluster.local my-svc
+  10.42.0.11  worker-1
+  10.42.0.12  worker-2
+  ```
+
+- **ClusterIP DNAT** is handled by the host bridge; `/etc/hosts` only maps names → VIP. Endpoint changes behind the VIP do not require hosts updates.
+- Advanced `kubectl apply` creating a *new* service name: host terminal proxy prints the new mapping and, if needed, sends a one-line serial command to append a hosts entry (rare path; most labs use fixed presets).
+
+**Why stable:** no DHCP lease expiry, no DNS daemon crash, no cross-VM UDP broadcast. Matches how many CI/kind setups seed `/etc/hosts` for simplicity.
+
+### 2. Downloads → lazy-fetch per profile/preset
+
+**Chosen.** See [Lazy-fetch](#lazy-fetch-per-lab-preset) above. First visit to a networking chapter downloads ~18 MB (worker-net); podman capstone still lazy-fetches ~50 MB only when opened.
+
+### 3. kubectl → host terminal proxy (serial input intercept)
+
+| Option | Verdict |
+| --- | --- |
+| HTTP sidecar on infra VM | Rejected — extra VM + HTTP server process |
+| 9p request/response queue | Rejected — v86 rootfs overlay is guest-local; host cannot reliably watch writes |
+| **Host terminal proxy** | **Chosen** |
+
+**How it works**
+
+- In multi-VM labs, `ShellTerminal` wraps `term.onData` for the **client** pane only.
+- Lines matching `kubectl …` are **not** sent to the guest serial port.
+- Host runs `K8sOrchestrator.handleKubectl(argv)` (TypeScript port of `fake-kubectl.sh` output format).
+- Output is written directly to xterm; React topology panels subscribe to orchestrator events.
+- `curl`, `ping`, `ip`, `wget` pass through to the real guest — real packets on the bridge.
+- Single-VM podman lab unchanged: in-guest `fake-kubectl.sh` via `/opt/lab/kubectl.sh`.
+
+**Why stable:** no network service in any VM; orchestrator state is single source of truth in the host; same UX as typing kubectl in the terminal.
+
+```ts
+// ShellTerminal sketch — client pane in multi-VM preset
+term.onData((data) => {
+  if (preset.orchestrator && pane.role === 'client' && looksLikeKubectl(data)) {
+    const out = orchestrator.handleKubectl(parseLine(data))
+    term.write(out)
+    return
+  }
+  emulator.serial0_send(data)
+})
+```
+
+### Remaining open question
+
+4. **Ingress TLS** — terminate on ingress VM with self-signed cert for `curl -k` lab? (defer to Phase 5 UI work)
 
 ---
 
