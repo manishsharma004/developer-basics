@@ -97,6 +97,26 @@ function waitForLayout(container: HTMLElement): Promise<void> {
   })
 }
 
+function waitForEmulatorLoaded(
+  emulator: { add_listener: (event: string, fn: () => void) => void },
+  timeoutMs: number,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const timer = window.setTimeout(
+      () => reject(new Error('Timed out waiting for v86 emulator to initialize')),
+      timeoutMs,
+    )
+    emulator.add_listener('emulator-loaded', () => {
+      window.clearTimeout(timer)
+      resolve()
+    })
+  })
+}
+
+function createV86Emulator(options: Record<string, unknown>) {
+  return new V86Sdk.V86(options)
+}
+
 function waitForSerialPrompt(
   emulator: { add_listener: (event: string, fn: (...args: unknown[]) => void) => void },
   timeoutMs: number,
@@ -187,7 +207,7 @@ export async function runV86Terminal(
     report('Booting Alpine Linux (first boot may take up to a minute)…')
   }
 
-  const emulator = new V86Sdk.V86(options)
+  const emulator = createV86Emulator(options)
 
   emulator.add_listener('serial0-output-byte', (byte: unknown) => {
     const code = typeof byte === 'number' ? byte : 0
@@ -199,7 +219,9 @@ export async function runV86Terminal(
     emulator.serial0_send(data)
   })
 
-  await emulator.run()
+  // WASM + BIOS + rootfs load asynchronously; run() before init causes
+  // "Cannot read properties of undefined (reading 'run')". autostart boots the CPU.
+  await waitForEmulatorLoaded(emulator, 120_000)
 
   if (!snapshot) {
     try {
