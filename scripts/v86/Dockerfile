@@ -4,7 +4,7 @@
 FROM docker.io/i386/alpine:3.18.6
 
 ENV KERNEL=virt
-ENV ADDPKGS="bash curl podman podman-docker podman-compose"
+ENV ADDPKGS="bash curl podman podman-docker"
 
 RUN apk add --no-cache openrc alpine-base agetty alpine-conf \
     linux-$KERNEL linux-firmware-none $ADDPKGS
