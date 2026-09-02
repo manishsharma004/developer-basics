@@ -2,6 +2,8 @@
 
 Interactive React + TypeScript course with in-browser simulations (Pyodide). Lessons live under `src/lessons/`; metadata in `src/lessons/meta.ts`; routes and sidebar wiring in `src/lessons/index.tsx` and `src/App.tsx`.
 
+**Cursor agents:** see [`.cursor/AGENTS.md`](.cursor/AGENTS.md) for full Cloud Agent instructions (git rebase before PR, commands, conventions).
+
 ## Commands
 
 - Install: `bun install`
@@ -13,7 +15,7 @@ Interactive React + TypeScript course with in-browser simulations (Pyodide). Les
 
 Before **every push** and before **creating or updating a pull request**:
 
-1. **Fetch and rebase onto `main`** — do not merge `main` into feature branches unless the user explicitly asks for a merge commit.
+1. **Fetch and rebase onto the PR base branch** — usually `main`; use another base only when the task says so. Do not merge the base into feature branches unless the user explicitly asks for a merge commit.
    ```bash
    git fetch origin main
    git rebase origin/main
@@ -23,11 +25,11 @@ Before **every push** and before **creating or updating a pull request**:
    ```bash
    git push -u origin <branch-name> --force-with-lease
    ```
-4. **Update the PR** (title/body if needed) after the rebase so it reflects the current diff against `main`.
+4. **Create or update the PR** after rebase and push so the diff targets the current base.
 
-If a feature branch’s changes are already on `main` after rebase (zero commits ahead), note that in the PR and close it instead of leaving an empty PR open.
+If a feature branch’s changes are already on the base after rebase (zero commits ahead), note that in the PR and close it instead of leaving an empty PR open.
 
-Branch names for cloud agents: `cursor-agent/<descriptive-name>-8083`.
+Branch names for cloud agents: `cursor-agent/<descriptive-name>-<suffix>` (suffix from the active cloud task).
 
 ## Project conventions
 
