@@ -66,13 +66,13 @@ PARTS=$(( (BYTES + CHUNK - 1) / CHUNK ))
 
 cat > "$OUT/manifest.json" <<EOF
 {
-  "version": 1,
+  "version": 2,
   "profile": "alpine-podman-lab",
   "rootfsBytes": $BYTES,
   "chunkSize": $CHUNK,
   "baseurl": ".",
   "memoryMb": 384,
-  "cmdline": "rw root=/dev/root rootfstype=9p rootflags=trans=virtio,cache=loose console=ttyS0"
+  "cmdline": "rw root=host9p rootfstype=9p rootflags=trans=virtio,cache=loose modules=virtio_pci console=ttyS0"
 }
 EOF
 

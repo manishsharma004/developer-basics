@@ -15,7 +15,7 @@ type ProgressListener = (message: string) => void
 const listeners = new Set<ProgressListener>()
 const SNAPSHOT_DB = 'developer-basics-v86'
 const SNAPSHOT_STORE = 'snapshots'
-const SNAPSHOT_KEY = 'alpine-podman-lab'
+const SNAPSHOT_KEY = 'alpine-podman-lab-v2'
 
 let initPromise: Promise<void> | null = null
 
@@ -34,7 +34,7 @@ export function resetV86Load(): void {
 
 export async function isV86LabImageAvailable(): Promise<boolean> {
   const manifest = await fetchLabManifest()
-  return manifest !== null && manifest.profile === 'alpine-podman-lab'
+  return manifest !== null && manifest.profile === 'alpine-podman-lab' && manifest.version >= 2
 }
 
 async function openSnapshotDb(): Promise<IDBDatabase> {

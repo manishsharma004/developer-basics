@@ -1,12 +1,16 @@
 # Alpine i386 rootfs for v86 with Podman (container lab).
-# Based on https://github.com/copy/v86/tree/master/tools/docker/alpine
-FROM docker.io/i386/alpine:3.21.0
+# Pin 3.18.x — v86 9p root is unreliable on Alpine 3.19+ (kernel 6.6+).
+# See: https://github.com/copy/v86/discussions/989
+FROM docker.io/i386/alpine:3.18.6
 
 ENV KERNEL=virt
 ENV ADDPKGS="bash curl podman podman-docker podman-compose"
 
 RUN apk add --no-cache openrc alpine-base agetty alpine-conf \
     linux-$KERNEL linux-firmware-none $ADDPKGS
+
+# Newer mkinitfs from edge includes 9p module lists needed for virtio root.
+RUN apk add --no-cache mkinitfs --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main
 
 RUN sed -i 's/getty 38400 tty1/agetty --autologin root tty1 linux/' /etc/inittab
 RUN echo 'ttyS0::respawn:/sbin/agetty --autologin root -s ttyS0 115200 vt100' >> /etc/inittab
