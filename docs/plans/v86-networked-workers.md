@@ -40,15 +40,20 @@ We want learners to **feel** networking and orchestration: multiple terminals, r
 │     ┌─────┴─────┬─────────────┬─────────────┐                      │   │
 │     ▼           ▼             ▼             ▼                      │   │
 │  ┌────────┐ ┌────────┐   ┌────────┐   ┌────────┐                  │   │
-│  │ infra  │ │ worker │   │ worker │   │ client │                  │   │
-│  │ .10    │ │ .11    │   │ .12    │   │ .20    │                  │   │
-│  │ DNS?   │ │ API    │   │ API    │   │ curl   │                  │   │
-│  └────────┘ └────────┘   └────────┘   └────────┘                  │   │
+│  │ worker │ │ worker │   │ worker │   │ client │                  │   │
+│  │ .11    │ │ .12    │   │ (opt)  │   │ .20    │                  │   │
+│  │ API    │ │ API    │   │        │   │ curl + │                  │   │
+│  └────────┘ └────────┘   └────────┘   │ kubectl│                  │   │
+│                                         │ (host  │                  │   │
+│                                         │ proxy) │                  │   │
+│                                         └────────┘                  │   │
+│  /etc/hosts overlays (lazy-fetched per preset, no DNS VM)           │   │
 │                                                                         │
 │  ┌─────────────────────────────────────────────────────────────────┐   │
 │  │ K8sOrchestrator (host-side, TypeScript)                          │   │
 │  │  • maps ClusterIP 10.43.0.10 → worker endpoints (round-robin)   │   │
-│  │  • optional: inject /etc/hosts or push dnsmasq records to infra │   │
+│  │  • serves /etc/hosts overlays per lab preset (lazy-fetched)    │   │
+│  │  • kubectl terminal proxy on client pane (multi-VM labs)         │   │
 │  │  • syncs with React K8s*Sim panels for visual topology           │   │
 │  └─────────────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────────────┘
