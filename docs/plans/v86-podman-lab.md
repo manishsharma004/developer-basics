@@ -25,7 +25,7 @@ ContainerShell
 | 2 | Alpine i386 image with `podman`, `podman-docker`, lab tree | Done (`scripts/v86/`) |
 | 3 | VM snapshot cache (IndexedDB), boot progress UI | Done |
 
-**9p root:** kernel cmdline must use `root=host9p` (not `root=/dev/root`). Alpine **3.18.6** + edge `mkinitfs` for reliable v86 virtio-9p boot.
+**9p root:** kernel cmdline must use `root=host9p` (not `root=/dev/root`). Alpine **3.18.6** + edge `mkinitfs` (with `--allow-untrusted`) bundles `9pnet_virtio` in initramfs. Manifest **v3** loads `modules=virtio_pci,9p,9pnet,9pnet_virtio` at boot.
 
 ## Image build
 

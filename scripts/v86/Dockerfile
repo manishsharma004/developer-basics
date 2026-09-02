@@ -10,8 +10,14 @@ ENV ADDPKGS="bash curl podman podman-docker"
 RUN apk add --no-cache openrc alpine-base agetty alpine-conf \
     linux-$KERNEL linux-firmware-none $ADDPKGS
 
-# Newer mkinitfs from edge includes 9p module lists needed for virtio root.
-RUN apk add --no-cache mkinitfs --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main
+# 3.18's mkinitfs lacks 9p feature files — install edge mkinitfs before initramfs generation.
+RUN apk add --no-cache --allow-untrusted mkinitfs \
+    --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main
+
+# Ensure virtio + 9p modules are bundled for nlplug-findfs root=host9p mount.
+RUN mkdir -p /etc/mkinitfs/modules.d && \
+    printf '%s\n' virtio virtio_ring virtio_pci 9p 9pnet 9pnet_virtio \
+    > /etc/mkinitfs/modules.d/v86-root.modules
 
 RUN sed -i 's/getty 38400 tty1/agetty --autologin root tty1 linux/' /etc/inittab
 RUN echo 'ttyS0::respawn:/sbin/agetty --autologin root -s ttyS0 115200 vt100' >> /etc/inittab
@@ -31,4 +37,8 @@ COPY lab-init.sh /etc/profile.d/lab-init.sh
 COPY lab/ /home/lab/
 COPY opt-lab/ /opt/lab/
 
-RUN mkinitfs -F "base virtio 9p" $(cat /usr/share/kernel/$KERNEL/kernel.release)
+RUN KERNEL_RELEASE="$(cat /usr/share/kernel/$KERNEL/kernel.release)" && \
+    mkinitfs -L | grep -w 9p && \
+    mkinitfs -F "base virtio 9p" "$KERNEL_RELEASE" && \
+    INITRD="$(ls /boot/initramfs-${KERNEL_RELEASE}*)" && \
+    gzip -dc "$INITRD" | cpio -t 2>/dev/null | grep -q 9pnet_virtio.ko

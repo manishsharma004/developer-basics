@@ -6,7 +6,7 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$ROOT"
 
 {
-  printf 'v86-lab-cache-v1\n'
+  printf 'v86-lab-cache-v2\n'
   sha256sum \
     scripts/v86/Dockerfile \
     scripts/v86/lab-init.sh \
