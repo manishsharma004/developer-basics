@@ -169,6 +169,16 @@ function Home() {
           Chapters marked with 🐍 need the Python runtime downloaded once (~15 MB).
           If your network is slow, you can still read the prose and try quizzes.
         </p>
+        <p>
+          <a
+            href={`${import.meta.env.BASE_URL}architecture/developer-basics-runtime.architecture.html`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Runtime architecture map
+          </a>{' '}
+          — interactive diagram of how this app runs in the browser (opens static HTML, not a lesson route).
+        </p>
       </section>
     </div>
   )
