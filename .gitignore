@@ -29,3 +29,6 @@ dist-ssr
 .cache/v86-images
 public/v86/lab-rootfs/*
 !public/v86/lab-rootfs/README.md
+
+# Archify skill (install via scripts/install-archify-skill.sh)
+.cursor/skills/

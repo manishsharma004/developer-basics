@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "developer-basics Runtime Architecture",
+    "subtitle": "Browser-only SPA · WASM lesson runtimes · GitHub Pages static deploy",
+    "output": "docs/architecture/developer-basics-runtime.architecture.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/manishsharma004/developer-basics",
+      "revision": "e557932acabb0a84c3f9aa62df44e5bab0dc4192"
+    },
+    "views": [
+      {
+        "id": "lesson-load",
+        "label": "Lesson load path",
+        "focus": ["learner", "github-pages", "coi-worker", "react-spa", "lesson-shell"],
+        "note": "Static assets from GitHub Pages; COI service worker enables SharedArrayBuffer before WASM shells load."
+      },
+      {
+        "id": "python-labs",
+        "label": "Python playgrounds",
+        "focus": ["lesson-shell", "pyodide", "pyodide-cdn"],
+        "note": "Pyodide loads CPython from jsDelivr on demand for SnippetRunner and Python lessons."
+      },
+      {
+        "id": "container-labs",
+        "label": "Container shell tiers",
+        "focus": ["lesson-shell", "shell-runtime", "v86-vm", "wasmer-shell"],
+        "note": "Container lessons try v86 Alpine+Podman first, fall back to Wasmer bash, then React simulators."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "learner",
+      "type": "external",
+      "label": "Learner browser",
+      "sublabel": "Chrome / Firefox / Safari",
+      "pos": [30, 280],
+      "size": [130, 60]
+    },
+    {
+      "id": "github-pages",
+      "type": "cloud",
+      "label": "GitHub Pages",
+      "sublabel": "static dist/",
+      "pos": [220, 280],
+      "size": [140, 60],
+      "sources": [
+        { "path": ".github/workflows/deploy.yml", "line": 19, "label": "deploy workflow" },
+        { "path": "vite.config.ts", "line": 4, "label": "BASE_PATH" }
+      ]
+    },
+    {
+      "id": "coi-worker",
+      "type": "security",
+      "label": "COI service worker",
+      "sublabel": "COOP + COEP headers",
+      "pos": [220, 120],
+      "size": [150, 64],
+      "tag": "SharedArrayBuffer",
+      "sources": [
+        { "path": "public/coi-serviceworker.js", "line": 8, "label": "header injection" },
+        { "path": "src/lib/crossOriginIsolation.ts", "line": 40, "label": "COI detection" }
+      ]
+    },
+    {
+      "id": "react-spa",
+      "type": "frontend",
+      "label": "React SPA",
+      "sublabel": "HashRouter · themes",
+      "pos": [420, 280],
+      "size": [140, 60],
+      "sources": [
+        { "path": "src/main.tsx", "line": 12, "label": "bootstrap" },
+        { "path": "src/App.tsx", "line": 384, "label": "routes" }
+      ]
+    },
+    {
+      "id": "lesson-shell",
+      "type": "frontend",
+      "label": "Lesson shell",
+      "sublabel": "sims · quizzes · nav",
+      "pos": [620, 280],
+      "size": [150, 60],
+      "sources": [
+        { "path": "src/lessons/components/Lesson.tsx", "line": 18, "label": "lesson chrome" },
+        { "path": "src/lessons/index.tsx", "line": 54, "label": "lesson map" }
+      ]
+    },
+    {
+      "id": "pyodide",
+      "type": "external",
+      "label": "Pyodide runtime",
+      "sublabel": "CPython WASM",
+      "pos": [620, 120],
+      "size": [140, 60],
+      "sources": [
+        { "path": "src/lib/pyodide.ts", "line": 27, "label": "loader" },
+        { "path": "src/lessons/components/SnippetRunner.tsx", "line": 18, "label": "runner" }
+      ]
+    },
+    {
+      "id": "pyodide-cdn",
+      "type": "cloud",
+      "label": "jsDelivr CDN",
+      "sublabel": "pyodide assets",
+      "pos": [820, 120],
+      "size": [130, 60]
+    },
+    {
+      "id": "shell-runtime",
+      "type": "frontend",
+      "label": "Shell orchestrator",
+      "sublabel": "v86 → Wasmer → sim",
+      "pos": [820, 280],
+      "size": [160, 60],
+      "sources": [
+        { "path": "src/lib/shellRuntime.ts", "line": 16, "label": "backend select" },
+        { "path": "src/lib/useShellRuntime.ts", "line": 21, "label": "load chain" }
+      ]
+    },
+    {
+      "id": "v86-vm",
+      "type": "external",
+      "label": "v86 Podman VM",
+      "sublabel": "Alpine i386 · 9p rootfs",
+      "pos": [1020, 160],
+      "size": [150, 60],
+      "sources": [
+        { "path": "src/lib/v86.ts", "line": 141, "label": "emulator mount" },
+        { "path": "scripts/v86/Dockerfile", "line": 4, "label": "guest image" }
+      ]
+    },
+    {
+      "id": "wasmer-shell",
+      "type": "external",
+      "label": "Wasmer bash",
+      "sublabel": "fake docker/kubectl",
+      "pos": [1020, 400],
+      "size": [150, 60],
+      "sources": [
+        { "path": "src/lib/wasmer.ts", "line": 400, "label": "registry load" }
+      ]
+    },
+    {
+      "id": "indexeddb",
+      "type": "database",
+      "label": "IndexedDB",
+      "sublabel": "progress · VM snapshots",
+      "pos": [620, 440],
+      "size": [150, 60],
+      "sources": [
+        { "path": "src/lib/progressDb.ts", "line": 10, "label": "progress store" },
+        { "path": "src/lib/v86.ts", "line": 40, "label": "VM snapshots" }
+      ]
+    },
+    {
+      "id": "github-actions",
+      "type": "cloud",
+      "label": "GitHub Actions",
+      "sublabel": "lint · build · deploy",
+      "pos": [220, 440],
+      "size": [150, 60],
+      "sources": [
+        { "path": ".github/workflows/deploy.yml", "line": 44, "label": "v86 image cache" }
+      ]
+    }
+  ],
+  "connections": [
+    { "id": "learner-to-pages", "from": "learner", "to": "github-pages", "label": "HTTPS GET", "variant": "emphasis" },
+    { "id": "pages-to-coi", "from": "github-pages", "to": "coi-worker", "label": "serve SW", "fromSide": "top", "toSide": "bottom" },
+    { "id": "coi-to-spa", "from": "coi-worker", "to": "react-spa", "variant": "security", "fromSide": "right", "toSide": "top", "via": [[395, 152], [395, 220], [490, 220]] },
+    { "id": "pages-to-spa", "from": "github-pages", "to": "react-spa", "label": "JS/CSS bundle", "labelDy": 54 },
+    { "id": "spa-to-lesson", "from": "react-spa", "to": "lesson-shell", "label": "HashRouter" },
+    { "id": "lesson-to-pyodide", "from": "lesson-shell", "to": "pyodide", "label": "Python labs", "fromSide": "top", "toSide": "bottom" },
+    { "id": "pyodide-to-cdn", "from": "pyodide", "to": "pyodide-cdn", "label": "fetch WASM" },
+    { "id": "lesson-to-shell", "from": "lesson-shell", "to": "shell-runtime", "label": "container labs", "labelDy": 54 },
+    { "id": "shell-to-v86", "from": "shell-runtime", "to": "v86-vm", "label": "primary tier", "variant": "emphasis", "labelAt": [1000, 354] },
+    { "id": "shell-to-wasmer", "from": "shell-runtime", "to": "wasmer-shell", "label": "fallback", "variant": "dashed", "fromSide": "bottom", "toSide": "top", "labelDy": 14 },
+    { "id": "lesson-to-idb", "from": "lesson-shell", "to": "indexeddb", "label": "progress", "variant": "dashed", "fromSide": "bottom", "toSide": "top", "labelDy": 58 },
+    { "id": "actions-to-pages", "from": "github-actions", "to": "github-pages", "label": "publish dist", "variant": "dashed", "fromSide": "top", "toSide": "bottom" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Static delivery",
+      "items": [
+        "No application server — Vite builds a static SPA",
+        "GitHub Actions lints, builds v86 lab image into dist/, deploys to Pages",
+        "HashRouter avoids server-side routing on project Pages URLs"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lesson runtimes",
+      "items": [
+        "Pyodide: CPython WASM for Python playgrounds (jsDelivr CDN)",
+        "v86: real Alpine Linux + Podman in-browser (primary shell tier)",
+        "Wasmer: lightweight bash + scripted docker/kubectl CLIs (fallback)"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Isolation & state",
+      "items": [
+        "COI service worker enables SharedArrayBuffer for Wasmer and v86",
+        "IndexedDB stores lesson progress, quiz answers, and v86 VM snapshots",
+        "All execution stays in the learner browser — no backend API"
+      ]
+    }
+  ]
+}
