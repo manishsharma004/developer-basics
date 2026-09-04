@@ -16,8 +16,17 @@ Interactive React + TypeScript course with in-browser simulations (Pyodide, Wasm
 | Build | `bun run build` |
 | Lint | `bun run lint` |
 | E2E tests | `bun run test:e2e` |
+| Regenerate architecture diagram | `bun run architecture:deliver` (requires Archify skill — `bun run archify:install`) |
 
 Dev server in Cloud: port **5173** (see `.cursor/environment.json`).
+
+## Architecture docs
+
+Runtime map: `docs/architecture/developer-basics-runtime.architecture.html` (generated from `.json` via [Archify](https://github.com/tt-a1i/archify)).
+
+- Install skill: `bash scripts/install-archify-skill.sh`
+- Regenerate after structural changes: `bash scripts/architecture-deliver.sh`
+- Update `meta.repository.revision` in the JSON when re-delivering from a new commit
 
 ## Git workflow (required)
 
