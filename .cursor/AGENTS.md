@@ -22,7 +22,9 @@ Dev server in Cloud: port **5173** (see `.cursor/environment.json`).
 
 ## Architecture docs
 
-Runtime map: `docs/architecture/developer-basics-runtime.architecture.html` (generated from `.json` via [Archify](https://github.com/tt-a1i/archify)).
+Runtime map: `public/architecture/developer-basics-runtime.architecture.html` (generated from `docs/architecture/*.json` via [Archify](https://github.com/tt-a1i/archify)).
+
+- **GitHub Pages URL:** `https://manishsharma004.github.io/developer-basics/architecture/developer-basics-runtime.architecture.html` — must **not** use `#/` (HashRouter is for lessons only).
 
 - Install skill: `bash scripts/install-archify-skill.sh`
 - Regenerate after structural changes: `bash scripts/architecture-deliver.sh`

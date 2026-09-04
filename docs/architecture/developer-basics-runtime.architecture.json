@@ -4,7 +4,7 @@
   "meta": {
     "title": "developer-basics Runtime Architecture",
     "subtitle": "Browser-only SPA · WASM lesson runtimes · GitHub Pages static deploy",
-    "output": "docs/architecture/developer-basics-runtime.architecture.html",
+    "output": "public/architecture/developer-basics-runtime.architecture.html",
     "quality_profile": "showcase",
     "repository": {
       "url": "https://github.com/manishsharma004/developer-basics",

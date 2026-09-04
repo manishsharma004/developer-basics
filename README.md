@@ -12,7 +12,7 @@ playgrounds, and runnable Python labs via Pyodide.
 See [`docs/sitemap.md`](docs/sitemap.md) for the full chapter index (regenerate
 with `bun run sitemap` after editing `src/lessons/meta.ts`).
 
-**Runtime architecture:** open [`docs/architecture/developer-basics-runtime.architecture.html`](docs/architecture/developer-basics-runtime.architecture.html) in a browser, or see [`docs/architecture/README.md`](docs/architecture/README.md) to regenerate with [Archify](https://github.com/tt-a1i/archify).
+**Runtime architecture:** [open the interactive map](https://manishsharma004.github.io/developer-basics/architecture/developer-basics-runtime.architecture.html) on GitHub Pages (static file — no `#/` in the URL), or see [`docs/architecture/README.md`](docs/architecture/README.md) to regenerate with [Archify](https://github.com/tt-a1i/archify).
 
 ## Features
 
