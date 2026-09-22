@@ -4168,6 +4168,29 @@ a {
   font-size: 0.78rem;
   padding: 4px 10px;
 }
+.kafka-lab-meta {
+  font-size: 0.88rem;
+  margin-bottom: 12px;
+}
+.kafka-lab-consume-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+.kafka-lab-error {
+  margin-bottom: 12px;
+}
+.kafka-sim-val {
+  color: var(--prose);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kafka-lab-subhead {
+  font-size: 0.95rem;
+  margin: 16px 0 8px;
+}
 .queue-overflow {
   color: #fca5a5;
   font-family: ui-monospace, monospace;

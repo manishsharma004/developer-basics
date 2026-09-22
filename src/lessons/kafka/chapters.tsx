@@ -2,7 +2,7 @@ import type { ComponentType } from 'react'
 import { createChapterLesson } from '../components/ChapterLesson.tsx'
 import { Callout, CodePreview, FlowDiagram, UnderTheHood, TryThis } from '../components/blocks.tsx'
 import { SnippetRunner } from '../components/SnippetRunner.tsx'
-import { KafkaLogSim } from './KafkaLogSim.tsx'
+import { KafkaLab } from './KafkaLab.tsx'
 import { snippets } from './snippets.ts'
 
 const kafkaEventStreaming = createChapterLesson({
@@ -206,10 +206,11 @@ const kafkaPartitions = createChapterLesson({
   ),
   playground: (
     <>
-      <KafkaLogSim />
+      <KafkaLab />
       <TryThis>
         Produce several events with the same key — they should land in one partition with increasing offsets.
-        Add consumers and watch partition assignment change when you scale the group.
+        Use <strong>Consume (poll)</strong> with the default consumer group; start Docker Redpanda (
+        <code>bun run kafka:up</code>) for full Fetch/consumer-group semantics.
       </TryThis>
     </>
   ),
@@ -394,7 +395,7 @@ const kafkaConsumerGroups = createChapterLesson({
   playground: (
     <>
       <SnippetRunner snippets={snippets('Consumer group assignment')} />
-      <KafkaLogSim />
+      <KafkaLab />
     </>
   ),
   hood: (

@@ -40,7 +40,7 @@ export const kafkaLessonsMeta: LessonMeta[] = [
     minutes: 8,
     modelTitle: 'Sharding & ordering',
     hasPlayground: true,
-    playgroundTitle: 'Partition log simulator',
+    playgroundTitle: 'Kafka lab (real broker)',
     hasHood: true,
   }),
   chapterMeta({
@@ -79,7 +79,7 @@ export const kafkaLessonsMeta: LessonMeta[] = [
     minutes: 8,
     modelTitle: 'Group mechanics',
     hasPlayground: true,
-    playgroundTitle: 'Assign partitions to consumers',
+    playgroundTitle: 'Kafka lab — consumer groups',
     hasHood: true,
   }),
   chapterMeta({

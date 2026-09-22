@@ -44,5 +44,6 @@ Branch names for cloud agents: `cursor-agent/<descriptive-name>-<suffix>` (suffi
 
 - Package manager: **Bun** (`bun install`, `bun run dev`).
 - Dev server port: **5173** (see `.cursor/environment.json`).
+- **Kafka labs** need the lab stack: `bun run dev:kafka` (or `kafka:broker` + `kafka:lab` + `dev`). Full consumer/Fetch semantics: `bun run kafka:up` (Docker Redpanda).
 - Stale TS build cache can cause false errors; clear with `rm -f tsconfig.app.tsbuildinfo tsconfig.node.tsbuildinfo` before rebuilding if needed.
 - **Computer-use subagents:** do not run `computerUse` with a Claude Sonnet model — see [`.cursor/AGENTS.md`](.cursor/AGENTS.md) § Manual UI testing.

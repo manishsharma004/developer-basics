@@ -16,6 +16,7 @@ Interactive React + TypeScript course with in-browser simulations (Pyodide, Wasm
 | Build | `bun run build` |
 | Lint | `bun run lint` |
 | E2E tests | `bun run test:e2e` |
+| Kafka lab (local) | `bun run dev:kafka` — Redpanda via Docker when available, else tiny-kafka; HTTP API on **9094**, broker **9092** |
 | Regenerate architecture diagram | `bun run architecture:deliver` (requires Archify skill — `bun run archify:install`) |
 
 Dev server in Cloud: port **5173** (see `.cursor/environment.json`).
