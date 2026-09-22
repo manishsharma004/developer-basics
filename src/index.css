@@ -4134,6 +4134,43 @@ a {
   border-radius: 4px;
   background: var(--code-bg);
 }
+.kafka-sim-record--read {
+  opacity: 0.45;
+  text-decoration: line-through;
+  text-decoration-color: var(--muted);
+}
+.kafka-sim-record--highlight {
+  outline: 2px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--code-bg));
+}
+.kafka-sim-record--sample-unread,
+.kafka-sim-record--sample-read {
+  display: inline-flex;
+  font-size: 0.72rem;
+  margin-right: 10px;
+  padding: 2px 8px;
+}
+.kafka-sim-record--sample-read {
+  opacity: 0.45;
+  text-decoration: line-through;
+}
+.kafka-sim-hwm {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 0.68rem;
+  margin-left: 6px;
+}
+.kafka-lab-legend {
+  font-size: 0.82rem;
+  margin: 8px 0 12px;
+}
+.kafka-sim-consumers {
+  margin-top: 16px;
+}
+.kafka-sim-note {
+  font-size: 0.88rem;
+  margin-bottom: 8px;
+}
 .kafka-sim-off {
   color: var(--accent);
   min-width: 1.2rem;

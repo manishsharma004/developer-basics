@@ -5,8 +5,9 @@
 
 export const LAB_TOPIC = 'devbasics.lab.events'
 export const LAB_DEFAULT_GROUP = 'devbasics-lab-group'
-export const LAB_PARTITION_COUNT = 3
-const STORAGE_KEY = 'devbasics:kafka-lab:v1'
+export const LAB_PARTITION_MIN = 1
+export const LAB_PARTITION_MAX = 6
+const STORAGE_KEY = 'devbasics:kafka-lab:v2'
 
 export type LabRecord = {
   id: string
@@ -25,11 +26,16 @@ type LabState = {
   groupOffsets: Record<string, Record<number, number>>
 }
 
-function emptyState(): LabState {
+function emptyState(partitionCount = 3): LabState {
+  const n = clampPartitions(partitionCount)
   return {
-    partitions: Array.from({ length: LAB_PARTITION_COUNT }, () => []),
+    partitions: Array.from({ length: n }, () => []),
     groupOffsets: {},
   }
+}
+
+function clampPartitions(n: number) {
+  return Math.min(LAB_PARTITION_MAX, Math.max(LAB_PARTITION_MIN, Math.floor(n)))
 }
 
 function loadState(): LabState {
@@ -37,7 +43,7 @@ function loadState(): LabState {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return emptyState()
     const parsed = JSON.parse(raw) as LabState
-    if (!Array.isArray(parsed.partitions) || parsed.partitions.length !== LAB_PARTITION_COUNT) {
+    if (!Array.isArray(parsed.partitions) || parsed.partitions.length < LAB_PARTITION_MIN) {
       return emptyState()
     }
     parsed.groupOffsets ??= {}
@@ -55,12 +61,25 @@ function saveState(state: LabState) {
   }
 }
 
-export function partitionForKey(key: string, partitionCount = LAB_PARTITION_COUNT): number {
+export function getPartitionCount(): number {
+  return state.partitions.length
+}
+
+export function setPartitionCount(count: number) {
+  const n = clampPartitions(count)
+  if (n === state.partitions.length) return
+  state = emptyState(n)
+  saveState(state)
+  notify()
+}
+
+export function partitionForKey(key: string, partitionCount?: number): number {
+  const n = partitionCount ?? state.partitions.length
   const trimmed = key.trim()
-  if (!trimmed) return Math.floor(Math.random() * partitionCount)
+  if (!trimmed) return Math.floor(Math.random() * n)
   let h = 0
   for (let i = 0; i < trimmed.length; i++) h = (h * 31 + trimmed.charCodeAt(i)) >>> 0
-  return h % partitionCount
+  return h % n
 }
 
 let state = loadState()
@@ -77,8 +96,8 @@ export function subscribeKafkaLab(fn: () => void): () => void {
   }
 }
 
-export function resetKafkaLab() {
-  state = emptyState()
+export function resetKafkaLab(partitionCount?: number) {
+  state = emptyState(partitionCount ?? state.partitions.length)
   saveState(state)
   notify()
 }
@@ -88,9 +107,9 @@ export function getLabInfo() {
     mode: 'in-browser' as const,
     topic: LAB_TOPIC,
     defaultGroup: LAB_DEFAULT_GROUP,
-    partitionCount: LAB_PARTITION_COUNT,
+    partitionCount: state.partitions.length,
     note:
-      'Simulated commit log in your browser (IndexedDB/localStorage). Same ideas as Kafka — partitions, offsets, consumer groups — without a network broker.',
+      'Simulated commit log in your browser. Partitions hold every record; consumer groups track read progress (offsets).',
   }
 }
 
@@ -99,6 +118,12 @@ export function listTopicRecords(topic: string = LAB_TOPIC): LabRecord[] {
   const all: LabRecord[] = []
   for (const log of state.partitions) all.push(...log)
   return all.sort((a, b) => a.partition - b.partition || a.offset - b.offset)
+}
+
+/** Next offset this group will read on a partition (0 = nothing read yet). */
+export function committedOffset(groupId: string, partition: number): number {
+  const offsets = groupOffsetTable(groupId)
+  return offsets[partition] ?? 0
 }
 
 export function produceRecord(input: {
@@ -110,7 +135,7 @@ export function produceRecord(input: {
   if (topic !== LAB_TOPIC) throw new Error(`Unknown topic: ${topic}`)
 
   const key = input.key?.trim() ? input.key.trim() : null
-  const partition = partitionForKey(key ?? '', LAB_PARTITION_COUNT)
+  const partition = partitionForKey(key ?? '')
   const log = state.partitions[partition]
   const offset = log.length
   const record: LabRecord = {
@@ -128,28 +153,37 @@ export function produceRecord(input: {
 }
 
 function groupOffsetTable(groupId: string): Record<number, number> {
-  if (!state.groupOffsets[groupId]) {
-    state.groupOffsets[groupId] = {}
-    for (let p = 0; p < LAB_PARTITION_COUNT; p++) state.groupOffsets[groupId][p] = 0
+  const gid = groupId.trim() || LAB_DEFAULT_GROUP
+  if (!state.groupOffsets[gid]) {
+    state.groupOffsets[gid] = {}
+    for (let p = 0; p < state.partitions.length; p++) state.groupOffsets[gid][p] = 0
   }
-  return state.groupOffsets[groupId]
+  return state.groupOffsets[gid]
 }
 
 export function consumeRecords(input: {
   groupId?: string
   topic?: string
   maxMessages?: number
+  partitionFilter?: number[]
 }): LabRecord[] {
   const topic = input.topic ?? LAB_TOPIC
   const groupId = input.groupId?.trim() || LAB_DEFAULT_GROUP
   const max = input.maxMessages ?? 5
   if (topic !== LAB_TOPIC) return []
 
+  const partitions =
+    input.partitionFilter?.length
+      ? input.partitionFilter
+      : state.partitions.map((_, i) => i)
+
   const offsets = groupOffsetTable(groupId)
   const batch: LabRecord[] = []
 
-  for (let p = 0; p < LAB_PARTITION_COUNT && batch.length < max; p++) {
+  for (const p of partitions) {
+    if (batch.length >= max) break
     const log = state.partitions[p]
+    if (!log) continue
     let pos = offsets[p] ?? 0
     while (pos < log.length && batch.length < max) {
       batch.push(log[pos])
@@ -170,4 +204,22 @@ export function groupLag(groupId: string): { partition: number; lag: number }[] 
     partition: p,
     lag: Math.max(0, log.length - (offsets[p] ?? 0)),
   }))
+}
+
+export function assignPartitionsToConsumers(consumerCount: number): number[][] {
+  const n = Math.max(1, Math.min(6, consumerCount))
+  const out: number[][] = Array.from({ length: n }, () => [])
+  for (let p = 0; p < state.partitions.length; p++) {
+    out[p % n].push(p)
+  }
+  return out
+}
+
+export function lagForPartitions(groupId: string, partitions: number[]): number {
+  const table = groupLag(groupId)
+  let sum = 0
+  for (const p of partitions) {
+    sum += table.find((r) => r.partition === p)?.lag ?? 0
+  }
+  return sum
 }

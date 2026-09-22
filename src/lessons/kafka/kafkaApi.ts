@@ -16,6 +16,7 @@ import {
 export { LAB_TOPIC, LAB_DEFAULT_GROUP, getLabInfo, listTopicRecords, resetKafkaLab, subscribeKafkaLab }
 
 export type ConsumerRecord = {
+  id: string
   topic: string
   partition: number
   offset: number
@@ -26,6 +27,7 @@ export type ConsumerRecord = {
 
 function toConsumerRecord(topic: string, r: LabRecord): ConsumerRecord {
   return {
+    id: r.id,
     topic,
     partition: r.partition,
     offset: r.offset,
