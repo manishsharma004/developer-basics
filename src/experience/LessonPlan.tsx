@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { getLessonMeta, getNextLesson } from '../lessons/meta.ts'
 import { teacherGuides } from './teacherGuides.ts'
 import { useExperience } from './ExperienceContext.tsx'
@@ -18,7 +18,21 @@ export function LessonPlan({ id }: { id: string }) {
   const guide = teacherGuides[id]
   const next = getNextLesson(id)
   const { setExperience } = useExperience()
+  const location = useLocation()
+  const [searchParams] = useSearchParams()
   const [active, setActive] = useState('objectives')
+
+  const sectionHref = (sectionId: string) => {
+    const params = new URLSearchParams(searchParams)
+    params.set('section', sectionId)
+    return { pathname: location.pathname, search: `?${params.toString()}` }
+  }
+
+  const onSectionLinkClick = (sectionId: string) => {
+    requestAnimationFrame(() => {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -36,8 +50,6 @@ export function LessonPlan({ id }: { id: string }) {
   }, [id])
 
   if (!meta || !guide) return null
-
-  const scrollTo = (sid: string) => document.getElementById(sid)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
   return (
     <div className="lesson">
@@ -59,9 +71,14 @@ export function LessonPlan({ id }: { id: string }) {
           <ol>
             {SECTIONS.map((s) => (
               <li key={s.id}>
-                <button className={`toc-link${active === s.id ? ' toc-link--active' : ''}`} onClick={() => scrollTo(s.id)}>
+                <Link
+                  to={sectionHref(s.id)}
+                  replace
+                  className={`toc-link${active === s.id ? ' toc-link--active' : ''}`}
+                  onClick={() => onSectionLinkClick(s.id)}
+                >
                   {s.title}
-                </button>
+                </Link>
               </li>
             ))}
           </ol>

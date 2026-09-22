@@ -1486,6 +1486,7 @@ a {
   border-left: 2px solid transparent;
   cursor: pointer;
   font-size: 0.9rem;
+  text-decoration: none;
 }
 .toc-link:hover {
   color: var(--text);
@@ -1992,16 +1993,28 @@ a {
   .lesson-toc ol {
     display: flex;
     flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
     border-left: none;
+    padding: 0 2px;
   }
   .toc-link {
+    display: inline;
+    width: auto;
     margin-left: 0;
+    padding: 6px 0;
     border-left: none;
-    border-bottom: 2px solid transparent;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--muted) 45%, transparent);
+    text-underline-offset: 3px;
+  }
+  .toc-link:hover {
+    text-decoration-color: currentColor;
   }
   .toc-link--active {
     border-left: none;
-    border-bottom-color: var(--accent);
+    color: var(--accent);
+    text-decoration-color: var(--accent);
   }
   .waterfall-row {
     grid-template-columns: 110px 1fr;
@@ -5583,10 +5596,14 @@ button.waterfall-row {
   .sim-reality {
     grid-template-columns: 1fr;
   }
+  .lesson-toc .toc-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
   .chip,
   .btn,
   .quiz-option,
-  .toc-link,
   .ref-snippets .chip {
     min-height: 44px;
     padding-top: 10px;
