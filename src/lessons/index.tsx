@@ -50,6 +50,7 @@ import { REACT_CHAPTERS } from './react/chapters.tsx'
 import { FASTAPI_CHAPTERS } from './fastapi/chapters.tsx'
 import { SQL_CHAPTERS } from './sql/chapters.tsx'
 import { MONGODB_CHAPTERS } from './mongodb/chapters.tsx'
+import { KAFKA_CHAPTERS } from './kafka/chapters.tsx'
 
 // Wire each metadata entry to its component. Adding a lesson = add a metadata
 // entry in meta.ts and a component here; nav, routes, and the home page update
@@ -80,6 +81,7 @@ const COMPONENTS: Record<string, ComponentType> = {
   time: TimeLesson,
   compute: ComputeLesson,
   queues: QueueLesson,
+  ...KAFKA_CHAPTERS,
   classes: ClassesLesson,
   oop: OopLesson,
   patterns: PatternsLesson,

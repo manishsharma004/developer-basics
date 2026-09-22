@@ -4065,6 +4065,109 @@ a {
   background: var(--accent);
   border-color: var(--accent);
 }
+
+/* Kafka partition log simulator ------------------------------------------- */
+.kafka-sim {
+  margin: 12px 0 20px;
+}
+.kafka-sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  margin-bottom: 12px;
+  font-size: 0.88rem;
+}
+.kafka-sim-controls label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.kafka-sim-produce {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.kafka-sim-input {
+  flex: 1;
+  min-width: 140px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--prose);
+}
+.kafka-sim-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.kafka-sim-partition {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 8px;
+  min-height: 120px;
+}
+.kafka-sim-partition-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.kafka-sim-log {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+}
+.kafka-sim-empty {
+  color: var(--muted);
+  font-style: italic;
+}
+.kafka-sim-record {
+  display: flex;
+  gap: 6px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  background: var(--code-bg);
+}
+.kafka-sim-off {
+  color: var(--accent);
+  min-width: 1.2rem;
+}
+.kafka-sim-key {
+  color: var(--prose);
+}
+.kafka-sim-note {
+  font-size: 0.88rem;
+  margin-bottom: 8px;
+}
+.kafka-sim-consumer-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.kafka-sim-consumer {
+  flex: 1;
+  min-width: 140px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 0.85rem;
+}
+.kafka-sim-assign,
+.kafka-sim-lag {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin: 4px 0;
+}
+.btn--small {
+  font-size: 0.78rem;
+  padding: 4px 10px;
+}
 .queue-overflow {
   color: #fca5a5;
   font-family: ui-monospace, monospace;

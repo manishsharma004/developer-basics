@@ -10,6 +10,7 @@ import { reactLessonsMeta } from './react/chapterMeta.ts'
 import { sqlLessonsMeta } from './sql/chapterMeta.ts'
 import { webLessonsMeta } from './web/chapterMeta.ts'
 import { containerizationLessonsMeta } from './containerization/chapterMeta.ts'
+import { kafkaLessonsMeta } from './kafka/chapterMeta.ts'
 
 export type Level = 'Beginner' | 'Intermediate' | 'Advanced'
 
@@ -96,6 +97,12 @@ export const groups: LessonGroup[] = [
     title: 'Caching & Queues',
     icon: '💾',
     blurb: 'Trade memory for speed with caches, and decouple services with message queues.',
+  },
+  {
+    id: 'kafka',
+    title: 'Apache Kafka',
+    icon: '📊',
+    blurb: 'Distributed event streaming — topics, partitions, consumer groups, replication, Connect, and Streams.',
   },
   {
     id: 'web',
@@ -537,6 +544,9 @@ export const lessonsMeta: LessonMeta[] = [
       ...CLOSING,
     ],
   },
+
+  // ── Apache Kafka ───────────────────────────────────────────────────────
+  ...kafkaLessonsMeta,
 
   // ── Networking & the Web ───────────────────────────────────────────────
   {

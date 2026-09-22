@@ -330,6 +330,23 @@ export const cssChapterGuides: Record<string, TeacherGuide> = {
   ),
 }
 
+export const kafkaChapterGuides: Record<string, TeacherGuide> = {
+  'kafka-event-streaming': chapterGuide('Kafka platform', 'Position Kafka as a replayable log vs classic queues.', ['Event streaming', 'Topic log', 'Decoupled consumers'], 'Relate to the queues chapter; sketch produce → topic → two consumer groups.', ['Kafka vs work queue?', 'Why replay?']),
+  'kafka-topics-log': chapterGuide('Topics & logs', 'Teach append-only logs and offsets.', ['Immutable records', 'Offsets', 'Retention'], 'Draw one partition with offsets 0..n.', ['What is an offset?', 'Can records be updated in place?']),
+  'kafka-partitions': chapterGuide('Partitions', 'Keys, ordering, and hot partitions.', ['Per-partition order', 'Key hashing', 'Parallelism'], 'Run KafkaLogSim with same key vs random keys.', ['Ordering scope?', 'What causes hot partitions?']),
+  'kafka-producers': chapterGuide('Producers', 'acks, batching, idempotence.', ['acks levels', 'compression', 'enable.idempotence'], 'Run Partition by key and Producer acks snippets.', ['Strongest ack setting?', 'Why idempotent producer?']),
+  'kafka-consumers': chapterGuide('Consumers', 'Poll loop and offset commits.', ['poll()', 'commit timing', 'read_committed'], 'Discuss auto-commit vs process-then-commit on board.', ['When is data lost on crash?', 'What does read_committed hide?']),
+  'kafka-consumer-groups': chapterGuide('Consumer groups', 'Assignment, rebalance, lag.', ['One consumer per partition', '__consumer_offsets', 'Lag'], 'KafkaLogSim: scale consumers vs partitions.', ['Max useful consumers?', 'What is consumer lag?']),
+  'kafka-brokers-replication': chapterGuide('Replication', 'Leaders, ISR, KRaft overview.', ['Leader/follower', 'ISR', 'Controller'], 'Draw RF=3 partition on three brokers.', ['Who serves reads/writes?', 'What is ISR?']),
+  'kafka-reliability': chapterGuide('Durability', 'min.insync.replicas and acks=all together.', ['RF', 'min ISR', 'unclean election'], 'Table: acks vs latency vs durability.', ['When does acks=all fail?', 'Unclean election risk?']),
+  'kafka-delivery-semantics': chapterGuide('Semantics', 'At-least-once vs exactly-once scope.', ['Duplicates', 'Transactions', 'Idempotent consumers'], 'Whiteboard at-least-once retry duplicate.', ['Default practical semantics?', 'EOS boundary at Kafka edge?']),
+  'kafka-compaction': chapterGuide('Compaction', 'Changelog topics and tombstones.', ['cleanup.policy=compact', 'Tombstones', 'KTable backing'], 'Contrast delete retention topic vs compacted config topic.', ['When compact?', 'What is a tombstone?']),
+  'kafka-serialization': chapterGuide('Schemas', 'Avro + Schema Registry evolution.', ['Backward compatible', 'Wire format', 'Subject strategy'], 'Add optional field example; discuss breaking change.', ['Why Registry?', 'Backward vs forward?']),
+  'kafka-connect': chapterGuide('Kafka Connect', 'Source/sink and CDC.', ['Connectors', 'SMTs', 'Debezium'], 'Draw JDBC source → topic → sink warehouse.', ['Source vs sink?', 'CDC tool name?']),
+  'kafka-streams': chapterGuide('Streams', 'KStream/KTable and state stores.', ['Topologies', 'Windowing', 'exactly_once_v2'], 'Relate WordCount changelog to stream-table duality section.', ['KTable vs KStream?', 'Where is state stored?']),
+  'kafka-operations': chapterGuide('Kafka ops', 'Lag, ACLs, topic design checklist.', ['Monitoring', 'Quotas', 'ACLs'], 'Walk topic design checklist as team exercise.', ['Alert on what first?', 'ACLs control?']),
+}
+
 export const webChapterGuides: Record<string, TeacherGuide> = {
   'web-reverse-proxy': chapterGuide('Reverse proxy', 'Contrast forward vs reverse proxies; nginx at the edge.', ['Reverse vs forward', 'TLS termination', 'upstream'], 'Run ReverseProxySim — animate HTTPS → nginx → upstream; click diagram nodes.', ['Where does nginx sit?', 'Why terminate TLS at edge?']),
   'web-nginx-routing': chapterGuide('nginx routing', 'Teach location blocks and proxy_pass.', ['Longest prefix', 'upstream pools', 'path routing'], 'Use RouteSim with /api and /admin paths; highlight nodes in the Mermaid diagram.', ['What wins: / or /api/?', 'What does proxy_pass do?']),
