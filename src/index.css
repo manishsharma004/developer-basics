@@ -1486,6 +1486,7 @@ a {
   border-left: 2px solid transparent;
   cursor: pointer;
   font-size: 0.9rem;
+  text-decoration: none;
 }
 .toc-link:hover {
   color: var(--text);
@@ -1992,16 +1993,28 @@ a {
   .lesson-toc ol {
     display: flex;
     flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
     border-left: none;
+    padding: 0 2px;
   }
   .toc-link {
+    display: inline;
+    width: auto;
     margin-left: 0;
+    padding: 6px 0;
     border-left: none;
-    border-bottom: 2px solid transparent;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--muted) 45%, transparent);
+    text-underline-offset: 3px;
+  }
+  .toc-link:hover {
+    text-decoration-color: currentColor;
   }
   .toc-link--active {
     border-left: none;
-    border-bottom-color: var(--accent);
+    color: var(--accent);
+    text-decoration-color: var(--accent);
   }
   .waterfall-row {
     grid-template-columns: 110px 1fr;
@@ -4052,6 +4065,189 @@ a {
   background: var(--accent);
   border-color: var(--accent);
 }
+
+/* Kafka partition log simulator ------------------------------------------- */
+.kafka-sim {
+  margin: 12px 0 20px;
+}
+.kafka-sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  margin-bottom: 12px;
+  font-size: 0.88rem;
+}
+.kafka-sim-controls label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.kafka-sim-produce {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.kafka-sim-input {
+  flex: 1;
+  min-width: 140px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--prose);
+}
+.kafka-sim-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.kafka-sim-partition {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 8px;
+  min-height: 120px;
+}
+.kafka-sim-partition-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.kafka-sim-log {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+}
+.kafka-sim-empty {
+  color: var(--muted);
+  font-style: italic;
+}
+.kafka-sim-record {
+  display: flex;
+  gap: 6px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  background: var(--code-bg);
+}
+.kafka-sim-record--read {
+  opacity: 0.45;
+  text-decoration: line-through;
+  text-decoration-color: var(--muted);
+}
+.kafka-sim-record--highlight {
+  outline: 2px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--code-bg));
+}
+.kafka-sim-record--sample-unread,
+.kafka-sim-record--sample-read {
+  display: inline-flex;
+  font-size: 0.72rem;
+  margin-right: 10px;
+  padding: 2px 8px;
+}
+.kafka-sim-record--sample-read {
+  opacity: 0.45;
+  text-decoration: line-through;
+}
+.kafka-sim-hwm {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 0.68rem;
+  margin-left: 6px;
+}
+.kafka-lab-legend {
+  font-size: 0.82rem;
+  margin: 8px 0 12px;
+}
+.kafka-sim-consumers {
+  margin-top: 16px;
+}
+.kafka-sim-note {
+  font-size: 0.88rem;
+  margin-bottom: 8px;
+}
+.kafka-sim-off {
+  color: var(--accent);
+  min-width: 1.2rem;
+}
+.kafka-sim-key {
+  color: var(--prose);
+}
+.kafka-sim-note {
+  font-size: 0.88rem;
+  margin-bottom: 8px;
+}
+.kafka-sim-consumer-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.kafka-sim-consumer {
+  flex: 1;
+  min-width: 140px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 0.85rem;
+}
+.kafka-sim-assign,
+.kafka-sim-lag {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin: 4px 0;
+}
+.btn--small {
+  font-size: 0.78rem;
+  padding: 4px 10px;
+}
+.kafka-lab-meta {
+  font-size: 0.88rem;
+  margin-bottom: 12px;
+}
+.kafka-lab-consume-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+.kafka-lab-error {
+  margin-bottom: 12px;
+}
+.kafka-sim-val {
+  color: var(--prose);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kafka-lab-subhead {
+  font-size: 0.95rem;
+  margin: 16px 0 8px;
+}
+.kafka-playground-divider {
+  margin: 24px 0;
+  border: none;
+  border-top: 1px solid var(--border);
+}
+.kafka-code-lab-intro {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+.kafka-code-lang {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.kafka-lab-lag {
+  font-size: 0.82rem;
+  font-family: ui-monospace, monospace;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
 .queue-overflow {
   color: #fca5a5;
   font-family: ui-monospace, monospace;
@@ -5583,10 +5779,14 @@ button.waterfall-row {
   .sim-reality {
     grid-template-columns: 1fr;
   }
+  .lesson-toc .toc-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
   .chip,
   .btn,
   .quiz-option,
-  .toc-link,
   .ref-snippets .chip {
     min-height: 44px;
     padding-top: 10px;

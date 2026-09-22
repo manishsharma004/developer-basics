@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { getLessonMeta, getNextLesson, type SectionMeta } from '../meta.ts'
 import { getNextPathLesson, isOnBeginnerPath } from '../beginnerPath.ts'
 import { lessonNeedsPython } from '../../lib/pythonLessons.ts'
@@ -20,7 +20,6 @@ export function Lesson({ id, children }: Props) {
   const nextInPath = getNextPathLesson(id)
   const next = isOnBeginnerPath(id) && nextInPath ? nextInPath : getNextLesson(id)
   const location = useLocation()
-  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const sections: SectionMeta[] = meta?.sections ?? []
   const [active, setActive] = useState(sections[0]?.id ?? '')
@@ -39,11 +38,16 @@ export function Lesson({ id, children }: Props) {
     })
   }, [location.pathname, location.state, searchParams])
 
-  const scrollToSection = (sectionId: string) => {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  const sectionHref = (sectionId: string) => {
     const params = new URLSearchParams(searchParams)
     params.set('section', sectionId)
-    navigate({ pathname: location.pathname, search: `?${params.toString()}` }, { replace: true })
+    return { pathname: location.pathname, search: `?${params.toString()}` }
+  }
+
+  const onSectionLinkClick = (sectionId: string) => {
+    requestAnimationFrame(() => {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
   }
 
   useEffect(() => {
@@ -79,8 +83,6 @@ export function Lesson({ id, children }: Props) {
     }
     return () => observer.disconnect()
   }, [id, sections])
-
-  const scrollTo = scrollToSection
 
   if (!meta) return null
 
@@ -130,12 +132,14 @@ export function Lesson({ id, children }: Props) {
             <ol>
               {sections.map((s) => (
                 <li key={s.id}>
-                  <button
+                  <Link
+                    to={sectionHref(s.id)}
+                    replace
                     className={`toc-link${active === s.id ? ' toc-link--active' : ''}`}
-                    onClick={() => scrollTo(s.id)}
+                    onClick={() => onSectionLinkClick(s.id)}
                   >
                     {s.title}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ol>

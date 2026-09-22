@@ -2,7 +2,7 @@
 
 > Auto-generated from `src/lessons/meta.ts`. Run `bun run sitemap` to refresh.
 
-An interactive course with **15 modules** and **146 chapters**.
+An interactive course with **16 modules** and **160 chapters**.
 Student and teacher experiences share the same curriculum; the sidebar switcher
 is persisted in `localStorage` (`devbasics.experience`).
 
@@ -74,6 +74,12 @@ Trade memory for speed with caches, and decouple services with message queues.
 
 Chapter ids: `caching, queues`
 
+### 📊 Apache Kafka (14 chapters)
+
+Distributed event streaming — topics, partitions, consumer groups, replication, Connect, and Streams.
+
+Chapter ids: `kafka-event-streaming, kafka-topics-log, kafka-partitions, kafka-producers, kafka-consumers, kafka-consumer-groups, kafka-brokers-replication, kafka-reliability, kafka-delivery-semantics, kafka-compaction, kafka-serialization, kafka-connect, kafka-streams, kafka-operations`
+
 ### 🌐 Networking & the Web (12 chapters)
 
 HTTP, DNS, TLS, load balancing, reverse proxies, API gateways, and rate limits.
@@ -132,30 +138,30 @@ Chapter ids: `classes, oop, patterns, functional, capstone`
 | Systems & the OS | Processes & the CPU | `/lessons/process` | Beginner | 19 |
 | Systems & the OS | Concurrency & Races | `/lessons/concurrency` | Intermediate | 28 |
 | Systems & the OS | Compute Instances | `/lessons/compute` | Intermediate | 18 |
-| Containerization | Why containers? | `/lessons/container-intro` | Intermediate | 5 |
-| Containerization | Images & layers | `/lessons/docker-images` | Intermediate | 6 |
-| Containerization | Containers & lifecycle | `/lessons/docker-containers` | Intermediate | 7 |
-| Containerization | Dockerfile deep dive | `/lessons/docker-dockerfile` | Intermediate | 6 |
-| Containerization | Networks & ports | `/lessons/docker-networks` | Intermediate | 5 |
-| Containerization | Volumes & bind mounts | `/lessons/docker-volumes` | Intermediate | 5 |
-| Containerization | Compose mental model | `/lessons/compose-intro` | Intermediate | 5 |
-| Containerization | Services & depends_on | `/lessons/compose-services` | Intermediate | 6 |
-| Containerization | Compose in production | `/lessons/compose-production` | Intermediate | 6 |
-| Containerization | Why orchestration? | `/lessons/k8s-intro` | Intermediate | 5 |
-| Containerization | Control plane & nodes | `/lessons/k8s-architecture` | Intermediate | 7 |
-| Containerization | Pods & controllers | `/lessons/k8s-workloads` | Intermediate | 6 |
-| Containerization | Service types | `/lessons/k8s-services` | Intermediate | 6 |
-| Containerization | Ingress & TLS | `/lessons/k8s-ingress` | Intermediate | 5 |
-| Containerization | DNS, CNI & IPs | `/lessons/k8s-networking` | Intermediate | 6 |
-| Containerization | PV, PVC & StorageClass | `/lessons/k8s-storage` | Intermediate | 6 |
-| Containerization | ConfigMaps & Secrets | `/lessons/k8s-config-secrets` | Intermediate | 5 |
-| Containerization | kubectl for DevOps | `/lessons/k8s-commands` | Intermediate | 7 |
-| Containerization | Node management | `/lessons/k8s-nodes` | Intermediate | 5 |
-| Containerization | Built-in controllers | `/lessons/k8s-operators-builtin` | Intermediate | 5 |
-| Containerization | CRDs & custom operators | `/lessons/k8s-operators-custom` | Intermediate | 6 |
-| Containerization | EKS, GKE & AKS | `/lessons/platforms-managed-k8s` | Intermediate | 6 |
-| Containerization | ECS, Rancher & Docker Desktop | `/lessons/platforms-ecs-rancher` | Intermediate | 6 |
-| Containerization | Ship a small stack | `/lessons/container-capstone` | Advanced | 8 |
+| Containerization | Why containers? | `/lessons/container-intro` | Intermediate | 10 |
+| Containerization | Images & layers | `/lessons/docker-images` | Intermediate | 12 |
+| Containerization | Containers & lifecycle | `/lessons/docker-containers` | Intermediate | 12 |
+| Containerization | Dockerfile deep dive | `/lessons/docker-dockerfile` | Intermediate | 12 |
+| Containerization | Networks & ports | `/lessons/docker-networks` | Intermediate | 10 |
+| Containerization | Volumes & bind mounts | `/lessons/docker-volumes` | Intermediate | 10 |
+| Containerization | Compose mental model | `/lessons/compose-intro` | Intermediate | 10 |
+| Containerization | Services & depends_on | `/lessons/compose-services` | Intermediate | 12 |
+| Containerization | Compose in production | `/lessons/compose-production` | Intermediate | 12 |
+| Containerization | Why orchestration? | `/lessons/k8s-intro` | Intermediate | 10 |
+| Containerization | Control plane & nodes | `/lessons/k8s-architecture` | Intermediate | 12 |
+| Containerization | Pods & controllers | `/lessons/k8s-workloads` | Intermediate | 12 |
+| Containerization | Service types | `/lessons/k8s-services` | Intermediate | 11 |
+| Containerization | Ingress & TLS | `/lessons/k8s-ingress` | Intermediate | 10 |
+| Containerization | DNS, CNI & IPs | `/lessons/k8s-networking` | Intermediate | 11 |
+| Containerization | PV, PVC & StorageClass | `/lessons/k8s-storage` | Intermediate | 11 |
+| Containerization | ConfigMaps & Secrets | `/lessons/k8s-config-secrets` | Intermediate | 10 |
+| Containerization | kubectl for DevOps | `/lessons/k8s-commands` | Intermediate | 12 |
+| Containerization | Node management | `/lessons/k8s-nodes` | Intermediate | 10 |
+| Containerization | Built-in controllers | `/lessons/k8s-operators-builtin` | Intermediate | 10 |
+| Containerization | CRDs & custom operators | `/lessons/k8s-operators-custom` | Intermediate | 11 |
+| Containerization | EKS, GKE & AKS | `/lessons/platforms-managed-k8s` | Intermediate | 10 |
+| Containerization | ECS, Rancher & Docker Desktop | `/lessons/platforms-ecs-rancher` | Intermediate | 10 |
+| Containerization | Ship a small stack | `/lessons/container-capstone` | Advanced | 14 |
 | Data Structures & Algorithms | Data Structures | `/lessons/datastructures` | Intermediate | 22 |
 | Data Structures & Algorithms | Algorithms & Big-O | `/lessons/algorithms` | Intermediate | 22 |
 | Data Structures & Algorithms | Searching & Binary Search | `/lessons/search` | Beginner | 17 |
@@ -196,6 +202,20 @@ Chapter ids: `classes, oop, patterns, functional, capstone`
 | MongoDB & Documents | Embed, indexes & sharding | `/lessons/mongodb-hood` | Intermediate | 5 |
 | Caching & Queues | Caching & LRU | `/lessons/caching` | Intermediate | 21 |
 | Caching & Queues | Queue Architecture | `/lessons/queues` | Intermediate | 18 |
+| Apache Kafka | Event streaming platform | `/lessons/kafka-event-streaming` | Intermediate | 8 |
+| Apache Kafka | Topics & the commit log | `/lessons/kafka-topics-log` | Intermediate | 7 |
+| Apache Kafka | Partitions & record keys | `/lessons/kafka-partitions` | Intermediate | 8 |
+| Apache Kafka | Producers | `/lessons/kafka-producers` | Intermediate | 7 |
+| Apache Kafka | Consumers & offsets | `/lessons/kafka-consumers` | Intermediate | 7 |
+| Apache Kafka | Consumer groups | `/lessons/kafka-consumer-groups` | Intermediate | 8 |
+| Apache Kafka | Brokers & replication | `/lessons/kafka-brokers-replication` | Intermediate | 8 |
+| Apache Kafka | Durability & availability | `/lessons/kafka-reliability` | Intermediate | 6 |
+| Apache Kafka | Delivery semantics | `/lessons/kafka-delivery-semantics` | Intermediate | 8 |
+| Apache Kafka | Log compaction | `/lessons/kafka-compaction` | Intermediate | 6 |
+| Apache Kafka | Serialization & schemas | `/lessons/kafka-serialization` | Intermediate | 7 |
+| Apache Kafka | Kafka Connect | `/lessons/kafka-connect` | Intermediate | 7 |
+| Apache Kafka | Kafka Streams & ksqlDB | `/lessons/kafka-streams` | Intermediate | 9 |
+| Apache Kafka | Operations & security | `/lessons/kafka-operations` | Intermediate | 7 |
 | Networking & the Web | How the Web Talks | `/lessons/network` | Intermediate | 18 |
 | Networking & the Web | JavaScript Fundamentals | `/lessons/js-fundamentals` | Beginner | 18 |
 | Networking & the Web | HTTP Clients | `/lessons/http-clients` | Beginner | 15 |

@@ -16,6 +16,7 @@ Interactive React + TypeScript course with in-browser simulations (Pyodide, Wasm
 | Build | `bun run build` |
 | Lint | `bun run lint` |
 | E2E tests | `bun run test:e2e` |
+| Kafka lab | In-browser only (`src/lessons/kafka/kafkaLabEngine.ts`); no Docker/broker required for deploy |
 | Regenerate architecture diagram | `bun run architecture:deliver` (requires Archify skill — `bun run archify:install`) |
 
 Dev server in Cloud: port **5173** (see `.cursor/environment.json`).
@@ -89,6 +90,10 @@ cursor-agent/<descriptive-name>-<suffix>
 - Shell toggle: `src/components/ShellBackendToggle.tsx`, `src/lib/shellRuntime.ts`.
 - v86 VM image is built in CI (`bun run v86:build-image`); not committed to git. See `docs/plans/v86-podman-lab.md`.
 - Local dev without Docker: `bun run v86:fetch-lab-image`.
+
+## Manual UI testing (computer use)
+
+When launching the **`computerUse`** subagent for browser or desktop testing, **do not** set `model` to any **Claude Sonnet** slug (e.g. `claude-sonnet-5-thinking-*`). Omit `model` to inherit the parent agent’s model, or pick a non-Sonnet model from the allowed subagent list.
 
 ## Gotchas
 
