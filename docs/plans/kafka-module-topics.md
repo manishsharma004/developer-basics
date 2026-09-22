@@ -25,11 +25,11 @@ Give developers a **full mental model** of Kafka as a **distributed commit log /
 | 13 | `kafka-streams` | Stream processing | Kafka Streams vs external processors; KStream vs KTable; state stores; joins & windowing; ksqlDB as SQL layer; stream-table duality |
 | 14 | `kafka-operations` | Operations & security | Metrics (lag, under-replicated partitions); quotas; ACLs (SASL/SSL overview); topic design checklist; capacity planning |
 
-## Interactive labs
+## Interactive labs (browser-only)
 
-- **Partition log simulator** (chapters 3, 6): produce keyed events, watch partition assignment and consumer group lag.
-- **Producer acks / ISR** (chapter 4/7): toggle acks and replica count — qualitative latency/durability.
-- Code snippets: `kafka-console-producer/consumer`, minimal Java/Python producer config (text only).
+- **KafkaLab** (`kafkaLabEngine.ts`): in-browser commit log with partitions, offsets, consumer groups, lag; persists in `localStorage` — works on GitHub Pages.
+- **Pyodide snippets**: conceptual Python (partition hash, acks tables) — separate from KafkaLab state unless bridged later.
+- CLI examples in prose (`kafka-console-producer`) are for real clusters outside the site.
 
 ## Placement in course
 

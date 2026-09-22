@@ -209,8 +209,7 @@ const kafkaPartitions = createChapterLesson({
       <KafkaLab />
       <TryThis>
         Produce several events with the same key — they should land in one partition with increasing offsets.
-        Use <strong>Consume (poll)</strong> with the default consumer group; start Docker Redpanda (
-        <code>bun run kafka:up</code>) for full Fetch/consumer-group semantics.
+        Use <strong>Consume (poll)</strong> with a consumer group and watch <strong>lag</strong> drop on the partitions you read.
       </TryThis>
     </>
   ),

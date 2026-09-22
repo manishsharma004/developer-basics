@@ -40,7 +40,7 @@ export const kafkaLessonsMeta: LessonMeta[] = [
     minutes: 8,
     modelTitle: 'Sharding & ordering',
     hasPlayground: true,
-    playgroundTitle: 'Kafka lab (real broker)',
+    playgroundTitle: 'In-browser Kafka lab',
     hasHood: true,
   }),
   chapterMeta({
@@ -79,7 +79,7 @@ export const kafkaLessonsMeta: LessonMeta[] = [
     minutes: 8,
     modelTitle: 'Group mechanics',
     hasPlayground: true,
-    playgroundTitle: 'Kafka lab — consumer groups',
+    playgroundTitle: 'Consumer group lab',
     hasHood: true,
   }),
   chapterMeta({

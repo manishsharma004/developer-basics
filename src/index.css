@@ -4191,6 +4191,12 @@ a {
   font-size: 0.95rem;
   margin: 16px 0 8px;
 }
+.kafka-lab-lag {
+  font-size: 0.82rem;
+  font-family: ui-monospace, monospace;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
 .queue-overflow {
   color: #fca5a5;
   font-family: ui-monospace, monospace;
