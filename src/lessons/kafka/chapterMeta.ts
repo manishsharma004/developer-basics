@@ -67,6 +67,8 @@ export const kafkaLessonsMeta: LessonMeta[] = [
     minutes: 7,
     modelTitle: 'Reading the log',
     extraSections: [{ id: 'commits', title: 'Commit strategies' }],
+    hasPlayground: true,
+    playgroundTitle: 'Producer & consumer code lab',
     hasHood: true,
   }),
   chapterMeta({

@@ -1,14 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import {
-  consumeRecords,
-  getLabInfo,
-  groupLag,
-  listTopicRecords,
-  produceRecord,
-  resetKafkaLab,
-  subscribeKafkaLab,
-  type LabRecord,
-} from './kafkaLabEngine.ts'
+import { KafkaConsumer, KafkaProducer, getLabInfo, resetKafkaLab, subscribeKafkaLab } from './kafkaApi.ts'
+import { groupLag, listTopicRecords, type LabRecord } from './kafkaLabEngine.ts'
 
 export function KafkaLab() {
   const info = getLabInfo()
@@ -31,13 +23,24 @@ export function KafkaLab() {
   }, [refresh])
 
   const produce = () => {
-    produceRecord({ key, value, topic: info.topic })
+    const producer = new KafkaProducer()
+    producer.send(info.topic, value, key.trim() || null)
     refresh()
   }
 
   const consume = () => {
-    const batch = consumeRecords({ groupId, topic: info.topic, maxMessages: 5 })
-    setLastConsume(batch)
+    const consumer = new KafkaConsumer({ group_id: groupId, topic: info.topic })
+    const batch = consumer.poll(5)
+    setLastConsume(
+      batch.map((m) => ({
+        id: `${m.partition}-${m.offset}`,
+        partition: m.partition,
+        offset: m.offset,
+        key: m.key,
+        value: m.value,
+        timestamp: m.timestamp,
+      })),
+    )
     refresh()
   }
 

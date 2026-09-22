@@ -4191,6 +4191,20 @@ a {
   font-size: 0.95rem;
   margin: 16px 0 8px;
 }
+.kafka-playground-divider {
+  margin: 24px 0;
+  border: none;
+  border-top: 1px solid var(--border);
+}
+.kafka-code-lab-intro {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+.kafka-code-lang {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
 .kafka-lab-lag {
   font-size: 0.82rem;
   font-family: ui-monospace, monospace;

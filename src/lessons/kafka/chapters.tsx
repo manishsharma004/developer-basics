@@ -1,9 +1,7 @@
 import type { ComponentType } from 'react'
 import { createChapterLesson } from '../components/ChapterLesson.tsx'
 import { Callout, CodePreview, FlowDiagram, UnderTheHood, TryThis } from '../components/blocks.tsx'
-import { SnippetRunner } from '../components/SnippetRunner.tsx'
-import { KafkaLab } from './KafkaLab.tsx'
-import { snippets } from './snippets.ts'
+import { KafkaPlayground } from './KafkaPlayground.tsx'
 
 const kafkaEventStreaming = createChapterLesson({
   id: 'kafka-event-streaming',
@@ -206,10 +204,10 @@ const kafkaPartitions = createChapterLesson({
   ),
   playground: (
     <>
-      <KafkaLab />
+      <KafkaPlayground />
       <TryThis>
-        Produce several events with the same key — they should land in one partition with increasing offsets.
-        Use <strong>Consume (poll)</strong> with a consumer group and watch <strong>lag</strong> drop on the partitions you read.
+        Produce from the buttons or from the <strong>Code lab</strong> (Python/JS), then consume with a group id and watch{' '}
+        <strong>lag</strong> drop. Same topic for UI and your code.
       </TryThis>
     </>
   ),
@@ -277,12 +275,7 @@ max.in.flight.requests.per.connection=5  # keep ≤5 with idempotence`}
       ),
     },
   ],
-  playground: (
-    <>
-      <SnippetRunner snippets={snippets('Producer acks')} />
-      <SnippetRunner snippets={snippets('Partition by key')} />
-    </>
-  ),
+  playground: <KafkaPlayground />,
   hood: (
     <UnderTheHood title="Retries and ordering">
       <p className="prose">
@@ -312,6 +305,7 @@ max.in.flight.requests.per.connection=5  # keep ≤5 with idempotence`}
 const kafkaConsumers = createChapterLesson({
   id: 'kafka-consumers',
   modelTitle: 'Reading the log',
+  playground: <KafkaPlayground />,
   intro: (
     <p className="prose">
       <strong>Consumers</strong> poll brokers for records, deserialize values, and commit offsets when work is
@@ -391,12 +385,7 @@ const kafkaConsumerGroups = createChapterLesson({
       </Callout>
     </>
   ),
-  playground: (
-    <>
-      <SnippetRunner snippets={snippets('Consumer group assignment')} />
-      <KafkaLab />
-    </>
-  ),
+  playground: <KafkaPlayground />,
   hood: (
     <UnderTheHood title="Rebalance cost">
       <p className="prose">
