@@ -1,398 +1,88 @@
-import { useEffect, useState } from 'react'
-import { NavLink, Route, Routes, useLocation } from 'react-router-dom'
-import { lessons } from './lessons/index.tsx'
-import { groups, type Level } from './lessons/meta.ts'
-import Home from './pages/Home.tsx'
-import TeacherHome from './pages/TeacherHome.tsx'
-import { useExperience } from './experience/ExperienceContext.tsx'
-import { LessonPlan } from './experience/LessonPlan.tsx'
-import { useTheme } from './theme/ThemeContext.tsx'
-import { THEMES, type ThemePreference } from './theme/themes.ts'
-import { FeedbackDialog } from './components/FeedbackDialog.tsx'
-import { GlobalSearch, searchShortcutLabel, useGlobalSearchShortcut } from './components/GlobalSearch.tsx'
-import { PresenterNotesStrip } from './components/PresenterNotesStrip.tsx'
-import { ProgressManager } from './components/ProgressManager.tsx'
-import { useClassroom } from './experience/ClassroomContext.tsx'
-import { useProgress } from './progress/ProgressContext.tsx'
+import { CABO_ABILITIES, KIND_LABEL } from './caboAbilities'
+import './App.css'
 
-const LEVELS: Level[] = ['Beginner', 'Intermediate', 'Advanced']
-const COLLAPSE_KEY = 'devbasics.sidebarCollapsed'
-
-function navLinkClass(isActive: boolean, read: boolean, opened: boolean, base = 'nav-link') {
-  let cls = base
-  if (isActive) cls += ' active'
-  if (read) cls += ' nav-link--read'
-  else if (opened) cls += ' nav-link--opened'
-  return cls
-}
-
-function getLessonNavState(
-  getProgress: (lessonId: string) => { read?: boolean; openCount?: number } | undefined,
-  lessonId: string,
-) {
-  const progress = getProgress(lessonId)
-  const openCount = progress?.openCount ?? 0
-  return {
-    read: progress?.read ?? false,
-    opened: openCount > 0,
-    openCount,
-  }
-}
-
-function NavStatusMarker({ read }: { read: boolean }) {
-  if (!read) return null
+function PlayingCard({
+  face,
+  sub,
+  tone,
+}: {
+  face: string
+  sub?: string
+  tone?: 'red' | 'black'
+}) {
+  const toneClass = tone ? `card--${tone}` : ''
   return (
-    <span
-      className="nav-status-marker nav-status-marker--read"
-      title="Marked as read"
-      aria-label="Marked as read"
-    />
+    <div className={`playing-card ${toneClass}`} aria-hidden="true">
+      <span className="playing-card__corner playing-card__corner--tl">{face}</span>
+      <span className="playing-card__center">
+        <span className="playing-card__face">{face}</span>
+        {sub ? <span className="playing-card__sub">{sub}</span> : null}
+      </span>
+      <span className="playing-card__corner playing-card__corner--br">{face}</span>
+    </div>
   )
 }
 
 function App() {
-  const { experience, setExperience } = useExperience()
-  const { preference, resolvedTheme, setTheme } = useTheme()
-  const { classroomMode, toggleClassroomMode } = useClassroom()
-  const teacher = experience === 'teacher'
-  const location = useLocation()
-
-  const [collapsed, setCollapsed] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem(COLLAPSE_KEY) === '1'
-    } catch {
-      return false
-    }
-  })
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const [feedbackOpen, setFeedbackOpen] = useState(false)
-  const [searchOpen, setSearchOpen] = useState(false)
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({})
-
-  const { getProgress } = useProgress()
-
-  const activeLesson = lessons.find((l) => l.path === location.pathname)
-
-  const toggleGroup = (id: string) =>
-    setOpenGroups((g) => ({ ...g, [id]: !g[id] }))
-
-  // Start with every module collapsed; expand only the group for the current lesson.
-  useEffect(() => {
-    if (teacher) return
-    setOpenGroups(activeLesson ? { [activeLesson.group]: true } : {})
-  }, [location.pathname, activeLesson?.group, teacher])
-
-  const toggleCollapsed = () => {
-    setCollapsed((c) => {
-      const next = !c
-      try {
-        localStorage.setItem(COLLAPSE_KEY, next ? '1' : '0')
-      } catch {
-        /* ignore */
-      }
-      return next
-    })
-  }
-
-  // Close the mobile drawer whenever the route changes.
-  useEffect(() => {
-    setMobileOpen(false)
-  }, [location.pathname])
-
-  useGlobalSearchShortcut(() => setSearchOpen(true))
-
-  // Auto-collapse sidebar in classroom mode for projection.
-  useEffect(() => {
-    if (classroomMode && !collapsed) {
-      setCollapsed(true)
-      try {
-        localStorage.setItem(COLLAPSE_KEY, '1')
-      } catch {
-        /* ignore */
-      }
-    }
-  }, [classroomMode]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const closeMobile = () => setMobileOpen(false)
-  const shortcut = searchShortcutLabel()
-
-  const renderLink = (to: string, icon: string, label: string, end = false) => (
-    <NavLink to={to} end={end} className="nav-link" title={label} onClick={closeMobile}>
-      <span className="nav-icon">{icon}</span>
-      <span className="nav-label">{label}</span>
-    </NavLink>
-  )
-
   return (
-    <div
-      className={`app${teacher ? ' app--teacher' : ''}${classroomMode ? ' app--classroom' : ''}${collapsed ? ' app--collapsed' : ''}${
-        mobileOpen ? ' app--mobnav-open' : ''
-      }`}
-    >
-      <header className="topbar">
-        <button
-          className="topbar-toggle"
-          aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'}
-          aria-expanded={mobileOpen}
-          onClick={() => setMobileOpen((o) => !o)}
-        >
-          <span className="hamburger" aria-hidden />
-        </button>
-        <span className="topbar-title">Developer Basics</span>
-        <button
-          className="topbar-search"
-          onClick={() => setSearchOpen(true)}
-          aria-label="Search topics"
-          title={`Search topics (${shortcut})`}
-        >
-          🔍
-        </button>
-        <button className="topbar-feedback" onClick={() => setFeedbackOpen(true)} aria-label="Request or report an issue" title="Request / report">
-          💬
-        </button>
-        <button
-          className={`topbar-classroom${classroomMode ? ' topbar-classroom--on' : ''}`}
-          onClick={toggleClassroomMode}
-          aria-pressed={classroomMode}
-          title={classroomMode ? 'Exit classroom mode' : 'Enter classroom mode'}
-        >
-          {classroomMode ? '📽️ On' : '📽️'}
-        </button>
-        <span className={`topbar-mode${teacher ? ' topbar-mode--teacher' : ''}`}>
-          {teacher ? '🧑‍🏫 Teacher' : '🎓 Student'}
-        </span>
+    <div className="page">
+      <header className="hero">
+        <div className="hero__badge">Quick reference</div>
+        <h1>Cabo — power cards</h1>
+        <p className="hero__lead">
+          When you discard a numbered card or face card, its ability fires before the next
+          turn. Use this sheet at the table so nobody has to dig through chat history.
+        </p>
       </header>
 
-      <button className="mobile-backdrop" aria-label="Close navigation" tabIndex={-1} onClick={closeMobile} />
-
-      <aside className="sidebar">
-        <div className="sidebar-head">
-          <div className="brand">
-            <span className="brand-mark">{'</>'}</span>
-            <div className="brand-text">
-              <div className="brand-title">Developer Basics</div>
-              <div className="brand-sub">{teacher ? 'teach with confidence' : 'learn by doing'}</div>
-            </div>
-          </div>
-          <button
-            className="collapse-btn"
-            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            onClick={toggleCollapsed}
-          >
-            {collapsed ? '»' : '«'}
-          </button>
-        </div>
-
-        <div className="exp-switch" role="tablist" aria-label="Experience">
-          <button
-            role="tab"
-            aria-selected={!teacher}
-            className={`exp-btn${!teacher ? ' exp-btn--active' : ''}`}
-            onClick={() => setExperience('student')}
-            title="Student experience"
-          >
-            <span className="exp-icon">🎓</span>
-            <span className="exp-label">Student</span>
-          </button>
-          <button
-            role="tab"
-            aria-selected={teacher}
-            className={`exp-btn${teacher ? ' exp-btn--active' : ''}`}
-            onClick={() => setExperience('teacher')}
-            title="Teacher experience"
-          >
-            <span className="exp-icon">🧑‍🏫</span>
-            <span className="exp-label">Teacher</span>
-          </button>
-        </div>
-
-        <button
-          type="button"
-          className="global-search-trigger"
-          onClick={() => setSearchOpen(true)}
-          title={`Search topics (${shortcut})`}
-          aria-label="Search topics"
-        >
-          <span className="nav-icon" aria-hidden>
-            🔍
-          </span>
-          <span className="nav-label global-search-trigger-label">Search topics…</span>
-          <kbd className="global-search-trigger-kbd nav-label">{shortcut}</kbd>
-        </button>
-
-        <button
-          type="button"
-          className={`classroom-toggle${classroomMode ? ' classroom-toggle--on' : ''}`}
-          onClick={toggleClassroomMode}
-          aria-pressed={classroomMode}
-          title={classroomMode ? 'Exit classroom mode' : 'Classroom mode — focus on lesson content'}
-        >
-          <span className="nav-icon" aria-hidden>📽️</span>
-          <span className="nav-label">{classroomMode ? 'Classroom mode on' : 'Classroom mode'}</span>
-        </button>
-
-        <nav className="nav">
-          {renderLink('/', teacher ? '📋' : '🏠', teacher ? 'Curriculum' : 'All lessons', true)}
-
-          {teacher ? (
-            LEVELS.map((level) => {
-              const group = lessons.filter((l) => l.level === level)
-              if (group.length === 0) return null
-              return (
-                <div key={level} className="nav-group">
-                  <div className="nav-group-title">{level}</div>
-                  {group.map((lesson) => {
-                    const { read, opened, openCount } = getLessonNavState(getProgress, lesson.id)
-                    const linkTitle =
-                      opened && !read ? `${lesson.title} · opened ${openCount}×` : lesson.title
-                    return (
-                    <NavLink
-                      key={lesson.id}
-                      to={lesson.path}
-                      className={({ isActive }) =>
-                        navLinkClass(isActive, read, opened)
-                      }
-                      title={linkTitle}
-                      onClick={closeMobile}
-                    >
-                      <span className="nav-icon">{lesson.icon}</span>
-                      <span className="nav-label">{lesson.title}</span>
-                      <NavStatusMarker read={read} />
-                    </NavLink>
-                    )
-                  })}
+      <section className="abilities" aria-labelledby="abilities-heading">
+        <h2 id="abilities-heading" className="section-title">Card abilities</h2>
+        <ul className="ability-grid">
+          {CABO_ABILITIES.map((ability) => (
+            <li key={ability.id}>
+              <article className={`ability-card ability-card--${ability.kind}`}>
+                <div className="ability-card__top">
+                  <PlayingCard
+                    face={ability.cardFace}
+                    sub={ability.cardSub}
+                    tone={ability.suitTone}
+                  />
+                  <div className="ability-card__meta">
+                    <span className="ability-card__ranks">{ability.ranks}</span>
+                    <span className={`pill pill--${ability.kind}`}>
+                      {KIND_LABEL[ability.kind]}
+                    </span>
+                  </div>
                 </div>
-              )
-            })
-          ) : (
-            groups.map((group) => {
-              const items = lessons.filter((l) => l.group === group.id)
-              if (items.length === 0) return null
-              // When the rail is collapsed to icons, always show the lessons so
-              // every chapter icon stays reachable.
-              const open = collapsed || !!openGroups[group.id]
-              return (
-                <div
-                  key={group.id}
-                  className={`nav-group nav-group--collapsible${open ? ' nav-group--open' : ''}`}
-                >
-                  <button
-                    type="button"
-                    className="nav-group-toggle"
-                    aria-expanded={open}
-                    onClick={() => toggleGroup(group.id)}
-                    title={group.title}
-                  >
-                    <span className="nav-icon" aria-hidden>{group.icon}</span>
-                    <span className="nav-group-toggle-title nav-label">{group.title}</span>
-                    <span className="nav-group-caret nav-label" aria-hidden>{open ? '▾' : '▸'}</span>
-                  </button>
-                  {open &&
-                    items.map((lesson) => {
-                      const { read, opened, openCount } = getLessonNavState(getProgress, lesson.id)
-                      const linkTitle =
-                        opened && !read ? `${lesson.title} · opened ${openCount}×` : lesson.title
-                      return (
-                      <NavLink
-                        key={lesson.id}
-                        to={lesson.path}
-                        className={({ isActive }) =>
-                          navLinkClass(isActive, read, opened, 'nav-link nav-link--child')
-                        }
-                        title={linkTitle}
-                        onClick={closeMobile}
-                      >
-                        <span className="nav-icon">{lesson.icon}</span>
-                        <span className="nav-label">{lesson.title}</span>
-                        <NavStatusMarker read={read} />
-                      </NavLink>
-                      )
-                    })}
-                </div>
-              )
-            })
-          )}
-        </nav>
-
-        <div className="theme-picker">
-          <label className="theme-picker-label nav-label" htmlFor="theme-select">
-            Theme
-          </label>
-          <div className="theme-select-wrap">
-            <span
-              className="theme-select-swatch"
-              style={{
-                background:
-                  preference === 'system'
-                    ? 'linear-gradient(135deg, #f8fafc 50%, #0f172a 50%)'
-                    : THEMES.find((t) => t.id === resolvedTheme)?.swatch,
-              }}
-              aria-hidden
-            />
-            <select
-              id="theme-select"
-              className="theme-select"
-              value={preference}
-              onChange={(e) => setTheme(e.target.value as ThemePreference)}
-              aria-label="Color theme"
-              title={preference === 'system' ? 'System' : THEMES.find((t) => t.id === resolvedTheme)?.label}
-            >
-              <optgroup label="System">
-                <option value="system">System</option>
-              </optgroup>
-              <optgroup label="Dark">
-                {THEMES.filter((t) => t.mode === 'dark').map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.label}
-                  </option>
-                ))}
-              </optgroup>
-              <optgroup label="Light">
-                {THEMES.filter((t) => t.mode === 'light').map((t) => (
-                  <option key={t.id} value={t.id}>
-                    {t.label}
-                  </option>
-                ))}
-              </optgroup>
-            </select>
-          </div>
-        </div>
-
-        <div className="sidebar-footer">
-          <ProgressManager compact />
-          <button className="feedback-btn" onClick={() => setFeedbackOpen(true)}>
-            <span className="nav-icon">💬</span>
-            <span className="nav-label">Request / feedback</span>
-          </button>
-          <a href="https://github.com/manishsharma004/developer-basics" target="_blank" rel="noreferrer">
-            <span className="nav-icon">↗</span>
-            <span className="nav-label">View source</span>
-          </a>
-        </div>
-      </aside>
-
-      <main className="content">
-        {teacher && !classroomMode && (
-          <div className="mode-ribbon">🧑‍🏫 Teacher mode — lesson plans &amp; teaching notes</div>
-        )}
-        {classroomMode && (
-          <div className="mode-ribbon mode-ribbon--classroom">
-            📽️ Classroom mode — focused view for projection
-          </div>
-        )}
-        <Routes>
-          <Route path="/" element={teacher ? <TeacherHome /> : <Home />} />
-          {lessons.map(({ id, path, Component }) => (
-            <Route key={id} path={path} element={teacher ? <LessonPlan id={id} /> : <Component />} />
+                <h3 className="ability-card__title">{ability.title}</h3>
+                <p className="ability-card__desc">{ability.description}</p>
+              </article>
+            </li>
           ))}
-          <Route path="*" element={teacher ? <TeacherHome /> : <Home />} />
-        </Routes>
-        <PresenterNotesStrip />
-      </main>
+        </ul>
+      </section>
 
-      {feedbackOpen && <FeedbackDialog onClose={() => setFeedbackOpen(false)} />}
-      <GlobalSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <section className="reminders" aria-labelledby="reminders-heading">
+        <h2 id="reminders-heading" className="section-title">At the table</h2>
+        <ul className="reminder-list">
+          <li>
+            <strong>Goal:</strong> lowest total when someone calls Cabo — usually four cards,
+            values 0–13 (Cabo = 0).
+          </li>
+          <li>
+            <strong>Draw or discard:</strong> take from the deck, or match the top discard if
+            you want that rank.
+          </li>
+          <li>
+            <strong>Power first:</strong> resolve 7–K effects before ending your turn when
+            those cards are played from your hand.
+          </li>
+        </ul>
+      </section>
+
+      <footer className="footer">
+        <p>House rules vary — confirm peek/swap limits with your group before you start.</p>
+      </footer>
     </div>
   )
 }

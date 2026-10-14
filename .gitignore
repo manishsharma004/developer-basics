@@ -8,11 +8,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-.kafka-lab/
 dist
 dist-ssr
 *.local
-*.tsbuildinfo
 
 # Editor directories and files
 .vscode/*
@@ -24,12 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# v86 lab VM (built locally; BIOS is committed)
-.cache/v86-tools
-.cache/v86-images
-public/v86/lab-rootfs/*
-!public/v86/lab-rootfs/README.md
-
-# Archify skill (install via scripts/install-archify-skill.sh)
-.cursor/skills/

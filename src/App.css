@@ -1,0 +1,239 @@
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 3rem;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.hero__badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  border: 1px solid var(--gold-dim);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  margin-bottom: 1rem;
+  background: rgba(232, 197, 71, 0.08);
+}
+
+.hero h1 {
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  color: var(--cream);
+  margin-bottom: 0.75rem;
+}
+
+.hero__lead {
+  max-width: 36rem;
+  margin: 0 auto;
+  color: var(--cream-muted);
+  font-size: 1.05rem;
+}
+
+.section-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--gold-dim);
+  margin-bottom: 1rem;
+}
+
+.ability-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .ability-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .ability-grid li:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .ability-grid li:last-child .ability-card {
+    max-width: calc(50% - 0.5rem);
+    margin: 0 auto;
+  }
+}
+
+.ability-card {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow);
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.ability-card:hover {
+  border-color: rgba(232, 197, 71, 0.35);
+  transform: translateY(-2px);
+}
+
+.ability-card__top {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ability-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+}
+
+.ability-card__ranks {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--cream);
+  font-variant-numeric: tabular-nums;
+}
+
+.ability-card__title {
+  font-size: 1.15rem;
+  color: var(--cream);
+  margin-bottom: 0.5rem;
+}
+
+.ability-card__desc {
+  font-size: 0.95rem;
+  color: var(--cream-muted);
+  line-height: 1.55;
+}
+
+.playing-card {
+  flex-shrink: 0;
+  width: 4.5rem;
+  height: 6.25rem;
+  background: var(--card-white);
+  border-radius: 0.45rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  position: relative;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.65rem;
+}
+
+.playing-card--red {
+  color: var(--red-suit);
+}
+
+.playing-card--black {
+  color: var(--black-suit);
+}
+
+.playing-card__corner {
+  position: absolute;
+  font-size: 0.55rem;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.playing-card__corner--tl {
+  top: 0.35rem;
+  left: 0.4rem;
+}
+
+.playing-card__corner--br {
+  bottom: 0.35rem;
+  right: 0.4rem;
+  transform: rotate(180deg);
+}
+
+.playing-card__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+}
+
+.playing-card__face {
+  font-size: 1rem;
+  text-align: center;
+  line-height: 1.1;
+}
+
+.playing-card__sub {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.75;
+}
+
+.pill {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  width: fit-content;
+}
+
+.pill--peek-self {
+  background: rgba(56, 189, 248, 0.2);
+  color: #7dd3fc;
+}
+
+.pill--peek-other {
+  background: rgba(167, 139, 250, 0.2);
+  color: #c4b5fd;
+}
+
+.pill--swap {
+  background: rgba(52, 211, 153, 0.2);
+  color: #6ee7b7;
+}
+
+.pill--penalty {
+  background: rgba(248, 113, 113, 0.2);
+  color: #fca5a5;
+}
+
+.reminders {
+  margin-top: 2.5rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.reminder-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  color: var(--cream-muted);
+  font-size: 0.95rem;
+}
+
+.reminder-list strong {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(201, 191, 176, 0.65);
+}
